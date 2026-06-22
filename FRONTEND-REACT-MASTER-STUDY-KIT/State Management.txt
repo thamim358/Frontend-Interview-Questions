@@ -1,0 +1,91 @@
+State Management Interview Questions (120+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect
+
+SECTION 1: Types of State
+Local state — useState/useReducer?
+Global state — Context, Zustand, Redux?
+Server state — React Query, SWR?
+URL state — search params, pathname?
+Form state — React Hook Form?
+Persisted state — localStorage, IndexedDB?
+Which tool for which state type?
+
+SECTION 2: Context API
+createContext — Provider and Consumer?
+useContext hook?
+When is Context appropriate?
+Context performance problem — all consumers re-render?
+Splitting contexts to avoid unnecessary re-renders?
+Context with useReducer for state management?
+useMemo for context value to prevent cascading updates?
+
+SECTION 3: Redux Toolkit
+createSlice — reducer + actions automatically?
+configureStore — setup with middleware?
+createAsyncThunk — async action handling?
+RTK Query — data fetching and caching?
+Redux DevTools — debugging state changes?
+Immer — immutable updates with mutable syntax?
+Selectors — createSelector for memoized derived state?
+Redux middleware — thunk, logger, saga?
+Redux Toolkit vs vanilla Redux — less boilerplate?
+
+SECTION 4: Zustand
+Zustand store — create(set => ({ ... }))?
+No Provider needed — hook-based access?
+Selectors — const user = useStore(s => s.user)?
+Immer middleware — mutable syntax?
+Persist middleware — localStorage persistence?
+Devtools middleware — Redux DevTools support?
+subscribe API — subscribing outside React?
+Zustand vs Redux — when to use each?
+
+SECTION 5: React Query (TanStack Query)
+useQuery — fetching and caching server state?
+useMutation — creating/updating/deleting?
+staleTime vs cacheTime — what do they mean?
+Query invalidation — invalidateQueries?
+Optimistic updates — onMutate, onError, onSettled?
+Query keys — structuring for cache management?
+Infinite queries — useInfiniteQuery for pagination?
+Query deduplication — automatic?
+Background refetching — stale-while-revalidate pattern?
+
+SECTION 6: Jotai & Atomic State
+Atom — atomic unit of state?
+Derived atoms — reading multiple atoms?
+Jotai vs Recoil — why Jotai won?
+Fine-grained subscriptions — only re-render used atoms?
+No Provider needed?
+Jotai vs Zustand — different mental models?
+
+SECTION 7: URL State
+URL search params as state?
+useSearchParams hook?
+Shareable, bookmarkable, persistable state?
+When to use URL state — filters, search, pagination?
+Next.js searchParams in Server Components?
+
+SECTION 8: Form State
+React Hook Form — uncontrolled, performant?
+Form libraries — React Hook Form vs Formik vs Final Form?
+useForm, Controller, useFieldArray?
+Zod/Yup validation integration?
+Form state management patterns?
+
+SECTION 9: Server State vs Client State
+Why server state doesn't belong in Redux?
+React Query for server state caching?
+Client state — UI state that stays with the app?
+Caching strategies — stale-while-revalidate?
+Cache invalidation patterns?
+Optimistic updates for better UX?
+
+SECTION 10: State Patterns
+Flux architecture — unidirectional data flow?
+Selector pattern — extracting derived state?
+State machine pattern — XState?
+Normalization — Normalizr for nested data?
+Undo/redo — history stack pattern?
+Cross-tab synchronization — BroadcastChannel API?
+Middleware patterns — logging, persistence, analytics?

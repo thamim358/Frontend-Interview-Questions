@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontend React Master Roadmap — Study Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/nebula.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 30% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 70% 50%, rgba(129, 140, 248, 0.05) 0%, transparent 50%);
+  }
+  .cover-title { background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .cover-badge { background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); }
+  .section-divider h2 { background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .end-section h2 { background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  .phase-card {
+    background: var(--bg-card);
+    border: var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-base);
+  }
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+  .phase-card:hover { border-color: rgba(56, 189, 248, 0.15); box-shadow: var(--shadow-glow-cyan); transform: translateY(-1px); }
+  .phase-1::before { background: var(--accent-sky); }
+  .phase-2::before { background: var(--accent-emerald); }
+  .phase-3::before { background: var(--accent-amber); }
+  .phase-4::before { background: var(--accent-indigo); }
+  .phase-5::before { background: var(--accent-violet); }
+  .phase-6::before { background: var(--accent-cyan); }
+  .phase-7::before { background: var(--accent-rose); }
+  .phase-8::before { background: var(--accent-blue); }
+  .phase-9::before { background: var(--accent-emerald); }
+  .phase-10::before { background: var(--accent-red); }
+  .phase-11::before { background: var(--accent-violet); }
+  .phase-12::before { background: var(--accent-orange); }
+  .phase-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .phase-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 50%;
+    font-size: 20px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .phase-1 .phase-number { background: var(--accent-sky); }
+  .phase-2 .phase-number { background: var(--accent-emerald); }
+  .phase-3 .phase-number { background: var(--accent-amber); }
+  .phase-4 .phase-number { background: var(--accent-indigo); }
+  .phase-5 .phase-number { background: var(--accent-violet); }
+  .phase-6 .phase-number { background: var(--accent-cyan); }
+  .phase-7 .phase-number { background: var(--accent-rose); }
+  .phase-8 .phase-number { background: var(--accent-blue); }
+  .phase-9 .phase-number { background: var(--accent-emerald); }
+  .phase-10 .phase-number { background: var(--accent-red); }
+  .phase-11 .phase-number { background: var(--accent-violet); }
+  .phase-12 .phase-number { background: var(--accent-orange); }
+  .phase-title { font-size: 22px; font-weight: 700; flex: 1; }
+  .phase-1 .phase-title { color: var(--accent-sky); }
+  .phase-2 .phase-title { color: var(--accent-emerald); }
+  .phase-3 .phase-title { color: var(--accent-amber); }
+  .phase-4 .phase-title { color: var(--accent-indigo); }
+  .phase-5 .phase-title { color: var(--accent-violet); }
+  .phase-6 .phase-title { color: var(--accent-cyan); }
+  .phase-7 .phase-title { color: var(--accent-rose); }
+  .phase-8 .phase-title { color: var(--accent-blue); }
+  .phase-9 .phase-title { color: var(--accent-emerald); }
+  .phase-10 .phase-title { color: var(--accent-red); }
+  .phase-11 .phase-title { color: var(--accent-violet); }
+  .phase-12 .phase-title { color: var(--accent-orange); }
+  .phase-time { font-size: 13px; color: var(--text-muted); padding: 4px 12px; background: var(--bg-surface); border: var(--border-default); border-radius: 50px; white-space: nowrap; }
+  .phase-content { color: var(--text-secondary); font-size: 15px; line-height: 1.8; }
+  .phase-content ul { list-style: none; padding: 0; }
+  .phase-content li { padding: 4px 0; padding-left: 24px; position: relative; }
+  .phase-1 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-sky); font-weight: 700; }
+  .phase-2 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-emerald); font-weight: 700; }
+  .phase-3 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-amber); font-weight: 700; }
+  .phase-4 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-indigo); font-weight: 700; }
+  .phase-5 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-violet); font-weight: 700; }
+  .phase-6 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-cyan); font-weight: 700; }
+  .phase-7 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-rose); font-weight: 700; }
+  .phase-8 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-blue); font-weight: 700; }
+  .phase-9 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-emerald); font-weight: 700; }
+  .phase-10 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-red); font-weight: 700; }
+  .phase-11 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-violet); font-weight: 700; }
+  .phase-12 .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-orange); font-weight: 700; }
+
+  .salary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 20px 0; }
+  .salary-card { background: var(--bg-card); border: var(--border-default); border-radius: var(--radius-md); padding: 20px; text-align: center; transition: all var(--transition-fast); }
+  .salary-card:hover { border-color: rgba(56, 189, 248, 0.12); }
+  .salary-card .level { font-size: 15px; font-weight: 700; color: var(--accent-sky); margin-bottom: 4px; }
+  .salary-card .title { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .salary-card .range { font-size: 18px; font-weight: 700; color: var(--accent-emerald); }
+
+  .file-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin: 20px 0; }
+  .file-item { background: var(--bg-card); border: var(--border-default); border-radius: var(--radius-md); padding: 12px 16px; font-size: 13px; color: var(--text-secondary); transition: all var(--transition-fast); }
+  .file-item:hover { border-color: rgba(56, 189, 248, 0.12); }
+  .file-item strong { color: var(--accent-emerald); }
+
+  .phase-content code { font-family: var(--font-mono); color: var(--accent-cyan); background: rgba(45,212,191,0.08); padding: 1px 6px; border-radius: 4px; }
+
+  @media (max-width: 768px) {
+    .phase-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .phase-number { width: 40px; height: 40px; font-size: 17px; }
+    .phase-title { font-size: 18px; }
+    .salary-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Frontend React Master Study Kit</div>
+  <h1 class="cover-title">Frontend React Complete Roadmap</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">Your Step-by-Step Guide to Frontend React Mastery</p>
+  <p class="cover-description" style="margin-top:20px">
+    From Junior Frontend Developer to Staff Frontend Engineer / React Architect — covering 12 phases of learning,
+    interview preparation, and career growth for FAANG, Product-Based Companies, FinTech, and Enterprise MNC roles.
+  </p>
+  <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center;margin-top:40px;position:relative;z-index:1">
+    <div style="text-align:center"><div style="font-size:36px;font-weight:700;color:var(--accent-emerald)">12</div><div style="font-size:13px;color:var(--text-muted)">Learning Phases</div></div>
+    <div style="text-align:center"><div style="font-size:36px;font-weight:700;color:var(--accent-blue)">~700</div><div style="font-size:13px;color:var(--text-muted)">Interview Questions</div></div>
+    <div style="text-align:center"><div style="font-size:36px;font-weight:700;color:var(--accent-violet)">13</div><div style="font-size:13px;color:var(--text-muted)">PDF Study Kits</div></div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>📚 The 12-Phase Learning Journey</h2></div>
+<div class="container">
+
+<div class="phase-card phase-1">
+  <div class="phase-header">
+    <span class="phase-number">1</span>
+    <span class="phase-title">Phase 1: JavaScript Fundamentals</span>
+    <span class="phase-time">2-3 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Core language mastery — the foundation of all React development.</p>
+    <ul>
+      <li>Closures, Event Loop, Hoisting, Scope (TDZ)</li>
+      <li>Promises, async/await, Callbacks</li>
+      <li>Prototypes, <code>this</code> binding, call/apply/bind</li>
+      <li>ES6+: destructuring, spread/rest, maps, sets, modules</li>
+      <li>Array methods: map, filter, reduce, flat, sort</li>
+      <li>Coding patterns: debounce, throttle, memoization, deep clone</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you explain the event loop with microtasks vs macrotasks? Can you implement debounce and throttle?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-2">
+  <div class="phase-header">
+    <span class="phase-number">2</span>
+    <span class="phase-title">Phase 2: TypeScript</span>
+    <span class="phase-time">1-2 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Type safety for scalable React applications.</p>
+    <ul>
+      <li>Interface vs Type, Generics, Utility Types</li>
+      <li>Union/Intersection, Discriminated Unions, Type Guards</li>
+      <li>Mapped Types, Conditional Types, Template Literal Types</li>
+      <li>React + TS patterns: Generic Components, Props typing</li>
+      <li>Type-safe hooks, context, and event handlers</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you design generic React components with proper TypeScript typing?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-3">
+  <div class="phase-header">
+    <span class="phase-number">3</span>
+    <span class="phase-title">Phase 3: React Core</span>
+    <span class="phase-time">3-4 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> The #1 frontend library — master everything core.</p>
+    <ul>
+      <li>JSX, Components, Props, State, Lifecycle</li>
+      <li>useState, useEffect, useRef, useReducer</li>
+      <li>Forms, Controlled vs Uncontrolled Components</li>
+      <li>Lists, Keys, Conditional Rendering</li>
+      <li>Context API, Composition Patterns</li>
+      <li>Event Handling, Synthetic Events</li>
+      <li>Portals, Refs, Forward Refs</li>
+      <li>Error Boundaries, Code Splitting</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you explain the React component lifecycle and how hooks replace lifecycle methods?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-4">
+  <div class="phase-header">
+    <span class="phase-number">4</span>
+    <span class="phase-title">Phase 4: React Advanced</span>
+    <span class="phase-time">2-3 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Performance optimization, patterns, and architecture — differentiator for senior roles.</p>
+    <ul>
+      <li>React.memo, useMemo, useCallback — when to use</li>
+      <li>Custom Hooks — design patterns and reusability</li>
+      <li>Render Props vs HOCs vs Hooks</li>
+      <li>Suspense, Concurrent Features, Transitions</li>
+      <li>React Fiber Architecture deep dive</li>
+      <li>Reconciliation, Diffing Algorithm, Keys</li>
+      <li>Virtual DOM vs Shadow DOM</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you explain when useMemo/useCallback are actually beneficial vs over-engineering?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-5">
+  <div class="phase-header">
+    <span class="phase-number">5</span>
+    <span class="phase-title">Phase 5: Next.js</span>
+    <span class="phase-time">3-4 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> The React framework — essential for modern production applications.</p>
+    <ul>
+      <li>App Router vs Pages Router</li>
+      <li>Server Components vs Client Components</li>
+      <li>SSR, SSG, ISR — when to use each</li>
+      <li>Data Fetching patterns in App Router</li>
+      <li>Layouts, Templates, Loading UI, Error UI</li>
+      <li>Middleware, Route Handlers, API Routes</li>
+      <li>Authentication, Caching, Revalidation</li>
+      <li>Streaming, Partial Prerendering</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you explain the difference between Server Components and Client Components and when to use each?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-6">
+  <div class="phase-header">
+    <span class="phase-number">6</span>
+    <span class="phase-title">Phase 6: CSS & Styling</span>
+    <span class="phase-time">2 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Styling modern React applications — Tailwind, CSS-in-JS, design systems.</p>
+    <ul>
+      <li>Tailwind CSS — utility-first workflow</li>
+      <li>CSS Modules, CSS-in-JS (Styled Components, Emotion)</li>
+      <li>Responsive Design, Mobile-First Approach</li>
+      <li>Flexbox, CSS Grid — layouts mastery</li>
+      <li>Animations, Transitions, Keyframes</li>
+      <li>Theming, Dark Mode, Design Tokens</li>
+      <li>Design Systems with Storybook</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you build a responsive layout using CSS Grid and Tailwind? Can you explain CSS Modules vs Styled Components trade-offs?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-7">
+  <div class="phase-header">
+    <span class="phase-number">7</span>
+    <span class="phase-title">Phase 7: State Management</span>
+    <span class="phase-time">2 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Managing state at scale — from local to global to server state.</p>
+    <ul>
+      <li>Redux Toolkit — Redux architecture, slices, thunks</li>
+      <li>Zustand — lightweight global state</li>
+      <li>Context API — when it's enough, when it's not</li>
+      <li>React Query / TanStack Query — server state management</li>
+      <li>Jotai / Recoil — atomic state management</li>
+      <li>URL State, Form State, Async State patterns</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you compare Redux Toolkit vs Zustand vs Context API and recommend when to use each?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-8">
+  <div class="phase-header">
+    <span class="phase-number">8</span>
+    <span class="phase-title">Phase 8: Testing</span>
+    <span class="phase-time">2-3 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Building reliable React applications through comprehensive testing.</p>
+    <ul>
+      <li>Jest + React Testing Library — unit & integration tests</li>
+      <li>Testing components, hooks, context, async logic</li>
+      <li>Mocking strategies (jest.mock, MSW)</li>
+      <li>Playwright for E2E testing</li>
+      <li>Accessibility testing (axe, jest-axe)</li>
+      <li>Snapshot testing, Visual regression testing</li>
+      <li>Test coverage strategies, CI/CD integration</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you design a testing strategy for a complex React application with E2E, integration, and unit tests?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-9">
+  <div class="phase-header">
+    <span class="phase-number">9</span>
+    <span class="phase-title">Phase 9: Build Tools & DevOps</span>
+    <span class="phase-time">2 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Tooling and deployment — bundlers, CI/CD, hosting platforms.</p>
+    <ul>
+      <li>Vite vs Webpack — configuration and optimization</li>
+      <li>Babel, ESLint, Prettier — code quality toolchain</li>
+      <li>CI/CD pipelines for frontend (GitHub Actions, GitLab CI)</li>
+      <li>Docker for frontend development</li>
+      <li>Vercel, Netlify, AWS deployment strategies</li>
+      <li>Monorepos (Turborepo, Nx)</li>
+      <li>Bundle analysis, Code Splitting strategies</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you configure a Vite + React project from scratch with ESLint, Prettier, and testing?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-10">
+  <div class="phase-header">
+    <span class="phase-number">10</span>
+    <span class="phase-title">Phase 10: System Design for Frontend</span>
+    <span class="phase-time">2-3 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Architecting scalable frontend systems — differentiator for Staff+ roles.</p>
+    <ul>
+      <li>Frontend Architecture patterns (monolith, micro-frontends)</li>
+      <li>Performance optimization (Core Web Vitals, LCP, CLS, INP)</li>
+      <li>Security (XSS, CSRF, CSP, Auth patterns)</li>
+      <li>Accessibility (WCAG, ARIA, screen readers)</li>
+      <li>SEO optimization for SPAs and Next.js</li>
+      <li>CDN strategies, Edge computing, PWA</li>
+      <li>Error tracking, monitoring, observability</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you design a large-scale React application architecture that handles 10M+ users?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-11">
+  <div class="phase-header">
+    <span class="phase-number">11</span>
+    <span class="phase-title">Phase 11: Behavioral & Company-Specific</span>
+    <span class="phase-time">2 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Behavioral stories, company research, and interview preparation.</p>
+    <ul>
+      <li>STAR Method — mastering behavioral questions</li>
+      <li>Amazon Leadership Principles for frontend roles</li>
+      <li>Google Googleyness and Product Sense</li>
+      <li>React-specific architectural decision stories</li>
+      <li>Conflict resolution, code reviews, mentorship</li>
+      <li>Production incident stories</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you tell 7-8 STAR stories with quantified impact from your React projects?</p>
+  </div>
+</div>
+
+<div class="phase-card phase-12">
+  <div class="phase-header">
+    <span class="phase-number">12</span>
+    <span class="phase-title">Phase 12: Coding Interview Preparation</span>
+    <span class="phase-time">3-4 weeks</span>
+  </div>
+  <div class="phase-content">
+    <p><strong>Focus:</strong> Putting it all together — DSA, frontend-specific coding, mock interviews.</p>
+    <ul>
+      <li>Master P1 questions from all 12 topic areas</li>
+      <li>DSA fundamentals: arrays, strings, linked lists, trees, DP</li>
+      <li>Frontend-specific: debounce, throttle, Promise.all, deep clone</li>
+      <li>React-specific: custom hooks, component design, state management</li>
+      <li>Practice whiteboarding system design</li>
+      <li>Mock interviews (at least 3-5 with feedback)</li>
+      <li>One-page revision guides per topic</li>
+    </ul>
+    <p style="margin-top:12px"><strong>Readiness Checkpoint:</strong> Can you solve Two Sum, Valid Parentheses, and implement debounce in 15 minutes each?</p>
+  </div>
+</div>
+
+</div>
+
+<div class="section-divider"><h2>💰 Salary Progression Roadmap</h2></div>
+<div class="container">
+<div class="salary-grid">
+  <div class="salary-card"><div class="level">Level 1</div><div class="title">Junior Frontend Developer</div><div class="range">$60k – $85k</div></div>
+  <div class="salary-card"><div class="level">Level 2</div><div class="title">Frontend Developer</div><div class="range">$85k – $115k</div></div>
+  <div class="salary-card"><div class="level">Level 3</div><div class="title">Senior Frontend Engineer</div><div class="range">$115k – $160k</div></div>
+  <div class="salary-card"><div class="level">Level 4</div><div class="title">Staff Frontend Engineer</div><div class="range">$160k – $210k</div></div>
+  <div class="salary-card"><div class="level">Level 5</div><div class="title">Principal / React Architect</div><div class="range">$210k – $280k+</div></div>
+</div>
+<p style="color:var(--text-muted);font-size:13px;text-align:center;margin-top:8px">* US-based ranges for FAANG and product-based companies. Adjusted for cost of living and company size.</p>
+</div>
+
+<div class="section-divider"><h2>📂 Study Kit Contents</h2></div>
+<div class="container">
+<div class="file-list">
+  <div class="file-item"><strong>Phase 1-2</strong><br>JavaScript + TypeScript</div>
+  <div class="file-item"><strong>Phase 3-4</strong><br>React Core + Advanced</div>
+  <div class="file-item"><strong>Phase 5</strong><br>Next.js Interview Mastery</div>
+  <div class="file-item"><strong>Phase 6</strong><br>CSS & Styling</div>
+  <div class="file-item"><strong>Phase 7</strong><br>State Management</div>
+  <div class="file-item"><strong>Phase 8</strong><br>Testing</div>
+  <div class="file-item"><strong>Phase 9</strong><br>Build Tools & DevOps</div>
+  <div class="file-item"><strong>Phase 10</strong><br>System Design for Frontend</div>
+  <div class="file-item"><strong>Phase 11</strong><br>Behavioral + Company-Specific</div>
+  <div class="file-item"><strong>Phase 12</strong><br>Coding Interview Problems</div>
+</div>
+</div>
+
+<div class="end-section">
+  <h2>🎯 Your Path to Frontend Success</h2>
+  <p>
+    <strong>Study Plan:</strong> Dedicate 1-2 hours daily for 12-16 weeks to complete all 12 phases.<br>
+    <strong>Focus on P1 questions first</strong> — these cover 80% of interview scenarios.<br>
+    <strong>Practice STAR stories</strong> — behavioral rounds often decide senior-level offers.<br>
+    <strong>Build a portfolio</strong> — a complete Next.js + Tailwind + TypeScript project deployed on Vercel.<br>
+    <strong>Stay current</strong> — Server Components, React 19 features, and AI integration are becoming mandatory for senior roles.
+  </p>
+</div>
+
+</body>
+</html>

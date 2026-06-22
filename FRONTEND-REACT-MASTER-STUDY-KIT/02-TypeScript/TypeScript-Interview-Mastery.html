@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript Interview Mastery — Frontend React Study Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/nebula.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 30% 50%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 70% 50%, rgba(129, 140, 248, 0.05) 0%, transparent 50%);
+  }
+  .cover-title { background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .cover-divider { background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%); }
+  .section-divider h2 { background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .q-number { background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%); }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Frontend React Master Study Kit</div>
+  <h1 class="cover-title">TypeScript Interview Mastery</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">40 High-Value Questions for Senior Frontend React Developer Interviews</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">P1 — Must Know</span></div>
+    <div class="cover-meta-item"><span class="number">18</span><span class="label">P2 — Commonly Asked</span></div>
+    <div class="cover-meta-item"><span class="number">7</span><span class="label">P3 — Valuable Context</span></div>
+    <div class="cover-meta-item"><span class="number">40</span><span class="label">Total Retained</span></div>
+  </div>
+  <p class="cover-description" style="margin-top: 30px;">
+    TypeScript mastery for React developers. Covers interfaces, types, generics, utility types, mapped types,
+    conditional types, and React-specific patterns with generics, props typing, and type-safe hooks.
+  </p>
+</div>
+
+<div class="container"><h2 style="font-size: 24px; margin-bottom: 24px; color: var(--accent-blue);">Table of Contents</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 40px;">
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-red);">P1</strong> — Questions 1–15: Frequently Asked</div>
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-orange);">P2</strong> — Questions 16–33: Commonly Asked</div>
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-blue);">P3</strong> — Questions 34–40: Valuable Context</div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P1 — Frequently Asked Questions</h2><p>You MUST know these for any React + TypeScript role.</p></div>
+
+<div class="container">
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">1</span><div><span class="q-text">What are the advantages of TypeScript over JavaScript for React projects?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>TypeScript adds: catching bugs at compile time, better IDE support (autocomplete, refactoring), self-documenting code through types, safer refactoring, and catching null/undefined errors. For React: typed props prevent passing wrong data, typed state prevents invalid state transitions, and typed events prevent handler errors.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">2</span><div><span class="q-text">Explain the difference between <code>interface</code> and <code>type</code> alias. When to use each in React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Both define shapes. Key differences: interfaces can be extended (declaration merging), types can do unions/intersections (more flexible). React convention: use <code>interface</code> for public API (props, state) and <code>type</code> for unions, complex types, and utility types. But consistency matters more.</p></div>
+    <div class="code-block">
+<span class="keyword">interface</span> ButtonProps {
+  variant: <span class="string">'primary'</span> | <span class="string">'secondary'</span>;
+  children: ReactNode;
+  onClick?(): <span class="keyword">void</span>;
+}
+
+<span class="keyword">type</span> Status = <span class="string">'idle'</span> | <span class="string">'loading'</span> | <span class="string">'success'</span> | <span class="string">'error'</span>;
+<span class="keyword">type</span> ApiResponse<T> = { data: T; status: Status };
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">3</span><div><span class="q-text">What are generics? Implement a generic React component.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Generics parameterize types, allowing components to work with different types safely. Essential for reusable React components like lists, tables, and selects.</p></div>
+    <div class="code-block">
+<span class="keyword">interface</span> ListProps<T> {
+  items: T[];
+  renderItem: (item: T) => ReactNode;
+  keyExtractor: (item: T) => string;
+}
+
+<span class="keyword">function</span> List<T>({ items, renderItem, keyExtractor }: ListProps<T>) {
+  <span class="keyword">return</span> (
+    &lt;ul&gt;
+      {items.map(item => (
+        &lt;li key={keyExtractor(item)}&gt;{renderItem(item)}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">4</span><div><span class="q-text">What are union types and intersection types? Give React examples.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Union (<code>|</code>): value can be one of several types. Intersection (<code>&</code>): value must satisfy all types. In React: unions for component variants, intersection for extending props.</p></div>
+    <div class="code-block">
+<span class="keyword">type</span> ButtonVariant = <span class="string">'primary'</span> | <span class="string">'secondary'</span> | <span class="string">'ghost'</span>;
+<span class="keyword">type</span> WithChildren<T> = T & { children: ReactNode };
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">5</span><div><span class="q-text">Explain utility types: <code>Partial</code>, <code>Required</code>, <code>Pick</code>, <code>Omit</code>, <code>Record</code>, <code>Readonly</code>.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Partial<T></code> — all optional. <code>Required<T></code> — all required. <code>Pick<T, K></code> — select keys. <code>Omit<T, K></code> — exclude keys. <code>Record<K, V></code> — key-value mapping. <code>Readonly<T></code> — all readonly. In React: <code>Partial</code> for form updates, <code>Pick/Omit</code> for prop subsets, <code>Record</code> for lookup maps.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">6</span><div><span class="q-text">What is the difference between <code>any</code> and <code>unknown</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>any</code> opts out of type checking entirely. <code>unknown</code> is type-safe — you must narrow it before use (typeof, type guard, assertion). Always prefer <code>unknown</code> over <code>any</code> in React code. Use <code>unknown</code> for API responses, form data, and external inputs that need runtime validation.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">7</span><div><span class="q-text">How does TypeScript handle type inference? When should you use explicit typing in React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>TypeScript infers types from values. Always type function parameters and return types explicitly. Use inference for local variables, useState initial values, and simple data structures. In React, always type props, state, and event handlers explicitly.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">8</span><div><span class="q-text">What are mapped types? Create a custom mapped type for React.</span><span class="q-badge badge-expert">Expert</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Mapped types create new types by transforming properties of an existing type. Useful for creating variant props, state types, and theme types in React.</p></div>
+    <div class="code-block">
+<span class="keyword">type</span> Theme = { primary: string; secondary: string; background: string };
+<span class="keyword">type</span> ThemeToken = <span class="string">`--color-${keyof Theme & string}`</span>;
+<span class="keyword">type</span> ThemeVars = Record<ThemeToken, string>;
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">9</span><div><span class="q-text">What are conditional types? Explain with <code>infer</code> keyword.</span><span class="q-badge badge-expert">Expert</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Conditional types select types based on conditions: <code>T extends U ? X : Y</code>. The <code>infer</code> keyword allows extracting types from complex structures. Used in React types like <code>ComponentProps</code>, <code>ReturnType</code>, and extracting prop types.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">10</span><div><span class="q-text">How do you type API responses in React? Design a generic API response type.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Use discriminated unions for API states and generics for type-safe data.</p></div>
+    <div class="code-block">
+<span class="keyword">type</span> ApiState<T> =
+  | { status: <span class="string">'idle'</span> }
+  | { status: <span class="string">'loading'</span> }
+  | { status: <span class="string">'success'</span>; data: T }
+  | { status: <span class="string">'error'</span>; error: string };
+
+<span class="keyword">function</span> useApi<T>(url: string): ApiState<T> {
+  <span class="comment">// Implementation</span>
+}
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">11</span><div><span class="q-text">What are type guards? Create a custom type guard for React.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Type guards narrow types at runtime. Common guards: <code>typeof</code>, <code>instanceof</code>, <code>in</code>, discriminated unions. Custom guards use <code>is</code> return type. In React, useful for type-safe event handlers, form validation, and conditional rendering.</p></div>
+    <div class="code-block">
+<span class="keyword">interface</span> SuccessResponse { status: <span class="string">'ok'</span>; data: unknown; }
+<span class="keyword">interface</span> ErrorResponse { status: <span class="string">'error'</span>; message: string; }
+<span class="keyword">type</span> ApiResponse = SuccessResponse | ErrorResponse;
+
+<span class="keyword">function</span> isSuccess(response: ApiResponse): response is SuccessResponse {
+  <span class="keyword">return</span> response.status === <span class="string">'ok'</span>;
+}
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">12</span><div><span class="q-text">How do access modifiers (<code>public</code>, <code>private</code>, <code>protected</code>) work in TypeScript classes?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>TypeScript access modifiers control visibility with class-based components (legacy). With hooks, classes are less common, but understanding them helps with legacy codebases and some library APIs. <code>public</code> — accessible anywhere (default). <code>private</code> — only within the class. <code>protected</code> — within class and subclasses.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">13</span><div><span class="q-text">What are abstract classes vs interfaces in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Abstract classes can have implementation. Interfaces are purely structural. In React, prefer interfaces for component contracts. Abstract classes are useful for class-based service layers or test utilities.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">14</span><div><span class="q-text">Explain <code>keyof</code> operator and how it works with generics in React.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>keyof T</code> yields a union of T's keys. Used in React for: type-safe form field names, sorting by keys, and generic table/component columns. <code>keyof typeof</code> pattern creates types from const objects.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">15</span><div><span class="q-text">What are discriminated unions? How do they enable type-safe state in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Discriminated unions use a literal property (discriminant) to differentiate between types. TypeScript narrows based on the discriminant. In React, they're the gold standard for modeling complex state: form states, multi-step wizards, API response states.</p></div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P2 — Commonly Asked Questions</h2></div>
+
+<div class="container">
+  <div class="question-card"><div class="q-header"><span class="q-number">16</span><div><span class="q-text">What is <code>enum</code>? Compare numeric, string, and const enums.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Enums define named constants. Numeric enums auto-increment. String enums require explicit values. Const enums are compiled away (no runtime overhead). In React, union types (<code>'a' | 'b'</code>) are often preferred over enums for props because they're more tree-shakable.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">17</span><div><span class="q-text">What are literal types? Give a React example.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Literal types are exact values: <code>'primary' | 'secondary'</code>, <code>true</code>, <code>42</code>. Used in React for component props where only specific values are valid. Combined with <code>as const</code> for type-safe configurations.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">18</span><div><span class="q-text">What is the <code>satisfies</code> operator? When to use it?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>satisfies</code> checks a value matches a type WITHOUT widening. Keeps the most specific type for inference while validating against a broader type. In React: validating theme objects, config objects, or tailwind config extensions.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">19</span><div><span class="q-text">What are template literal types? Give a real React example.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Template literal types create string types using template syntax: <code>type EventName = `on${Capitalize<string>}`</code>. In React: creating type-safe CSS class builders, event handler names, or Tailwind CSS class generation.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">20</span><div><span class="q-text">What are tuple types and variadic tuple types?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Tuples are fixed-length arrays with typed positions: <code>[string, number]</code>. Variadic tuples (<code>[...T[], U]</code>) handle dynamic lengths. In React: useState returns a tuple <code>[T, Dispatch<T>]</code>, useReducer returns <code>[T, Dispatch]</code>.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">21</span><div><span class="q-text">How does TypeScript handle async/await return types?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>An <code>async</code> function always returns <code>Promise<T></code>. The <code>T</code> is inferred from the return value. In React: <code>useEffect</code> callbacks can't be async directly (they return cleanup, not Promise). Define async function inside and call it.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">22</span><div><span class="q-text">What is the <code>never</code> type? When does it occur in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>never</code> represents values that never occur. Used in: exhaustive checks in switch statements (discriminated unions), unreachable code after TypeScript narrowing, and generic utility types. In React: exhaustive check on enum-like props, exhaustive reducer cases.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">23</span><div><span class="q-text">How do you type event handlers in React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>React provides synthetic event types: <code>React.MouseEvent<HTMLButtonElement></code>, <code>React.ChangeEvent<HTMLInputElement></code>, <code>React.FormEvent<HTMLFormElement></code>, <code>React.KeyboardEvent<HTMLDivElement></code>. Use <code>React.EventHandler<></code> for callback types.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">24</span><div><span class="q-text">How do you design type-safe Page Objects or component tests in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Use generics to create type-safe test utilities. Examples: type-safe render helpers, type-safe query functions, and type-safe test data factories.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">25</span><div><span class="q-text">Explain <code>as const</code> assertions and their use in React.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>as const</code> marks values as readonly literal types. In React: defining variant mappings, color palettes, action types, and configuration objects where exact values must be preserved for type inference.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">26</span><div><span class="q-text">What is module resolution? How does <code>paths</code> mapping work in <code>tsconfig.json</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Module resolution determines how imports are found. <code>paths</code> in tsconfig.json creates aliases: <code>"@components/*": ["src/components/*"]</code>. In React projects, path aliases simplify imports: <code>import Button from '@components/Button'</code> instead of <code>../../components/Button</code>.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">27</span><div><span class="q-text">How do you create a type-safe configuration system for React apps?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Use <code>as const</code> + <code>satisfies</code> + <code>typeof</code> to create type-safe configs. Example: environment variable validation, feature flags, theme configurations, and API endpoint definitions.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">28</span><div><span class="q-text">What is <code>NonNullable</code> and how does it prevent null reference errors?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>NonNullable<T></code> removes <code>null</code> and <code>undefined</code> from <code>T</code>. In React: useful for removing null from optional callbacks, cleaning up types from API responses, and ensuring safe access to element refs.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">29</span><div><span class="q-text">How do decorators work in TypeScript? React use case?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Decorators are annotations for classes (experimental in TS). Used in legacy class-based React components for HOCs, MobX observables, and Angular-like patterns. Not commonly used in modern functional React.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">30</span><div><span class="q-text">What is <code>Extract</code> and <code>Exclude</code> utility types?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Extract<T, U></code> — extracts types from T that are assignable to U. <code>Exclude<T, U></code> — removes types from T that are assignable to U. In React: filtering union types for conditional props, removing certain variants from component prop types.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">31</span><div><span class="q-text">How does <code>typeof</code> work in type context vs value context?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>In value context: returns runtime type string. In type context (<code>typeof x</code>): returns the TypeScript type of <code>x</code>. Used to extract types from values, modules, and configuration objects. <code>typeof import('./module')</code> gives module type.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">32</span><div><span class="q-text">What is <code>InstanceType</code> and when would you use it?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>InstanceType<T></code> extracts the instance type from a constructor type. Useful for typing class instances and inferring component prop types from class components (legacy React).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">33</span><div><span class="q-text">What are <code>Parameters</code> and <code>ReturnType</code> utility types?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Parameters<T></code> — extracts parameter types as a tuple. <code>ReturnType<T></code> — extracts the return type. In React: typing wrapper components that spread props, creating typed event handler generics, and extracting API function signatures.</p></div></div>
+</div>
+
+<div class="section-divider"><h2>P3 — Occasionally Asked (Valuable Context)</h2></div>
+
+<div class="container">
+  <div class="question-card"><div class="q-header"><span class="q-number">34</span><div><span class="q-text">How do you create a deep <code>Partial</code> or deep <code>Readonly</code> type?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Use recursive mapped types: <code>type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T</code>. In React: form state with nested objects, deeply nested theme overrides.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">35</span><div><span class="q-text">What is brand/nominal typing in TypeScript? How do you implement it?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Brand typing creates distinct types from the same primitive: <code>type UserId = string & { __brand: 'UserId' }</code>. Prevents passing wrong ID types accidentally. In React: type-safe IDs for different entities in state management.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">36</span><div><span class="q-text">How does declaration merging work with interfaces?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Multiple interface declarations with the same name merge into one. Types don't merge. In React: used to extend module typings (e.g., adding to <code>Window</code>, augmenting CSS properties). Also used by libraries like Styled Components for theme augmentation.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">37</span><div><span class="q-text">What are call signatures and construct signatures?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Call signatures describe a function's params and return type. Construct signatures describe a constructor with <code>new</code>. Used when typing function overloads, factory patterns, and some React component patterns (like <code>React.FC</code> type).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">38</span><div><span class="q-text">How do you type dynamic object keys in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Use index signatures: <code>{ [key: string]: T }</code> or <code>Record<string, T></code>. For specific keys from a union: <code>type ValidKeys = 'name' | 'email'; type FormState = Record<ValidKeys, string></code>. In React: dynamic form state, lookup tables, error messages object.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">39</span><div><span class="q-text">How do you type <code>children</code> in React? Compare <code>ReactNode</code> vs <code>ReactElement</code> vs <code>JSX.Element</code>.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>ReactNode</code> — most permissive (includes strings, numbers, null, undefined, arrays, portals). <code>ReactElement</code> — only JSX elements with type and props. <code>JSX.Element</code> — a ReactElement with any props. For most components, use <code>ReactNode</code> for children.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">40</span><div><span class="q-text">How do you type React hooks with generics?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Custom hooks can use generics for type-safe return values. Example: <code>useLocalStorage<T>(key: string, initial: T): [T, (value: T) => void]</code>, <code>useFetch<T>(url: string): ApiState<T></code>, <code>useForm<T extends Record<string, unknown>>(initial: T)</code>.</p></div></div>
+</div>
+
+<div class="end-section">
+  <h2>🎯 Most Frequently Asked TypeScript Questions</h2>
+  <div class="styled-table">
+    <thead><tr><th>Rank</th><th>Topic</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Interface vs Type</td><td>Every TypeScript interview</td></tr>
+      <tr><td>2</td><td>Generics</td><td>Nearly every React + TS role</td></tr>
+      <tr><td>3</td><td>Utility Types (Pick, Omit, Partial)</td><td>Very common</td></tr>
+      <tr><td>4</td><td>Union/Discriminated Unions</td><td>Essential for state modeling</td></tr>
+      <tr><td>5</td><td>Type Guards + Narrowing</td><td>Common in senior roles</td></tr>
+    </tbody>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

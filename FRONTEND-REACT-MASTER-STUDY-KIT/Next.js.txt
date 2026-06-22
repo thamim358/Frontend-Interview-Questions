@@ -1,0 +1,120 @@
+Next.js Interview Questions (120+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect
+
+SECTION 1: Next.js Fundamentals
+What is Next.js? Problems it solves?
+App Router vs Pages Router — key differences?
+File-based routing — how it works?
+Next.js vs plain React — when to use Next.js?
+Vercel — creator and deployment platform?
+
+SECTION 2: Routing
+App Router file conventions — layout, page, loading, error, not-found?
+Dynamic routes — [slug], [...catchAll], [[...optionalCatchAll]]?
+Route groups — (marketing), (shop)?
+Parallel routes — @modal, @sidebar?
+Intercepting routes — (.)photo, (..)feed?
+Nested layouts — persistent across navigations?
+Templates — remount on each navigation?
+
+SECTION 3: Server Components vs Client Components
+Server Components — default, run on server, no JS in browser?
+Client Components — 'use client' directive, interactive?
+When to use each — practical decision guide?
+Server Components benefits — smaller bundle, database access?
+Client Components limitations — more JS sent to browser?
+Mixing Server and Client Components — composition patterns?
+
+SECTION 4: Data Fetching
+fetch() in Server Components — async component?
+Caching — force-cache, no-store, next.revalidate?
+Parallel data fetching — Promise.all()?
+Sequential data fetching — dependent requests?
+generateStaticParams — pre-rendering dynamic routes?
+Static Data Cache — how it works?
+Full Route Cache — what gets cached?
+Router Cache — client-side navigation cache?
+Revalidation — time-based (revalidate) and on-demand (revalidatePath, revalidateTag)?
+
+SECTION 5: Rendering Strategies
+Static Site Generation (SSG) — pre-rendered at build time?
+Server-Side Rendering (SSR) — rendered per request?
+Incremental Static Regeneration (ISR) — static + periodic revalidation?
+Streaming — progressive HTML delivery?
+Partial Prerendering (PPR) — static shell + dynamic holes?
+Dynamic functions — cookies(), headers(), searchParams make routes dynamic?
+Edge Runtime vs Node.js Runtime?
+
+SECTION 6: Layouts & Templates
+RootLayout — shared across all routes?
+Nested layouts — layout.tsx in each folder?
+Loading UI — loading.tsx with Suspense?
+Error UI — error.tsx with Error Boundaries?
+Not Found — not-found.tsx?
+Templates — template.tsx differs from layout.tsx?
+
+SECTION 7: Middleware
+middleware.ts — runs on every request (Edge)?
+Use cases — redirects, auth checks, A/B testing, geolocation?
+config.matcher — matching specific paths?
+Reading/setting cookies and headers?
+Response rewriting (NextResponse.rewrite)?
+
+SECTION 8: Route Handlers & Server Actions
+Route Handlers — route.ts for API endpoints?
+GET, POST, PUT, PATCH, DELETE handlers?
+Request and response typing?
+Server Actions — 'use server' functions?
+Form actions — <form action={serverAction}>?
+useFormStatus — pending state?
+useOptimistic — optimistic updates?
+Server Actions vs Route Handlers — when to use each?
+
+SECTION 9: Authentication & Authorization
+Auth.js (NextAuth.js) — most popular?
+Clerk, Supabase Auth, Lucia Auth?
+Middleware-based auth — protecting routes?
+Server-side auth — session reading in Server Components?
+OAuth, JWT, session-based auth — trade-offs?
+
+SECTION 10: Metadata & SEO
+Static metadata — export const metadata?
+Dynamic metadata — generateMetadata()?
+Open Graph images — @vercel/og?
+Sitemap generation — sitemap.ts?
+Robots.txt — robots.ts?
+Canonical URLs, hreflang tags?
+Structured data — JSON-LD?
+
+SECTION 11: Images & Fonts
+next/image — automatic optimization?
+Remote images — remotePatterns config?
+Responsive images — sizes attribute?
+Placeholder blur — blurDataURL?
+next/font — Google Fonts optimization?
+Font subsetting and variable fonts?
+
+SECTION 12: Caching Deep Dive
+Data Cache — fetch results caching?
+Full Route Cache — static HTML caching?
+Router Cache — client-side prefetching?
+Revalidation strategies — time vs on-demand?
+Cache invalidation — revalidatePath, revalidateTag?
+Opting out of cache — dynamic routes?
+
+SECTION 13: Performance & Optimization
+Bundle size analysis?
+Code splitting — automatic per route?
+Image optimization?
+Font optimization?
+Script optimization — next/script?
+Lazy loading — dynamic imports?
+Edge Functions for low-latency?
+
+SECTION 14: Testing & Deployment
+Testing Next.js — RTL + Playwright?
+Vercel deployment — git push?
+Self-hosting — Docker, Node.js server?
+Environment variables — NEXT_PUBLIC_ prefix?
+Preview deployments — per PR?
+Analytics — @vercel/analytics?

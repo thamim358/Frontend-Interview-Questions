@@ -1,0 +1,158 @@
+JavaScript ES6+ Interview Questions (200+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect • UI Engineer
+
+SECTION 1: JavaScript Fundamentals
+What is JavaScript?
+What are the data types in JavaScript?
+Primitive vs non-primitive types?
+Dynamic vs static typing?
+undefined vs null?
+NaN — how to check?
+typeof operator quirks (typeof null)?
+Strict mode?
+Variable declarations — var, let, const?
+Temporal Dead Zone?
+Block scope vs function scope vs global scope?
+Lexical scope?
+
+SECTION 2: Operators & Coercion
+== vs === — when to use each?
+Type coercion — implicit vs explicit?
+Truthy vs falsy values?
+Short-circuit evaluation (&&, ||)?
+Nullish coalescing (??) vs OR (||)?
+Optional chaining (?.)?
+Spread operator vs rest operator?
+Destructuring arrays and objects?
+
+SECTION 3: Functions
+Function declaration vs expression?
+Arrow functions vs regular functions?
+IIFE (Immediately Invoked Function Expression)?
+Callback functions?
+Higher-order functions?
+Pure vs impure functions — why matters for React?
+Currying — use in React configuration?
+Memoization — implement memoize?
+Recursion — flatten array recursively?
+
+SECTION 4: Closures & Scope
+What is a closure?
+Closures in React — useEffect, custom hooks?
+Stale closure problem — how to fix?
+Closure in event handlers?
+Closure with setTimeout — loop problem?
+Memory leaks from closures?
+
+SECTION 5: Execution Context & Hoisting
+Execution context — creation vs execution phase?
+Call stack?
+Hoisting — var, let, const, function declarations?
+Temporal Dead Zone?
+Hoisting order in React components?
+
+SECTION 6: The this Keyword
+Default binding — global/undefined in strict mode?
+Implicit binding — object before dot?
+Explicit binding — call, apply, bind?
+Arrow function this — lexical scoping?
+new binding?
+Priority order of this rules?
+
+SECTION 7: Prototypes & Inheritance
+Prototype chain?
+__proto__ vs prototype?
+Prototypal inheritance?
+Object.create()?
+Class syntax (syntactic sugar)?
+How prototypes relate to React synthetic events?
+
+SECTION 8: Arrays
+map(), filter(), reduce() — React rendering examples?
+forEach() vs map() — when to use each?
+splice() vs slice() — immutability in React?
+find(), findIndex(), some(), every()?
+flat(), flatMap() — flattening nested data?
+Removing duplicates — Set vs filter?
+Array.isArray() vs instanceof?
+Flatten nested array?
+
+SECTION 9: Strings & Template Literals
+Template literals — React dynamic classes, URLs?
+Tagged templates — CSS-in-JS?
+String methods — split, replace, includes, match?
+
+SECTION 10: Objects
+Object.freeze() vs seal() vs preventExtensions()?
+Shallow vs deep clone — structuredClone()?
+JSON.parse(JSON.stringify()) — limitations?
+Object.keys(), values(), entries()?
+Object.create(null) — safe dictionaries?
+Property descriptors?
+
+SECTION 11: ES6+ Features
+Modules — import/export?
+Default vs named exports?
+Dynamic imports — React.lazy?
+Maps, WeakMaps, Sets, WeakSets?
+Symbols — React use ($$typeof)?
+Generators and iterators?
+Proxy API — Immer use case?
+Reflect API?
+
+SECTION 12: Promises
+Promise states — pending, fulfilled, rejected?
+Promise chaining?
+Promise.all() vs allSettled() vs race() vs any()?
+Error handling — .catch() vs try/catch with async/await?
+Promise.all — implement polyfill?
+Promise in React — data fetching patterns?
+
+SECTION 13: Async/Await
+async function return type?
+Await — does it block?
+Error handling with try/catch?
+Parallel vs sequential execution?
+Async/await in useEffect?
+AbortController for fetch cancellation?
+Loop with async — sequential vs parallel?
+
+SECTION 14: Event Loop
+Call Stack?
+Microtask queue (Promise callbacks)?
+Macrotask queue (setTimeout, setInterval)?
+Execution order — sync > microtask > macrotask?
+setTimeout vs setInterval?
+requestAnimationFrame?
+Event loop in React — state batching?
+Why setState batching uses microtasks?
+
+SECTION 15: DOM & Events
+Event bubbling vs capturing?
+Event delegation?
+Synthetic Events in React?
+stopPropagation() vs stopImmediatePropagation()?
+DOM traversal and manipulation?
+Shadow DOM vs Virtual DOM?
+
+SECTION 16: Browser Storage
+localStorage vs sessionStorage vs cookies?
+Storage limits?
+Using localStorage for theme/auth in React?
+IndexedDB — Dexie.js?
+
+SECTION 17: Coding Questions
+Two Sum.
+Valid Parentheses.
+Palindrome.
+Anagram.
+Fibonacci.
+Remove Duplicates.
+Find Missing Number.
+Flatten Array.
+Deep Clone Object.
+Debounce Function.
+Throttle Function.
+Implement Promise.all().
+Implement map polyfill.
+Implement bind polyfill.

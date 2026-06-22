@@ -1,0 +1,89 @@
+System Design for Frontend Interview Questions (80+ Questions)
+Senior Frontend Engineer • React Architect • Staff Frontend Engineer
+
+SECTION 1: Frontend Architecture
+Designing a large-scale React application (10M+ users)?
+Micro-frontends — when to use? Trade-offs?
+Monorepo architecture — Turborepo/Nx setup?
+Component library architecture — design system?
+Feature-based folder structure?
+Module architecture — shared packages, domain separation?
+State architecture — client vs server state separation?
+
+SECTION 2: Performance
+Core Web Vitals — LCP, CLS, INP?
+Optimizing LCP — image optimization, preloading, SSR?
+Preventing CLS — aspect-ratio, font-display, reserved space?
+Improving INP — avoid long tasks, break up computation?
+Code splitting — route-based, component-based, dynamic imports?
+Image optimization — next/image, WebP, responsive sizes, CDN?
+Font optimization — next/font, font-display, variable fonts?
+Virtualization — react-window, react-virtuoso for long lists?
+Bundle analysis — reducing JavaScript size?
+Caching strategies — CDN, service worker, React Query cache?
+
+SECTION 3: Security
+XSS prevention — React's escaping, dangerouslySetInnerHTML, DOMPurify?
+CSRF protection — SameSite cookies, CSRF tokens?
+Content Security Policy (CSP) — restricting script sources?
+Authentication — secure HTTP-only cookies, OAuth2?
+Token management — short-lived access tokens, refresh tokens?
+Input validation — both client and server side?
+HTTPS — always use TLS?
+
+SECTION 4: Accessibility (a11y)
+WCAG 2.1 AA compliance — what it covers?
+Semantic HTML — proper heading hierarchy, landmarks?
+ARIA — roles, states, properties?
+Keyboard navigation — tab order, focus management, skip links?
+Screen reader compatibility — proper labels, announcements?
+Color contrast — minimum 4.5:1 for normal text?
+Accessibility testing — jest-axe, axe-core, manual testing?
+
+SECTION 5: Scalability & Reliability
+Scaling frontend for global audience — CDN, edge computing?
+Monitoring — Sentry, Datadog RUM, LogRocket?
+Error tracking — source maps, error grouping, alerting?
+Performance monitoring — Core Web Vitals in production?
+Feature flags — LaunchDarkly, custom solution?
+A/B testing — experimentation platforms?
+Graceful degradation — fallback UIs, offline support?
+
+SECTION 6: Real-Time Features
+WebSocket architecture — connection management, reconnection?
+Real-time collaboration — CRDT (Yjs) vs OT (ShareDB)?
+Optimistic updates — expected UI, rollback on error?
+Server-Sent Events (SSE) — simpler than WebSocket?
+BroadcastChannel — cross-tab communication?
+
+SECTION 7: State Architecture
+State management at scale — multiple stores, slices?
+Server state management — React Query, caching strategy?
+State normalization — avoiding duplicate data?
+Selectors — memoized derived state at scale?
+Cross-tab state synchronization?
+Offline state — persistence, sync queue, conflict resolution?
+
+SECTION 8: Design Patterns
+Compound components — shared implicit state?
+State reducer pattern?
+Render props vs HOCs vs hooks?
+Container/presentational pattern — before hooks?
+Custom hooks — encapsulating reusable logic?
+Hooks composition — building complex behavior?
+
+SECTION 9: Enterprise Patterns
+Design system architecture — tokens, components, documentation?
+Form system — schema-driven, dynamic, validated?
+Notification system — toast, in-app, real-time?
+Search with autocomplete — debounced, accessible, keyboard navigable?
+Data visualization dashboards — lazy-loaded charts, aggregated data?
+Drag-and-drop — @dnd-kit, sortable, accessible?
+
+SECTION 10: Deployment & Infrastructure
+CI/CD pipeline for frontend — stages, environments?
+Preview deployments — per-PR environments?
+Canary releases — gradual rollout?
+Blue-green deployments — zero-downtime?
+Edge computing — Vercel Edge, Cloudflare Workers?
+CDN strategy — cache static assets, dynamic at edge?

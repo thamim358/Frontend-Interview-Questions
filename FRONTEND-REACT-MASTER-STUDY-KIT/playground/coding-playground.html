@@ -1,0 +1,3163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coding Playground — Frontend React Study Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/nebula.css">
+  <style>
+    /* ============================================================
+       PLAYGROUND SPECIFIC STYLES
+       ============================================================ */
+    :root {
+      --editor-bg: #0a0e1a;
+      --editor-line: #1a2340;
+      --output-bg: #0d1117;
+      --output-text: #c9d1d9;
+      --output-success: #34d399;
+      --output-error: #f87171;
+      --output-warn: #fbbf24;
+    }
+
+    body { padding-bottom: 80px; }
+
+    /* ---- Navigation ---- */
+    .playground-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-bottom: var(--glass-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .playground-nav .logo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-sky);
+      white-space: nowrap;
+    }
+
+    .playground-nav .logo span { color: var(--text-muted); font-weight: 400; }
+
+    .playground-nav .nav-links {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .playground-nav .nav-links a {
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .playground-nav .nav-links a:hover {
+      color: var(--text-primary);
+      border-color: var(--border-default);
+      background: var(--bg-surface);
+    }
+
+    .playground-nav .nav-links a.active {
+      color: var(--accent-sky);
+      border-color: rgba(56, 189, 248, 0.3);
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    /* ---- Section ---- */
+    .pq-section {
+      max-width: var(--content-wide);
+      margin: 0 auto;
+      padding: 32px 24px 16px;
+    }
+
+    .pq-section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .pq-section .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* ---- Question Card ---- */
+    .pq-card {
+      background: var(--bg-card);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: 28px;
+      overflow: hidden;
+      transition: border-color var(--transition-base);
+    }
+    .pq-card:hover { border-color: rgba(56, 189, 248, 0.12); }
+
+    .pq-card-header {
+      padding: 20px 24px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .pq-card-header .qnum {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 34px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--bg-deep);
+      flex-shrink: 0;
+    }
+
+    .pq-card-header .qtext {
+      flex: 1;
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .pq-card-header .qtext code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      color: var(--accent-amber);
+      background: rgba(251, 191, 36, 0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .pq-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .pq-tag {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 2px 10px;
+      border-radius: 50px;
+    }
+    .tag-map { background: rgba(96, 165, 250, 0.12); color: var(--accent-blue); border: 1px solid rgba(96, 165, 250, 0.2); }
+    .tag-filter { background: rgba(52, 211, 153, 0.12); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.2); }
+    .tag-reduce { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.2); }
+    .tag-console { background: rgba(167, 139, 250, 0.12); color: var(--accent-violet); border: 1px solid rgba(167, 139, 250, 0.2); }
+    .tag-array { background: rgba(251, 114, 133, 0.12); color: var(--accent-rose); border: 1px solid rgba(251, 114, 133, 0.2); }
+    .tag-easy { background: rgba(52, 211, 153, 0.12); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.15); }
+    .tag-medium { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.15); }
+    .tag-hard { background: rgba(248, 113, 113, 0.12); color: var(--accent-red); border: 1px solid rgba(248, 113, 113, 0.15); }
+
+    /* ---- Code + Output ---- */
+    .pq-body { padding: 0 24px 20px; }
+
+    .pq-editor {
+      position: relative;
+      background: var(--editor-bg);
+      border: 1px solid rgba(148, 163, 184, 0.08);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .pq-editor textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 16px;
+      background: transparent;
+      border: none;
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      resize: vertical;
+      outline: none;
+      tab-size: 2;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .pq-editor textarea::placeholder {
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .pq-editor .line-numbers {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      padding: 16px 8px;
+      background: rgba(148, 163, 184, 0.03);
+      border-right: 1px solid rgba(148, 163, 184, 0.06);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--text-dim);
+      text-align: right;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .pq-editor textarea { padding-left: 52px; }
+
+    .pq-actions {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(148, 163, 184, 0.02);
+      border-top: 1px solid rgba(148, 163, 184, 0.06);
+      flex-wrap: wrap;
+    }
+
+    .btn-run {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 18px;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .btn-run:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .btn-run:active { transform: translateY(0); }
+
+    .btn-reset {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .btn-reset:hover { border-color: var(--text-dim); color: var(--text-secondary); }
+
+    .btn-toggle-answer {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-left: auto;
+    }
+    .btn-toggle-answer:hover { border-color: rgba(251, 191, 36, 0.3); color: var(--accent-amber); }
+    .btn-toggle-answer.showing { border-color: rgba(251, 191, 36, 0.3); color: var(--accent-amber); }
+
+    .pq-output {
+      padding: 16px;
+      background: var(--output-bg);
+      border-radius: var(--radius-md);
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--output-text);
+      min-height: 40px;
+      display: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid rgba(148, 163, 184, 0.06);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .pq-output.show { display: block; }
+    .pq-output .log-line { color: var(--output-text); }
+    .pq-output .log-error { color: var(--output-error); }
+    .pq-output .log-warn { color: var(--output-warn); }
+    .pq-output .log-info { color: var(--accent-sky); }
+    .pq-output .log-success { color: var(--output-success); }
+
+    /* ---- Answer Reveal ---- */
+    .pq-answer {
+      display: none;
+      margin-top: 10px;
+      padding: 16px 18px;
+      background: rgba(251, 191, 36, 0.03);
+      border: 1px solid rgba(251, 191, 36, 0.12);
+      border-left: 3px solid var(--accent-amber);
+      border-radius: var(--radius-md);
+    }
+    .pq-answer.show { display: block; }
+
+    .pq-answer .answer-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-amber);
+      margin-bottom: 6px;
+    }
+
+    .pq-answer .answer-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .pq-answer .answer-text code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-emerald);
+      background: rgba(52, 211, 153, 0.08);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .pq-answer .answer-explanation {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(251, 191, 36, 0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ---- Global Run All ---- */
+    .run-all-bar {
+      position: sticky;
+      top: 56px;
+      z-index: 99;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-bottom: var(--glass-border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .run-all-bar .info {
+      font-size: 12px;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    /* ---- Filter Bar ---- */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 0 20px;
+    }
+
+    .filter-btn {
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 500;
+      border: 1px solid var(--border-default);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .filter-btn:hover { border-color: var(--text-dim); color: var(--text-secondary); }
+    .filter-btn.active {
+      border-color: var(--accent-sky);
+      color: var(--accent-sky);
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    /* ---- Scroll Spy highlight ---- */
+    .pq-section { scroll-margin-top: 120px; }
+
+    @media (max-width: 768px) {
+      .playground-nav { padding: 10px 16px; }
+      .playground-nav .nav-links a { font-size: 11px; padding: 4px 10px; }
+      .pq-section { padding: 20px 12px 12px; }
+      .pq-card-header { padding: 16px 16px 12px; }
+      .pq-body { padding: 0 16px 16px; }
+      .pq-editor textarea { font-size: 12px; min-height: 80px; }
+      .pq-editor .line-numbers { display: none; }
+      .pq-editor textarea { padding-left: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION BAR
+     ============================================================ -->
+<nav class="playground-nav" id="topNav">
+  <div class="logo">🧪 Playground <span>· Run & Learn</span></div>
+  <div class="nav-links">
+    <a href="#sec-map" class="active">map()</a>
+    <a href="#sec-filter">filter()</a>
+    <a href="#sec-reduce">reduce()</a>
+    <a href="#sec-console">console.log</a>
+    <a href="#sec-array-fundamentals">Array Basics</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     COVER PAGE
+     ============================================================ -->
+<div class="cover-page">
+  <div class="cover-badge">Frontend React Master Study Kit</div>
+  <h1 class="cover-title">Coding Playground</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">Interactive Coding Problems — Run, Test & Learn</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">map()</span></div>
+    <div class="cover-meta-item"><span class="number">12</span><span class="label">filter()</span></div>
+    <div class="cover-meta-item"><span class="number">12</span><span class="label">reduce()</span></div>
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">console.log</span></div>
+    <div class="cover-meta-item"><span class="number">18</span><span class="label">Array Basics</span></div>
+  </div>
+  <p class="cover-description" style="margin-top:30px;">
+    Interactive coding playground with 70+ questions covering <strong>Array.map()</strong>,
+    <strong>Array.filter()</strong>, <strong>Array.reduce()</strong>,
+    tricky <strong>console.log()</strong> output predictions, and
+    <strong>JavaScript Array fundamentals</strong>. Click <strong>▶ Run</strong> on any question
+    to see the output, or click <strong>👁 Show Answer</strong> for the expected result + explanation.
+  </p>
+</div>
+
+<!-- ============================================================
+     HELPER: runAll
+     ============================================================ -->
+<script>
+// ============================================================
+// RUNNER: Executes code in a sandboxed console
+// ============================================================
+function runCode(code, outputDiv) {
+  outputDiv.classList.add('show');
+  outputDiv.innerHTML = '';
+
+  const mockConsole = {
+    _lines: [],
+    log(...args) { this._lines.push({ type: 'log', text: args.map(String).join(' ') }); },
+    error(...args) { this._lines.push({ type: 'error', text: args.map(String).join(' ') }); },
+    warn(...args) { this._lines.push({ type: 'warn', text: args.map(String).join(' ') }); },
+    info(...args) { this._lines.push({ type: 'info', text: args.map(String).join(' ') }); },
+    table(data) { this._lines.push({ type: 'log', text: JSON.stringify(data, null, 2) }); },
+    dir(obj) { this._lines.push({ type: 'log', text: JSON.stringify(obj, null, 2) }); },
+  };
+
+  try {
+    const fn = new Function('console', code);
+    fn(mockConsole);
+
+    if (mockConsole._lines.length === 0) {
+      outputDiv.innerHTML = '<span class="log-info">✓ Code executed (no console output)</span>';
+    } else {
+      mockConsole._lines.forEach(l => {
+        const span = document.createElement('div');
+        span.className = 'log-' + l.type;
+        span.textContent = l.text;
+        outputDiv.appendChild(span);
+      });
+    }
+  } catch (err) {
+    outputDiv.innerHTML = `<span class="log-error">✗ ${err.name}: ${err.message}</span>`;
+  }
+}
+</script>
+
+<!-- ============================================================
+     SECTION 1: Array.map()
+     ============================================================ -->
+<div id="sec-map" class="pq-section">
+  <h2 style="color:var(--accent-blue)">1. Array.map() Questions</h2>
+  <p class="subtitle">Transform arrays — every React developer uses map() daily for rendering lists. Master it through these interview questions.</p>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="easy">Easy</button>
+    <button class="filter-btn" data-filter="medium">Medium</button>
+    <button class="filter-btn" data-filter="hard">Hard</button>
+  </div>
+</div>
+
+<div class="container" id="map-container">
+
+  <!-- Q1 -->
+  <div class="pq-card" id="map-q1" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">1</span>
+      <div class="qtext">
+        Basic map — Double each number
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 3, 4, 5];
+const doubled = nums.map(n => n * 2);
+console.log("Original:", nums);
+console.log("Doubled:", doubled);</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Original: [1, 2, 3, 4, 5]</code><br>
+          <code>Doubled: [2, 4, 6, 8, 10]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> <code>map()</code> creates a new array by calling the callback on every element. The original array is never mutated — this is a key principle of immutability in React.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="pq-card" id="map-q2" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">2</span>
+      <div class="qtext">
+        Extract property from array of objects
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const users = [
+  { name: "Alice", age: 25 },
+  { name: "Bob", age: 30 },
+  { name: "Charlie", age: 35 }
+];
+const names = users.map(u => u.name);
+console.log("Names:", names);
+// What will this output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>Names: ["Alice", "Bob", "Charlie"]</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> This is exactly how you extract data for rendering in React — <code>users.map(u => &lt;li&gt;{u.name}&lt;/li&gt;)</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="pq-card" id="map-q3" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">3</span>
+      <div class="qtext">
+        Using index in map — Add numbering
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const fruits = ["Apple", "Banana", "Cherry"];
+const numbered = fruits.map((fruit, index) => `${index + 1}. ${fruit}`);
+console.log(numbered);
+// What will this output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>["1. Apple", "2. Banana", "3. Cherry"]</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> <code>map()</code> passes three args: <code>(element, index, array)</code>. The second argument <code>index</code> is commonly used as React keys and numbering.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="pq-card" id="map-q4" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">4</span>
+      <div class="qtext">
+        What does map return for empty slots?
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const arr = [1, , 3]; // sparse array
+const result = arr.map(x => x * 2);
+console.log("Result:", result);
+console.log("Length:", result.length);
+console.log("Has index 1:", result.hasOwnProperty(1));
+// What will this output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Result: [2, empty, 6]</code><br>
+          <code>Length: 3</code><br>
+          <code>Has index 1: false</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Key insight:</strong> <code>map()</code> preserves sparse arrays — it skips empty slots entirely (the callback is NOT called for missing elements). This is critical when implementing polyfills. React handles sparse arrays by skipping empty slots too.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="pq-card" id="map-q5" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">5</span>
+      <div class="qtext">
+        What does this map + parseInt output?
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = ["1", "2", "3"].map(parseInt);
+console.log(nums);
+// Common interview question — what's the output?
+// (Hint: think about what parseInt receives)</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>[1, NaN, NaN]</code></div>
+        <div class="answer-explanation">
+          <strong>Classic interview trap!</strong> <code>parseInt</code> takes <code>(string, radix)</code> as parameters. <code>map()</code> passes <code>(element, index, array)</code>. So:<br>
+          <code>parseInt("1", 0) → 1</code> (radix 0 = auto-detect)<br>
+          <code>parseInt("2", 1) → NaN</code> (radix 1 is invalid)<br>
+          <code>parseInt("3", 2) → NaN</code> (binary has no digit 3)<br>
+          <strong>Fix:</strong> <code>.map(num => parseInt(num))</code> or <code>.map(Number)</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="pq-card" id="map-q6" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">6</span>
+      <div class="qtext">
+        Deep transform — Nested object mapping
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const data = [
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" }
+];
+// Transform to React component-ready format
+const components = data.map(item => ({
+  key: item.id,
+  label: item.name.toUpperCase(),
+  selected: false
+}));
+console.log(components);
+// What shape is the output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>[{key: 1, label: "ALICE", selected: false}, {key: 2, label: "BOB", selected: false}]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> Returning an object from <code>map()</code> requires wrapping in <code>()</code> so the parser doesn't confuse <code>{}</code> with a function body. This pattern is used daily in React for transforming API data into component props.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7: React-specific -->
+  <div class="pq-card" id="map-q7" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">7</span>
+      <div class="qtext">
+        React keys — What's wrong with using index as key?
+        <div class="pq-tags">
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const items = ["A", "B", "C"];
+// ❌ Bad: key=index (don't do this if order can change)
+const badMap = items.map((item, i) => `${i}: ${item}`);
+console.log("With index:", badMap);
+
+// ✅ Good: key=unique id
+const goodMap = items.map((item) => `${item}-${Math.random()}`);
+console.log("With random key:", goodMap);
+console.log("Why is index-based key bad?");</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          Using <code>index</code> as key 👉 causes <strong>re-render bugs</strong> when items are reordered, added at the beginning, or removed.<br>
+          React uses keys to identify elements — index is unstable and can cause incorrect component state reuse.
+        </div>
+        <div class="answer-explanation">
+          <strong>Solution:</strong> Use stable unique IDs (<code>item.id</code>), or combine with a text field if no IDs exist. The <code>key</code> prop tells React which items changed, were added, or removed.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 2: Array.filter()
+     ============================================================ -->
+<div id="sec-filter" class="pq-section">
+  <h2 style="color:var(--accent-emerald)">2. Array.filter() Questions</h2>
+  <p class="subtitle">Filter arrays — test your understanding of predicate functions, truthy/falsy values, and immutability.</p>
+</div>
+
+<div class="container" id="filter-container">
+
+  <!-- Q1 -->
+  <div class="pq-card" id="filter-q1" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">1</span>
+      <div class="qtext">
+        Basic filter — Get even numbers
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 3, 4, 5, 6];
+const evens = nums.filter(n => n % 2 === 0);
+console.log("Original:", nums);
+console.log("Evens:", evens);
+// What are evens?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Original: [1, 2, 3, 4, 5, 6]</code><br>
+          <code>Evens: [2, 4, 6]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> <code>filter()</code> returns a new array with elements where the callback returns a truthy value. Original array is unchanged.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="pq-card" id="filter-q2" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">2</span>
+      <div class="qtext">
+        Filter out falsy values — what's the result?
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const values = [0, 1, "", "hello", false, true, null, undefined, NaN];
+const truthy = values.filter(Boolean);
+console.log("Truthy values:", truthy);
+console.log("Length:", truthy.length);
+// What does filter(Boolean) return?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Truthy values: [1, "hello", true]</code><br>
+          <code>Length: 3</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Common pattern!</strong> <code>filter(Boolean)</code> removes all falsy values: <code>0, "", false, null, undefined, NaN</code>. This is used frequently for cleaning up data before rendering. Note: empty arrays <code>[]</code> and empty objects <code>{}</code> are truthy!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="pq-card" id="filter-q3" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">3</span>
+      <div class="qtext">
+        Filter by property — Active users only
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const users = [
+  { name: "Alice", active: true },
+  { name: "Bob", active: false },
+  { name: "Charlie", active: true },
+  { name: "Diana", active: false }
+];
+const activeUsers = users.filter(u => u.active);
+console.log("Active:", activeUsers.map(u => u.name));
+// What names appear?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>Active: ["Alice", "Charlie"]</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> <code>u.active</code> returns the boolean value directly. If <code>active</code> is <code>true</code>, filter keeps the element. This is the exact pattern used for filtering lists in React components.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4: filter + indexOf trick -->
+  <div class="pq-card" id="filter-q4" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">4</span>
+      <div class="qtext">
+        Remove duplicates using filter
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 2, 3, 4, 4, 5];
+const unique = nums.filter((num, index, arr) => {
+  return arr.indexOf(num) === index;
+});
+console.log("Original:", nums);
+console.log("Unique:", unique);
+// What is unique?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Original: [1, 2, 2, 3, 4, 4, 5]</code><br>
+          <code>Unique: [1, 2, 3, 4, 5]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Clever trick!</strong> <code>indexOf</code> returns the first occurrence. If the current index matches, it's the first time we've seen that value. If not, it's a duplicate and gets filtered out. <strong>Downside:</strong> O(n²) — use <code>Set</code> for larger arrays.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="pq-card" id="filter-q5" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">5</span>
+      <div class="qtext">
+        What does filter return for an empty array?
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const result1 = [].filter(x => x > 0);
+console.log("Empty array:", result1);
+
+const result2 = [1, -2, 3].filter(x => x > 10);
+console.log("No matches:", result2);
+
+const result3 = [1, 2, 3].filter(x => x);
+console.log("Truthy filter:", result3);
+
+console.log("Are any of these the same reference?");</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Empty array: []</code><br>
+          <code>No matches: []</code><br>
+          <code>Truthy filter: [1, 2, 3]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Key insight:</strong> <code>filter()</code> always returns a <strong>new array</strong>, even if empty or if it contains all elements! <code>result1 !== result2</code> (different references). This means <code>if (arr.filter(...).length)</code> is safer than <code>if (arr.filter(...))</code> since empty arrays are truthy.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6: Chaining -->
+  <div class="pq-card" id="filter-q6" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">6</span>
+      <div class="qtext">
+        Chaining filter + map — Performance trap
+        <div class="pq-tags">
+          <span class="pq-tag tag-filter">filter</span>
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Chained approach (2 passes)
+const result = data
+  .filter(n => n % 2 === 0)
+  .map(n => n * 10);
+
+console.log("Chained result:", result);
+console.log("Passes over data: 2");
+
+// Single-pass alternative using reduce
+const singlePass = data.reduce((acc, n) => {
+  if (n % 2 === 0) acc.push(n * 10);
+  return acc;
+}, []);
+console.log("Single-pass result:", singlePass);
+// Same output, different performance characteristics</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Chained result: [20, 40, 60, 80, 100]</code><br>
+          <code>Single-pass result: [20, 40, 60, 80, 100]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Performance insight:</strong> Chaining <code>filter()</code> + <code>map()</code> iterates the array twice. For large datasets (10,000+ items), <code>reduce()</code> in a single pass can be 2x faster. However, chaining is more readable — optimize only when profiling shows it matters.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 3: Array.reduce()
+     ============================================================ -->
+<div id="sec-reduce" class="pq-section">
+  <h2 style="color:var(--accent-amber)">3. Array.reduce() Questions</h2>
+  <p class="subtitle">The most powerful array method — master reduce and you can implement any data transformation.</p>
+</div>
+
+<div class="container" id="reduce-container">
+
+  <!-- Q1 -->
+  <div class="pq-card" id="reduce-q1" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">1</span>
+      <div class="qtext">
+        Basic reduce — Sum of numbers
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 3, 4, 5];
+const sum = nums.reduce((acc, cur) => acc + cur, 0);
+console.log("Sum:", sum);
+// What is sum?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>Sum: 15</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> <code>reduce</code> takes a callback <code>(accumulator, currentValue)</code> and an initial value. Each iteration adds the current number to the accumulator. <code>0</code> is the initial value.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="pq-card" id="reduce-q2" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">2</span>
+      <div class="qtext">
+        Reduce without initial value — what happens?
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 3, 4, 5];
+const sum = nums.reduce((acc, cur) => acc + cur);
+console.log("Sum without initial:", sum);
+// What's the difference from Q1?
+
+const empty = [];
+// const crash = empty.reduce((acc, cur) => acc + cur);
+// Uncomment the above — what error would it throw?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>Sum without initial: 15</code></div>
+        <div class="answer-explanation">
+          <strong>Key difference:</strong> Without initial value, <code>reduce()</code> uses the first element as the accumulator and starts from index 1. Same result here, but <strong>dangerous for empty arrays!</strong> <code>[].reduce((a,c) => a + c)</code> throws <code>TypeError: Reduce of empty array with no initial value</code>. <strong>Always provide an initial value!</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="pq-card" id="reduce-q3" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">3</span>
+      <div class="qtext">
+        Flatten array using reduce
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nested = [[1, 2], [3, 4], [5, 6]];
+const flat = nested.reduce((acc, cur) => acc.concat(cur), []);
+console.log("Flattened:", flat);
+// What is the output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>Flattened: [1, 2, 3, 4, 5, 6]</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> Each iteration concats the current sub-array to the accumulator. This is the classic reduce pattern for flattening — also works with <code>[...acc, ...cur]</code> (spread). For deeply nested arrays, use recursion or <code>Array.flat(Infinity)</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="pq-card" id="reduce-q4" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">4</span>
+      <div class="qtext">
+        Group by property using reduce
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const people = [
+  { name: "Alice", age: 25 },
+  { name: "Bob", age: 30 },
+  { name: "Charlie", age: 25 },
+  { name: "Diana", age: 30 },
+  { name: "Eve", age: 35 }
+];
+
+// Group by age
+const grouped = people.reduce((acc, person) => {
+  (acc[person.age] = acc[person.age] || []).push(person.name);
+  return acc;
+}, {});
+
+console.log("Grouped by age:", JSON.stringify(grouped, null, 2));
+// What shape is the output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>{"25": ["Alice", "Charlie"], "30": ["Bob", "Diana"], "35": ["Eve"]}</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Powerful pattern!</strong> This grouping pattern is used in data visualization, category filtering, and dashboard widgets. The expression <code>(acc[key] = acc[key] || []).push(value)</code> initializes the array if it doesn't exist, then pushes the value.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="pq-card" id="reduce-q5" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">5</span>
+      <div class="qtext">
+        Count occurrences using reduce
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const fruits = ["apple", "banana", "apple", "orange", "banana", "apple"];
+const count = fruits.reduce((acc, fruit) => {
+  acc[fruit] = (acc[fruit] || 0) + 1;
+  return acc;
+}, {});
+
+console.log("Fruit count:", count);
+// What is the count of each fruit?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>{apple: 3, banana: 2, orange: 1}</code></div>
+        <div class="answer-explanation">
+          <strong>Common interview question!</strong> <code>(acc[fruit] || 0) + 1</code> safely handles first occurrence (undefined → 0). This pattern is useful for frequency analysis, vote counting, and data aggregation.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="pq-card" id="reduce-q6" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">6</span>
+      <div class="qtext">
+        Implement map using reduce
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-map">map</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const nums = [1, 2, 3, 4, 5];
+
+// Implement map() behavior using reduce()
+const doubled = nums.reduce((acc, cur) => {
+  acc.push(cur * 2);
+  return acc;
+}, []);
+
+console.log("Doubled (via reduce):", doubled);
+
+// Implement filter using reduce
+const evens = nums.reduce((acc, cur) => {
+  if (cur % 2 === 0) acc.push(cur);
+  return acc;
+}, []);
+
+console.log("Evens (via reduce):", evens);
+// Same results as using native map/filter!</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Doubled (via reduce): [2, 4, 6, 8, 10]</code><br>
+          <code>Evens (via reduce): [2, 4]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Why this matters:</strong> This shows that <code>reduce()</code> is a general-purpose iteration method. Both <code>map()</code> and <code>filter()</code> can be implemented with <code>reduce()</code>. Understanding this proves mastery of the method.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 4: console.log() Output Prediction
+     ============================================================ -->
+<div id="sec-console" class="pq-section">
+  <h2 style="color:var(--accent-violet)">4. console.log() Output Prediction</h2>
+  <p class="subtitle">Tricky JavaScript output questions — common interview traps involving hoisting, closures, event loop, scoping, and coercion.</p>
+</div>
+
+<div class="container" id="console-container">
+
+  <!-- Q1: Hoisting -->
+  <div class="pq-card" id="console-q1" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">1</span>
+      <div class="qtext">
+        Hoisting with var
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log(a);
+var a = 5;
+console.log(a);
+// What does this output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>undefined</code><br>
+          <code>5</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Hoisting with var:</strong> <code>var</code> declarations are hoisted to the top of their scope and initialized with <code>undefined</code>. So <code>console.log(a)</code> sees <code>undefined</code>, not an error. After assignment, <code>a</code> becomes <code>5</code>. With <code>let/const</code>, this would throw <code>ReferenceError</code> (Temporal Dead Zone).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: TDZ -->
+  <div class="pq-card" id="console-q2" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">2</span>
+      <div class="qtext">
+        Temporal Dead Zone with let
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log(b);
+let b = 10;
+// What error or value? (try it)</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>ReferenceError: Cannot access 'b' before initialization</code></div>
+        <div class="answer-explanation">
+          <strong>Temporal Dead Zone:</strong> <code>let</code> and <code>const</code> are hoisted but NOT initialized. Accessing them before declaration causes a <code>ReferenceError</code>. This is a common interview question to test ES6 scoping knowledge.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3: Closure -->
+  <div class="pq-card" id="console-q3" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">3</span>
+      <div class="qtext">
+        Classic closure loop — setTimeout + var
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// What gets logged after 100ms?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>3<br>3<br>3</code> (three times)</div>
+        <div class="answer-explanation">
+          <strong>Classic closure trap!</strong> <code>var</code> is function-scoped — all three closures share the same <code>i</code>. By the time <code>setTimeout</code> fires, the loop has finished and <code>i = 3</code>.<br>
+          <strong>Fix 1:</strong> Use <code>let i</code> (block-scoped, creates new binding each iteration)<br>
+          <strong>Fix 2:</strong> <code>for (var i = 0; i < 3; i++) { (j => setTimeout(() => console.log(j), 100))(i); }</code> (IIFE)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4: Closure with let fix -->
+  <div class="pq-card" id="console-q4" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">4</span>
+      <div class="qtext">
+        Closure loop fixed with let
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// What gets logged with 'let' instead of 'var'?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>0<br>1<br>2</code></div>
+        <div class="answer-explanation">
+          <strong>Why it works with let:</strong> <code>let</code> is block-scoped. Each iteration creates a new binding for <code>i</code>. The closure captures the correct value. This is the simplest fix — always prefer <code>let</code>/<code>const</code> over <code>var</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5: Event Loop -->
+  <div class="pq-card" id="console-q5" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">5</span>
+      <div class="qtext">
+        Event loop — setTimeout, Promises, and microtasks
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log("1");
+
+setTimeout(() => console.log("2"), 0);
+
+Promise.resolve().then(() => console.log("3"));
+
+console.log("4");
+
+// What order will these be logged in?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>1<br>4<br>3<br>2</code></div>
+        <div class="answer-explanation">
+          <strong>Event Loop order:</strong><br>
+          1. Synchronous code first: <code>1</code>, then <code>4</code><br>
+          2. Microtasks (Promise.then) before macrotasks (setTimeout): <code>3</code><br>
+          3. Macrotasks: <code>2</code><br>
+          <strong>Priority:</strong> Sync → Microtasks (Promises, queueMicrotask) → Animation frames → Macrotasks (setTimeout, setInterval, I/O)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6: Coercion -->
+  <div class="pq-card" id="console-q6" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">6</span>
+      <div class="qtext">
+        Type coercion — == vs ===
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log(1 == "1");      // true or false?
+console.log(1 === "1");     // ?
+console.log(false == "0");  // ?
+console.log(false === "0"); // ?
+console.log(null == undefined); // ?
+console.log(null === undefined); // ?
+console.log([] == false);   // ?
+console.log([1] == true);   // ?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>true</code> (loose equality coerces string to number)<br>
+          <code>false</code> (strict equality — different types)<br>
+          <code>true</code> (<code>false → 0</code>, <code>"0" → 0</code>)<br>
+          <code>false</code><br>
+          <code>true</code> (special case: null == undefined)<br>
+          <code>false</code><br>
+          <code>true</code> (<code>[] → "" → 0</code>, <code>false → 0</code>)<br>
+          <code>true</code> (<code>[1] → "1" → 1</code>, <code>true → 1</code>)
+        </div>
+        <div class="answer-explanation">
+          <strong>The Golden Rule:</strong> <code>==</code> performs type coercion before comparing. <code>===</code> requires same type AND value. Always prefer <code>===</code> unless you specifically need coercion (known as "the crockford rule"). Abstract Equality Comparison algorithm is a common interview deep-dive topic.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7: this binding -->
+  <div class="pq-card" id="console-q7" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">7</span>
+      <div class="qtext">
+        The 'this' keyword — implicit vs explicit binding
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const obj = {
+  name: "MyObject",
+  regular: function() {
+    console.log("Regular:", this.name);
+  },
+  arrow: () => {
+    console.log("Arrow:", this.name);
+  }
+};
+
+obj.regular(); // ?
+obj.arrow();   // ?
+
+const regularUnbound = obj.regular;
+regularUnbound(); // ?
+
+const regularBound = obj.regular.bind({ name: "Bound!" });
+regularBound(); // ?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Regular: MyObject</code><br>
+          <code>Arrow: undefined</code> (or global object in non-strict)<br>
+          <code>undefined</code> (or global)<br>
+          <code>Bound!</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>this binding rules:</strong><br>
+          1. <strong>Regular function</strong> called as method → <code>this</code> is the object<br>
+          2. <strong>Arrow function</strong> → <code>this</code> is from outer (lexical) scope, not the object<br>
+          3. <strong>Unbound reference</strong> → <code>this</code> is <code>undefined</code> (strict) or global (non-strict)<br>
+          4. <strong>bind/call/apply</strong> → explicitly sets <code>this</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8: NaN -->
+  <div class="pq-card" id="console-q8" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">8</span>
+      <div class="qtext">
+        NaN behavior — typeof and equality
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log(typeof NaN);
+console.log(NaN === NaN);
+console.log(NaN == NaN);
+console.log(Object.is(NaN, NaN));
+console.log(isNaN("hello"));
+console.log(Number.isNaN("hello"));
+// Predict each output</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>number</code> (typeof NaN is 'number'!)<br>
+          <code>false</code> (NaN is the only value !== itself)<br>
+          <code>false</code><br>
+          <code>true</code> (Object.is treats NaN correctly)<br>
+          <code>true</code> (isNaN coerces to number first)<br>
+          <code>false</code> (Number.isNaN doesn't coerce — "hello" is not NaN)
+        </div>
+        <div class="answer-explanation">
+          <strong>NaN quirks:</strong> Despite meaning "Not a Number", <code>typeof NaN === "number"</code>. NaN is never equal to anything, including itself — <code>NaN !== NaN</code> is the only self-inequality in JS. Use <code>Number.isNaN()</code> for reliable checking.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9: Array + Array -->
+  <div class="pq-card" id="console-q9" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">9</span>
+      <div class="qtext">
+        Array and Object coercion
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log([] + []);
+console.log([] + {});
+console.log({} + []);
+console.log([1, 2] + [3, 4]);
+// What do these output?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>""</code> (empty string)<br>
+          <code>"[object Object]"</code><br>
+          <code>0</code> (or <code>"[object Object]"</code> in some engines — depends on context)<br>
+          <code>"1,23,4"</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Coercion: + operator</strong> treats objects as strings (calls <code>toString()</code>).<br>
+          <code>[] → ""</code>, <code>{} → "[object Object]"</code>, <code>[1,2] → "1,2"</code>.<br>
+          <code>[] + [] = "" + "" = ""</code><br>
+          <code>[] + {} = "" + "[object Object]" = "[object Object]"</code><br>
+          <code>[1,2] + [3,4] = "1,2" + "3,4" = "1,23,4"</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10: Spread operator -->
+  <div class="pq-card" id="console-q10" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">10</span>
+      <div class="qtext">
+        Spread operator — shallow copy
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const original = { a: 1, b: { c: 2 } };
+const copy = { ...original };
+
+copy.a = 99;
+console.log("original.a:", original.a);
+console.log("copy.a:", copy.a);
+
+copy.b.c = 999;
+console.log("original.b.c:", original.b.c);
+console.log("copy.b.c:", copy.b.c);
+// What changed in the original?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>original.a: 1</code><br>
+          <code>copy.a: 99</code><br>
+          <code>original.b.c: 999</code> (mutated!)<br>
+          <code>copy.b.c: 999</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Shallow copy!</strong> Spread is shallow — nested objects/arrays are still referenced, not cloned. <code>copy.b</code> points to the same object as <code>original.b</code>. For deep cloning, use <code>structuredClone()</code>, <code>JSON.parse(JSON.stringify())</code>, or a deep clone utility.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11: Destructuring defaults -->
+  <div class="pq-card" id="console-q11" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">11</span>
+      <div class="qtext">
+        Destructuring with default values
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const obj = { a: 1, b: null, c: undefined };
+
+const { a = 10, b = 20, c = 30, d = 40 } = obj;
+
+console.log("a:", a);  // ?
+console.log("b:", b);  // ?
+console.log("c:", c);  // ?
+console.log("d:", d);  // ?
+// Predict the values</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>a: 1</code><br>
+          <code>b: null</code> (default NOT used — value is null, not undefined)<br>
+          <code>c: 30</code> (default IS used — value is undefined)<br>
+          <code>d: 40</code> (default IS used — property doesn't exist)
+        </div>
+        <div class="answer-explanation">
+          <strong>Key insight:</strong> Default values in destructuring only apply when the value is <code>undefined</code>. <code>null</code> is a defined value and will NOT trigger the default. This is a very common interview trap!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12: Promise chaining -->
+  <div class="pq-card" id="console-q12" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">12</span>
+      <div class="qtext">
+        Promise chaining — resolve values
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>Promise.resolve(1)
+  .then(x => {
+    console.log("then1:", x);
+    return x + 1;
+  })
+  .then(x => {
+    console.log("then2:", x);
+    return Promise.resolve(x + 1);
+  })
+  .then(x => {
+    console.log("then3:", x);
+    throw new Error("Boom!");
+  })
+  .catch(err => {
+    console.log("catch:", err.message);
+    return "recovered";
+  })
+  .then(x => {
+    console.log("then4:", x);
+  });
+
+// What is logged and in what order?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>then1: 1</code><br>
+          <code>then2: 2</code><br>
+          <code>then3: 3</code><br>
+          <code>catch: Boom!</code><br>
+          <code>then4: recovered</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Promise chaining rules:</strong><br>
+          1. Each <code>.then()</code> receives the resolved value from the previous step<br>
+          2. Returning a value from <code>.then()</code> wraps it in a resolved promise<br>
+          3. Returning <code>Promise.resolve(x)</code> is the same as returning <code>x</code><br>
+          4. <code>throw</code> in <code>.then()</code> jumps to the nearest <code>.catch()</code><br>
+          5. <code>.catch()</code> can recover — whatever it returns continues down the chain
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13: async/await -->
+  <div class="pq-card" id="console-q13" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">13</span>
+      <div class="qtext">
+        async/await execution order
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>async function async1() {
+  console.log("async1 start");
+  await async2();
+  console.log("async1 end");
+}
+
+async function async2() {
+  console.log("async2");
+}
+
+console.log("script start");
+
+setTimeout(() => console.log("setTimeout"), 0);
+
+async1();
+
+new Promise(resolve => {
+  console.log("promise1");
+  resolve();
+}).then(() => console.log("promise2"));
+
+console.log("script end");
+
+// Predict the full output order</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>script start</code><br>
+          <code>async1 start</code><br>
+          <code>async2</code><br>
+          <code>promise1</code><br>
+          <code>script end</code><br>
+          <code>async1 end</code><br>
+          <code>promise2</code><br>
+          <code>setTimeout</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Event Loop deep-dive:</strong><br>
+          1. Sync: <code>script start</code>, <code>async1 start</code>, <code>async2</code>, <code>promise1</code>, <code>script end</code><br>
+          2. <code>await</code> suspends execution — the rest of <code>async1</code> becomes a microtask<br>
+          3. Microtasks: <code>async1 end</code> (from await), <code>promise2</code> (from Promise.then)<br>
+          4. Macrotask: <code>setTimeout</code><br>
+          <strong>Note:</strong> The <code>await async2()</code> is a microtask checkpoint, so <code>async1 end</code> runs before <code>promise2</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14: + unary -->
+  <div class="pq-card" id="console-q14" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">14</span>
+      <div class="qtext">
+        Unary plus — type coercion to number
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log(+"123");
+console.log(+true);
+console.log(+false);
+console.log(+null);
+console.log(+undefined);
+console.log(+"");
+console.log(+"hello");
+// What numbers do these become?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>123</code><br>
+          <code>1</code><br>
+          <code>0</code><br>
+          <code>0</code><br>
+          <code>NaN</code><br>
+          <code>0</code><br>
+          <code>NaN</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Unary + operator:</strong> Converts operand to Number. Common shorthand for numeric coercion. <code>+"123"</code> is equivalent to <code>Number("123")</code>. Know the coercion table — <code>null → 0</code>, <code>undefined → NaN</code>, <code>true → 1</code>, <code>false → 0</code>, <code>"" → 0</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15: || and && -->
+  <div class="pq-card" id="console-q15" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">15</span>
+      <div class="qtext">
+        Logical operators — short-circuit evaluation
+        <div class="pq-tags">
+          <span class="pq-tag tag-console">console</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>console.log("hello" || "world");
+console.log(0 || "default");
+console.log(null || "fallback");
+console.log("" || "empty");
+
+console.log("hello" && "world");
+console.log(0 && "never");
+console.log(true && "yes");
+console.log(false && "no");
+
+// What does each expression return?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>"hello"</code> (first truthy)<br>
+          <code>"default"</code> (0 is falsy, so return second)<br>
+          <code>"fallback"</code><br>
+          <code>"empty"</code> ("" is falsy)<br>
+          <code>"world"</code> (<code>&&</code> returns last truthy)<br>
+          <code>0</code> (first falsy — short-circuits)<br>
+          <code>"yes"</code><br>
+          <code>false</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Short-circuit rules:</strong><br>
+          <code>a || b</code> — returns first truthy value, or last value if all falsy<br>
+          <code>a && b</code> — returns first falsy value, or last value if all truthy<br>
+          <strong>These are NOT boolean operators!</strong> They return the actual value, not <code>true/false</code>. This is why you can use <code>condition && &lt;Component /&gt;</code> in React.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 5: JavaScript Array Fundamentals (CyberDude Questions)
+     ============================================================ -->
+<div id="sec-array-fundamentals" class="pq-section">
+  <h2 style="color:var(--accent-rose)">5. JavaScript Array Fundamentals</h2>
+  <p class="subtitle">18 essential array questions covering creation, manipulation, iteration, and common interview pitfalls.</p>
+</div>
+
+<div class="container" id="array-fundamentals-container">
+
+  <!-- Q1 -->
+  <div class="pq-card" id="arr-q1" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">1</span>
+      <div class="qtext">
+        Create an Array — in at least 3 methods
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>// Method 1: Array literal
+const arr1 = [1, 2, 3];
+console.log("Literal:", arr1);
+
+// Method 2: Array constructor
+const arr2 = new Array(1, 2, 3);
+console.log("Constructor:", arr2);
+
+// Method 3: Array.from
+const arr3 = Array.from({ length: 3 }, (_, i) => i + 1);
+console.log("Array.from:", arr3);
+
+// Method 4: Array.of (treats single number as element, not length)
+const arr4 = Array.of(1, 2, 3);
+console.log("Array.of:", arr4);
+
+// Method 5: Spread
+const arr5 = [...[1, 2, 3]];
+console.log("Spread:", arr5);
+
+// 🧠 Gotcha: new Array(3) creates [empty × 3], not [3]!
+const trap = new Array(3);
+console.log("new Array(3):", trap, "length:", trap.length);</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          5 different ways to create arrays. The important distinction: <code>new Array(3)</code> creates a sparse array of length 3 with empty slots (not <code>[3]</code>), while <code>Array.of(3)</code> creates <code>[3]</code>.
+        </div>
+        <div class="answer-explanation">
+          <strong>Remember:</strong> <code>new Array(n)</code> creates empty slots when passed a single number. Use <code>Array.of()</code> if you want <code>[n]</code>. <code>Array.from()</code> is great for generating sequences with a map function.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="pq-card" id="arr-q2" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">2</span>
+      <div class="qtext">
+        Copy an array using slice() and for loop
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const array = [1, 2, 3, 4, 5];
+
+// Method 1: slice()
+const copy1 = array.slice();
+console.log("slice copy:", copy1);
+console.log("Same reference?", copy1 === array); // false!
+
+// Method 2: for loop
+const copy2 = [];
+for (let i = 0; i < array.length; i++) {
+  copy2.push(array[i]);
+}
+console.log("for loop copy:", copy2);
+
+// Method 3: spread (modern alternative)
+const copy3 = [...array];
+console.log("spread copy:", copy3);
+
+// 🧠 Are these shallow or deep copies?
+array.push(6);
+console.log("Original after push:", array);
+console.log("copy1 unchanged:", copy1);</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          All three methods create <strong>shallow copies</strong>. For primitive arrays, this behaves like a deep copy. For nested objects — they still share references. <code>slice()</code> and <code>[...arr]</code> are the most common methods.
+        </div>
+        <div class="answer-explanation">
+          <strong>Interview tip:</strong> <code>array.slice()</code> is the classic way to copy an array. Modern code uses spread <code>[...array]</code>. Both are shallow — use <code>structuredClone()</code> for deep cloning.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="pq-card" id="arr-q3" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">3</span>
+      <div class="qtext">
+        Empty an array — multiple methods
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>let array = [1, 2, 3, 4, 5];
+console.log("Original:", array);
+
+// Method 1: Set length to 0 (mutates original)
+array.length = 0;
+console.log("After length=0:", array);
+
+// Method 2: Re-assign (creates new array)
+array = [1, 2, 3, 4, 5];
+array = [];
+console.log("After re-assign:", array);
+
+// Method 3: splice
+array = [1, 2, 3, 4, 5];
+array.splice(0, array.length);
+console.log("After splice:", array);
+
+// Method 4: pop in a loop
+array = [1, 2, 3, 4, 5];
+while (array.length) array.pop();
+console.log("After pop loop:", array);
+
+// 🧠 Which methods mutate vs reassign?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          <code>array.length = 0</code>, <code>splice()</code>, and <code>pop()</code> loop all <strong>mutate</strong> the original array. Re-assigning <code>array = []</code> creates a <strong>new</strong> reference — other references to the old array remain unchanged.
+        </div>
+        <div class="answer-explanation">
+          <strong>Important distinction:</strong> If you have <code>const arr = [1,2,3]; const ref = arr; arr = []</code> — <code>ref</code> still points to <code>[1,2,3]</code>! Use <code>arr.length = 0</code> to clear the original reference.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="pq-card" id="arr-q4" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">4</span>
+      <div class="qtext">
+        What type is an Array?
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const arr = [1, 2, 3];
+console.log("typeof arr:", typeof arr);
+
+// What does typeof return for an array?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>"object"</code></div>
+        <div class="answer-explanation">
+          <strong>Why?</strong> Arrays are objects in JavaScript. <code>typeof</code> returns <code>"object"</code> for arrays. To check if something is an array, use <code>Array.isArray(arr)</code>. The typeof operator is useless for distinguishing arrays from other objects.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="pq-card" id="arr-q5" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">5</span>
+      <div class="qtext">
+        How to check if something is an Array?
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const arr = [1, 2, 3];
+const obj = { a: 1 };
+const str = "hello";
+
+console.log("Array.isArray(arr):", Array.isArray(arr));
+console.log("Array.isArray(obj):", Array.isArray(obj));
+console.log("Array.isArray(str):", Array.isArray(str));
+
+// 🧠 Bonus: Check via prototype
+console.log("Object.prototype.toString:", Object.prototype.toString.call(arr));
+// Returns "[object Array]" for arrays</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          <code>Array.isArray()</code> is the only reliable way. <code>typeof arr === "object"</code> is true but doesn't distinguish from other objects. <code>instanceof Array</code> works across frames (unlike <code>instanceof</code>).
+        </div>
+        <div class="answer-explanation">
+          <strong>Why not instanceof?</strong> <code>arr instanceof Array</code> fails across different execution contexts (iframes, windows). <code>Array.isArray()</code> is safe across all contexts.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="pq-card" id="arr-q6" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">6</span>
+      <div class="qtext">
+        Add an item to the end of an array
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const arr = [1, 2, 3];
+
+// Method 1: push (mutates)
+arr.push(4);
+console.log("After push:", arr);
+
+// Method 2: concat (returns new array)
+const arr2 = [1, 2, 3];
+const newArr = arr2.concat(4);
+console.log("Original:", arr2, "New:", newArr);
+
+// Method 3: spread (returns new array)
+const arr3 = [1, 2, 3];
+const spreadArr = [...arr3, 4];
+console.log("Spread result:", spreadArr);
+
+// 🧠 Which mutate vs return new?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          <code>push()</code> mutates the original. <code>concat()</code> and <code>[...arr, item]</code> return new arrays (immutable). In React, prefer immutable methods to avoid accidental mutations.
+        </div>
+        <div class="answer-explanation">
+          <strong>React rule:</strong> Never use <code>push()</code> in React state — use <code>setState(prev => [...prev, newItem])</code> to maintain immutability.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="pq-card" id="arr-q7" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">7</span>
+      <div class="qtext">
+        Find index of an element
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var arr = ["a", "b", "c", "d"];
+
+// Find the index position of 'd'
+console.log("Index of 'd':", arr.indexOf("d"));
+</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>3</code></div>
+        <div class="answer-explanation">
+          <code>indexOf()</code> returns the first index at which a given element is found. Array indices start at 0, so <code>"d"</code> is at index 3.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="pq-card" id="arr-q8" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">8</span>
+      <div class="qtext">
+        What is returned when indexOf doesn't find the element?
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var arr = ["a", "b", "c", "d"];
+
+// What happens when we look for something that doesn't exist?
+console.log("Index of 'z':", arr.indexOf("z"));
+</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>-1</code></div>
+        <div class="answer-explanation">
+          <code>indexOf()</code> returns <code>-1</code> when the element is not found. <strong>Always</strong> check <code>if (index !== -1)</code> before using the result — <code>0</code> is a valid index but falsy in a boolean context, so <code>if (index)</code> fails for index 0!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="pq-card" id="arr-q9" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">9</span>
+      <div class="qtext">
+        Check if "milk" exists, find index, and remove it
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var items = ["milk", "bread", "sugar"];
+
+// Check if "milk" exists
+var hasMilk = items.includes("milk");
+console.log("Has milk?", hasMilk);
+
+// Find index of "milk"
+var milkIndex = items.indexOf("milk");
+console.log("Milk index:", milkIndex);
+
+// Remove "milk" by index
+if (milkIndex !== -1) {
+  items.splice(milkIndex, 1);
+}
+console.log("After removing milk:", items);</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Has milk? true</code><br>
+          <code>Milk index: 0</code><br>
+          <code>After removing milk: ["bread", "sugar"]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Pattern:</strong> <code>includes()</code> checks existence, <code>indexOf()</code> finds position, <code>splice()</code> removes by index. <code>splice</code> mutates the original — always use the <code>-1</code> guard check!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="pq-card" id="arr-q10" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">10</span>
+      <div class="qtext">
+        Add code to find index of 'milk' and remove it
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var items = ["milk", "bread", "sugar"];
+
+// Now that you've found 'milk' exists,
+// find its index and remove that item
+var index = items.indexOf("milk");
+if (index !== -1) {
+  items.splice(index, 1);
+}
+console.log("Items after removal:", items);
+// What's left in the array?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text"><code>["bread", "sugar"]</code></div>
+        <div class="answer-explanation">
+          <code>indexOf()</code> finds the position, <code>splice(index, 1)</code> removes that item. Always check <code>index !== -1</code> before splicing — the <code>-1</code> guard is critical!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="pq-card" id="arr-q11" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">11</span>
+      <div class="qtext">
+        List the ways to loop over an array
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const fruits = ["apple", "banana", "cherry"];
+
+// 1. for loop
+console.log("--- for loop ---");
+for (let i = 0; i < fruits.length; i++) {
+  console.log(fruits[i]);
+}
+
+// 2. for...of
+console.log("--- for...of ---");
+for (const fruit of fruits) {
+  console.log(fruit);
+}
+
+// 3. forEach
+console.log("--- forEach ---");
+fruits.forEach((fruit, i) => console.log(i + ": " + fruit));
+
+// 4. while loop
+console.log("--- while ---");
+let j = 0;
+while (j < fruits.length) {
+  console.log(fruits[j++]);
+}
+
+// 🧠 Which one can you NOT break out of early?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Key Insight</div>
+        <div class="answer-text">
+          <code>forEach()</code> cannot be broken/stopped early. Use <code>for...of</code> with <code>break</code>/<code>continue</code> if you need early exit. <code>for...of</code> also works best with <code>async/await</code> — <code>forEach()</code> fires all callbacks immediately without waiting.
+        </div>
+        <div class="answer-explanation">
+          <strong>Sequence matters:</strong> <code>for...of</code> waits for each await sequentially. <code>forEach()</code> is synchronous-only — use it for operations without async side effects.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12: Sort numbers -->
+  <div class="pq-card" id="arr-q12" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">12</span>
+      <div class="qtext">
+        Sort numbers — Ascending & Descending (the default sort trap)
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const numbers = [1, 12, 2, 23, 77, 7, 33, 5, 99, 234];
+
+// ❌ Default sort — what happens?
+const defaultSort = [...numbers].sort();
+console.log("Default sort:", defaultSort);
+// Surprised? Why does 12 come before 2?
+
+// ✅ Correct ascending
+const ascending = [...numbers].sort((a, b) => a - b);
+console.log("Ascending:", ascending);
+
+// ✅ Correct descending
+const descending = [...numbers].sort((a, b) => b - a);
+console.log("Descending:", descending);
+
+// 🧠 Why does default sort behave this way?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Default sort: [1, 12, 2, 23, 234, 33, 5, 7, 77, 99]</code><br>
+          <code>Ascending: [1, 2, 5, 7, 12, 23, 33, 77, 99, 234]</code><br>
+          <code>Descending: [234, 99, 77, 33, 23, 12, 7, 5, 2, 1]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Classic JavaScript trap!</strong> <code>sort()</code> converts elements to strings and compares their UTF-16 values. <code>"12" < "2"</code> because <code>"1" < "2"</code>. <strong>Always pass a compare function for numeric sorting!</strong> <code>a - b</code> for ascending, <code>b - a</code> for descending.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="pq-card" id="arr-q13" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">13</span>
+      <div class="qtext">
+        Sort strings alphabetically
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>const letters = ["a", "z", "e", "y"];
+
+// Alphabetical (A-Z)
+const asc = [...letters].sort();
+console.log("A-Z:", asc);
+
+// Reverse alphabetical (Z-A)
+const desc = [...letters].sort().reverse();
+console.log("Z-A:", desc);
+
+// Custom locale-aware sort (handles accents, case)
+const words = ["résumé", "apple", "café", "banana"];
+const localeSorted = [...words].sort((a, b) => a.localeCompare(b));
+console.log("Locale sort:", localeSorted);</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>A-Z: ["a", "e", "y", "z"]</code><br>
+          <code>Z-A: ["z", "y", "e", "a"]</code><br>
+          <code>Locale sort: ["apple", "banana", "café", "résumé"]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Tip:</strong> Default string sort works as expected for simple letters. For international text with accents (<code>é</code>, <code>ü</code>), use <code>localeCompare()</code> for correct ordering. <code>sort().reverse()</code> chains nicely for descending order.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="pq-card" id="arr-q14" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">14</span>
+      <div class="qtext">
+        Array length — tricky cases
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var arr1 = [, , ,];
+console.log("arr1 length:", arr1.length);
+
+var arr2 = new Array(3);
+console.log("arr2 length:", arr2.length);
+
+var arr3 = [1, 2, 3, 4, 5];
+console.log("arr3 length:", arr3.length);
+
+var arr4 = [
+  [1, 2, 3],
+  [4, 5, 6],
+];
+console.log("arr4 length:", arr4.length);
+
+// 🧠 Are any of these arrays actually empty?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>arr1 length: 3</code><br>
+          <code>arr2 length: 3</code><br>
+          <code>arr3 length: 5</code><br>
+          <code>arr4 length: 2</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Important distinctions:</strong><br>
+          <code>arr1</code> and <code>arr2</code> have length 3 but are <strong>sparse</strong> — they have empty slots (no properties at indices 0, 1, 2).<br>
+          <code>arr4.length</code> is 2 because it has 2 elements (both are sub-arrays). Multi-dimensional array length only counts the first dimension.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="pq-card" id="arr-q15" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">15</span>
+      <div class="qtext">
+        splice vs slice — What's the difference?
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var a = ["zero", "one", "two", "three"];
+var names = ["jason", "john", "peter", "karen"];
+
+// slice(start, end) — returns new array, doesn't mutate
+var sliced = a.slice(1, 3);
+console.log("slice(1,3):", sliced);
+console.log("Original after slice:", a); // unchanged?
+
+// splice(start, deleteCount) — mutates, returns removed items
+var spliced = names.splice(1, 3);
+console.log("splice(1,3):", spliced);
+console.log("Original after splice:", names); // what's left?
+
+// 🧠 What's the key difference between these?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>slice(1,3): ["one", "two"]</code><br>
+          <code>Original after slice: ["zero", "one", "two", "three"]</code> (unchanged!)<br>
+          <code>splice(1,3): ["john", "peter", "karen"]</code><br>
+          <code>Original after splice: ["jason"]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Key difference:</strong><br>
+          <code>slice()</code> 📗 — does NOT mutate, returns subset (end index is exclusive)<br>
+          <code>splice()</code> ✂️ — DOES mutate, removes/replaces items<br>
+          Mnemonic: <strong>slice</strong> is like cutting a piece of cake (original stays), <strong>splice</strong> is like splicing rope (original is altered).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="pq-card" id="arr-q16" data-difficulty="hard">
+    <div class="pq-card-header">
+      <span class="qnum">16</span>
+      <div class="qtext">
+        shift and unshift — track the changes
+        <div class="pq-tags">
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-hard">hard</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var a = [];
+
+a.unshift(1);
+a.unshift(22);
+var b = a;               // b = ?
+a.shift();
+var c = a;               // c = ?
+a.unshift(3, [4, 5]);
+var d = a;               // d = ?
+a.shift();
+var e = a;               // e = ?
+a.shift();
+var f = a;               // f = ?
+a.shift();
+var g = a;               // g = ?
+
+console.log("b:", b);
+console.log("c:", c);
+console.log("d:", d);
+console.log("e:", e);
+console.log("f:", f);
+console.log("g:", g);
+// Track the array state after each operation</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>b: [22, 1]</code><br>
+          <code>c: [1]</code><br>
+          <code>d: [3, [4,5], 1]</code><br>
+          <code>e: [[4,5], 1]</code><br>
+          <code>f: [1]</code><br>
+          <code>g: []</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Trace:</strong><br>
+          1. <code>unshift(1)</code> → <code>[1]</code><br>
+          2. <code>unshift(22)</code> → <code>[22, 1]</code> ← <code>b</code><br>
+          3. <code>shift()</code> removes 22 → <code>[1]</code> ← <code>c</code><br>
+          4. <code>unshift(3, [4,5])</code> → <code>[3, [4,5], 1]</code> ← <code>d</code><br>
+          5. <code>shift()</code> removes 3 → <code>[[4,5], 1]</code> ← <code>e</code><br>
+          6. <code>shift()</code> removes [4,5] → <code>[1]</code> ← <code>f</code><br>
+          7. <code>shift()</code> removes 1 → <code>[]</code> ← <code>g</code><br>
+          <strong>Note:</strong> <code>unshift</code> adds to the beginning, <code>shift</code> removes from the beginning.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="pq-card" id="arr-q17" data-difficulty="easy">
+    <div class="pq-card-header">
+      <span class="qnum">17</span>
+      <div class="qtext">
+        Using reduce to sum all numbers
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-easy">easy</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var numbers = [1, 2, 3, 4, 5, 6];
+
+// Sum using reduce
+const sum = numbers.reduce((acc, cur) => acc + cur, 0);
+console.log("Sum:", sum);
+
+// Alternative: for loop
+let total = 0;
+for (let i = 0; i < numbers.length; i++) {
+  total += numbers[i];
+}
+console.log("Total (for loop):", total);
+
+// What's the sum?</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Sum: 21</code><br>
+          <code>Total (for loop): 21</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>1 + 2 + 3 + 4 + 5 + 6 = 21</strong><br>
+          Reduce is the functional way to aggregate. Always provide an initial value (0 for sums) to avoid errors on empty arrays.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="pq-card" id="arr-q18" data-difficulty="medium">
+    <div class="pq-card-header">
+      <span class="qnum">18</span>
+      <div class="qtext">
+        Flatten 2D array using reduce
+        <div class="pq-tags">
+          <span class="pq-tag tag-reduce">reduce</span>
+          <span class="pq-tag tag-array">arrays</span>
+          <span class="pq-tag tag-medium">medium</span>
+        </div>
+      </div>
+    </div>
+    <div class="pq-body">
+      <div class="pq-editor">
+        <textarea>var array = [
+  [0, 1],
+  [2, 3],
+  [4, 5],
+];
+
+// Flatten using reduce
+const flat = array.reduce((acc, cur) => acc.concat(cur), []);
+console.log("Flattened:", flat);
+
+// Using flat() method (modern)
+const flat2 = array.flat();
+console.log("Using flat():", flat2);
+
+// Deep flatten (3 levels)
+const deep = [[[1, 2], [3, 4]], [[5, 6]]];
+console.log("Deep flat(1):", deep.flat(1));
+console.log("Deep flat(2):", deep.flat(2));
+console.log("Deep flat(Infinity):", deep.flat(Infinity));</textarea>
+      </div>
+      <div class="pq-actions">
+        <button class="btn-run">▶ Run</button>
+        <button class="btn-reset">↺ Reset</button>
+        <button class="btn-toggle-answer">👁 Show Answer</button>
+      </div>
+      <div class="pq-output"></div>
+      <div class="pq-answer">
+        <div class="answer-label">✅ Expected Output</div>
+        <div class="answer-text">
+          <code>Flattened: [0, 1, 2, 3, 4, 5]</code><br>
+          <code>Using flat(): [0, 1, 2, 3, 4, 5]</code><br>
+          <code>Deep flat(1): [[1,2], [3,4], [5,6]]</code><br>
+          <code>Deep flat(2): [1, 2, 3, 4, 5, 6]</code><br>
+          <code>Deep flat(Infinity): [1, 2, 3, 4, 5, 6]</code>
+        </div>
+        <div class="answer-explanation">
+          <strong>Flattening methods:</strong><br>
+          1. <code>reduce + concat</code> — classic interview answer (works for 1 level)<br>
+          2. <code>Array.flat(n)</code> — modern, specify depth<br>
+          3. <code>Array.flat(Infinity)</code> — completely flatten regardless of nesting<br>
+          The reduce approach proves you understand how to manipulate arrays programmatically.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     END SECTION
+     ============================================================ -->
+<div class="container">
+  <div class="end-section">
+    <h2>🎯 Master These Patterns</h2>
+    <p>
+      <strong>map()</strong> transforms data — used for rendering lists in React.<br>
+      <strong>filter()</strong> selects data — used for search, categories, and conditions.<br>
+      <strong>reduce()</strong> aggregates data — used for sums, groups, and complex transforms.<br>
+      <strong>console.log()</strong> predictions test your understanding of JS internals.<br>
+      <strong>Array basics</strong> are the foundation — master these before anything else.
+    </p>
+    <p style="margin-top:16px; color:var(--text-muted); font-size:13px;">
+      Pro tip: Create a blank editor tab and try writing each solution from memory before looking at the answers.
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script>
+  // ---------------------------------
+  // Initialize all questions
+  // ---------------------------------
+  const questions = [
+    // map questions
+    { id: 'map-q1', code: `const nums = [1, 2, 3, 4, 5];\nconst doubled = nums.map(n => n * 2);\nconsole.log("Original:", nums);\nconsole.log("Doubled:", doubled);` },
+    { id: 'map-q2', code: `const users = [\n  { name: "Alice", age: 25 },\n  { name: "Bob", age: 30 },\n  { name: "Charlie", age: 35 }\n];\nconst names = users.map(u => u.name);\nconsole.log("Names:", names);` },
+    { id: 'map-q3', code: `const fruits = ["Apple", "Banana", "Cherry"];\nconst numbered = fruits.map((fruit, index) => \`\${index + 1}. \${fruit}\`);\nconsole.log(numbered);` },
+    { id: 'map-q4', code: `const arr = [1, , 3];\nconst result = arr.map(x => x * 2);\nconsole.log("Result:", result);\nconsole.log("Length:", result.length);\nconsole.log("Has index 1:", result.hasOwnProperty(1));` },
+    { id: 'map-q5', code: `const nums = ["1", "2", "3"].map(parseInt);\nconsole.log(nums);` },
+    { id: 'map-q6', code: `const data = [\n  { id: 1, name: "Alice" },\n  { id: 2, name: "Bob" }\n];\nconst components = data.map(item => ({\n  key: item.id,\n  label: item.name.toUpperCase(),\n  selected: false\n}));\nconsole.log(components);` },
+    { id: 'map-q7', code: `const items = ["A", "B", "C"];\nconst badMap = items.map((item, i) => \`\${i}: \${item}\`);\nconsole.log("With index:", badMap);\nconst goodMap = items.map((item) => \`\${item}-\${Math.random()}\`);\nconsole.log("With random key:", goodMap);\nconsole.log("Why is index-based key bad?");` },
+
+    // filter questions
+    { id: 'filter-q1', code: `const nums = [1, 2, 3, 4, 5, 6];\nconst evens = nums.filter(n => n % 2 === 0);\nconsole.log("Original:", nums);\nconsole.log("Evens:", evens);` },
+    { id: 'filter-q2', code: `const values = [0, 1, "", "hello", false, true, null, undefined, NaN];\nconst truthy = values.filter(Boolean);\nconsole.log("Truthy values:", truthy);\nconsole.log("Length:", truthy.length);` },
+    { id: 'filter-q3', code: `const users = [\n  { name: "Alice", active: true },\n  { name: "Bob", active: false },\n  { name: "Charlie", active: true },\n  { name: "Diana", active: false }\n];\nconst activeUsers = users.filter(u => u.active);\nconsole.log("Active:", activeUsers.map(u => u.name));` },
+    { id: 'filter-q4', code: `const nums = [1, 2, 2, 3, 4, 4, 5];\nconst unique = nums.filter((num, index, arr) => {\n  return arr.indexOf(num) === index;\n});\nconsole.log("Original:", nums);\nconsole.log("Unique:", unique);` },
+    { id: 'filter-q5', code: `const result1 = [].filter(x => x > 0);\nconsole.log("Empty array:", result1);\nconst result2 = [1, -2, 3].filter(x => x > 10);\nconsole.log("No matches:", result2);\nconst result3 = [1, 2, 3].filter(x => x);\nconsole.log("Truthy filter:", result3);\nconsole.log("Are any of these the same reference?");` },
+    { id: 'filter-q6', code: `const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = data\n  .filter(n => n % 2 === 0)\n  .map(n => n * 10);\nconsole.log("Chained result:", result);\nconsole.log("Passes over data: 2");\nconst singlePass = data.reduce((acc, n) => {\n  if (n % 2 === 0) acc.push(n * 10);\n  return acc;\n}, []);\nconsole.log("Single-pass result:", singlePass);` },
+
+    // reduce questions
+    { id: 'reduce-q1', code: `const nums = [1, 2, 3, 4, 5];\nconst sum = nums.reduce((acc, cur) => acc + cur, 0);\nconsole.log("Sum:", sum);` },
+    { id: 'reduce-q2', code: `const nums = [1, 2, 3, 4, 5];\nconst sum = nums.reduce((acc, cur) => acc + cur);\nconsole.log("Sum without initial:", sum);\nconst empty = [];` },
+    { id: 'reduce-q3', code: `const nested = [[1, 2], [3, 4], [5, 6]];\nconst flat = nested.reduce((acc, cur) => acc.concat(cur), []);\nconsole.log("Flattened:", flat);` },
+    { id: 'reduce-q4', code: `const people = [\n  { name: "Alice", age: 25 },\n  { name: "Bob", age: 30 },\n  { name: "Charlie", age: 25 },\n  { name: "Diana", age: 30 },\n  { name: "Eve", age: 35 }\n];\nconst grouped = people.reduce((acc, person) => {\n  (acc[person.age] = acc[person.age] || []).push(person.name);\n  return acc;\n}, {});\nconsole.log("Grouped by age:", JSON.stringify(grouped, null, 2));` },
+    { id: 'reduce-q5', code: `const fruits = ["apple", "banana", "apple", "orange", "banana", "apple"];\nconst count = fruits.reduce((acc, fruit) => {\n  acc[fruit] = (acc[fruit] || 0) + 1;\n  return acc;\n}, {});\nconsole.log("Fruit count:", count);` },
+    { id: 'reduce-q6', code: `const nums = [1, 2, 3, 4, 5];\nconst doubled = nums.reduce((acc, cur) => {\n  acc.push(cur * 2);\n  return acc;\n}, []);\nconsole.log("Doubled (via reduce):", doubled);\nconst evens = nums.reduce((acc, cur) => {\n  if (cur % 2 === 0) acc.push(cur);\n  return acc;\n}, []);\nconsole.log("Evens (via reduce):", evens);` },
+
+    // console questions
+    { id: 'console-q1', code: `console.log(a);\nvar a = 5;\nconsole.log(a);` },
+    { id: 'console-q2', code: `console.log(b);\nlet b = 10;` },
+    { id: 'console-q3', code: `for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100);\n}` },
+    { id: 'console-q4', code: `for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100);\n}` },
+    { id: 'console-q5', code: `console.log("1");\nsetTimeout(() => console.log("2"), 0);\nPromise.resolve().then(() => console.log("3"));\nconsole.log("4");` },
+    { id: 'console-q6', code: `console.log(1 == "1");\nconsole.log(1 === "1");\nconsole.log(false == "0");\nconsole.log(false === "0");\nconsole.log(null == undefined);\nconsole.log(null === undefined);\nconsole.log([] == false);\nconsole.log([1] == true);` },
+    { id: 'console-q7', code: `const obj = {\n  name: "MyObject",\n  regular: function() {\n    console.log("Regular:", this.name);\n  },\n  arrow: () => {\n    console.log("Arrow:", this.name);\n  }\n};\nobj.regular();\nobj.arrow();\nconst regularUnbound = obj.regular;\nregularUnbound();\nconst regularBound = obj.regular.bind({ name: "Bound!" });\nregularBound();` },
+    { id: 'console-q8', code: `console.log(typeof NaN);\nconsole.log(NaN === NaN);\nconsole.log(NaN == NaN);\nconsole.log(Object.is(NaN, NaN));\nconsole.log(isNaN("hello"));\nconsole.log(Number.isNaN("hello"));` },
+    { id: 'console-q9', code: `console.log([] + []);\nconsole.log([] + {});\nconsole.log([1, 2] + [3, 4]);` },
+    { id: 'console-q10', code: `const original = { a: 1, b: { c: 2 } };\nconst copy = { ...original };\ncopy.a = 99;\nconsole.log("original.a:", original.a);\nconsole.log("copy.a:", copy.a);\ncopy.b.c = 999;\nconsole.log("original.b.c:", original.b.c);\nconsole.log("copy.b.c:", copy.b.c);` },
+    { id: 'console-q11', code: `const obj = { a: 1, b: null, c: undefined };\nconst { a = 10, b = 20, c = 30, d = 40 } = obj;\nconsole.log("a:", a);\nconsole.log("b:", b);\nconsole.log("c:", c);\nconsole.log("d:", d);` },
+    { id: 'console-q12', code: `Promise.resolve(1)\n  .then(x => {\n    console.log("then1:", x);\n    return x + 1;\n  })\n  .then(x => {\n    console.log("then2:", x);\n    return Promise.resolve(x + 1);\n  })\n  .then(x => {\n    console.log("then3:", x);\n    throw new Error("Boom!");\n  })\n  .catch(err => {\n    console.log("catch:", err.message);\n    return "recovered";\n  })\n  .then(x => {\n    console.log("then4:", x);\n  });` },
+    { id: 'console-q13', code: `async function async1() {\n  console.log("async1 start");\n  await async2();\n  console.log("async1 end");\n}\nasync function async2() {\n  console.log("async2");\n}\nconsole.log("script start");\nsetTimeout(() => console.log("setTimeout"), 0);\nasync1();\nnew Promise(resolve => {\n  console.log("promise1");\n  resolve();\n}).then(() => console.log("promise2"));\nconsole.log("script end");` },
+    { id: 'console-q14', code: `console.log(+"123");\nconsole.log(+true);\nconsole.log(+false);\nconsole.log(+null);\nconsole.log(+undefined);\nconsole.log(+"");\nconsole.log(+"hello");` },
+    { id: 'console-q15', code: `console.log("hello" || "world");\nconsole.log(0 || "default");\nconsole.log(null || "fallback");\nconsole.log("" || "empty");\nconsole.log("hello" && "world");\nconsole.log(0 && "never");\nconsole.log(true && "yes");\nconsole.log(false && "no");` },
+
+    // Array fundamentals
+    { id: 'arr-q1', code: `const arr1 = [1, 2, 3];\nconsole.log("Literal:", arr1);\nconst arr2 = new Array(1, 2, 3);\nconsole.log("Constructor:", arr2);\nconst arr3 = Array.from({ length: 3 }, (_, i) => i + 1);\nconsole.log("Array.from:", arr3);\nconst arr4 = Array.of(1, 2, 3);\nconsole.log("Array.of:", arr4);\nconst arr5 = [...[1, 2, 3]];\nconsole.log("Spread:", arr5);\nconst trap = new Array(3);\nconsole.log("new Array(3):", trap, "length:", trap.length);` },
+    { id: 'arr-q2', code: `const array = [1, 2, 3, 4, 5];\nconst copy1 = array.slice();\nconsole.log("slice copy:", copy1);\nconsole.log("Same reference?", copy1 === array);\nconst copy2 = [];\nfor (let i = 0; i < array.length; i++) {\n  copy2.push(array[i]);\n}\nconsole.log("for loop copy:", copy2);\nconst copy3 = [...array];\nconsole.log("spread copy:", copy3);\narray.push(6);\nconsole.log("Original after push:", array);\nconsole.log("copy1 unchanged:", copy1);` },
+    { id: 'arr-q3', code: `let array = [1, 2, 3, 4, 5];\nconsole.log("Original:", array);\narray.length = 0;\nconsole.log("After length=0:", array);\narray = [1, 2, 3, 4, 5];\narray = [];\nconsole.log("After re-assign:", array);\narray = [1, 2, 3, 4, 5];\narray.splice(0, array.length);\nconsole.log("After splice:", array);\narray = [1, 2, 3, 4, 5];\nwhile (array.length) array.pop();\nconsole.log("After pop loop:", array);` },
+    { id: 'arr-q4', code: `const arr = [1, 2, 3];\nconsole.log("typeof arr:", typeof arr);` },
+    { id: 'arr-q5', code: `const arr = [1, 2, 3];\nconst obj = { a: 1 };\nconst str = "hello";\nconsole.log("Array.isArray(arr):", Array.isArray(arr));\nconsole.log("Array.isArray(obj):", Array.isArray(obj));\nconsole.log("Array.isArray(str):", Array.isArray(str));\nconsole.log("Object.prototype.toString:", Object.prototype.toString.call(arr));` },
+    { id: 'arr-q6', code: `const arr = [1, 2, 3];\narr.push(4);\nconsole.log("After push:", arr);\nconst arr2 = [1, 2, 3];\nconst newArr = arr2.concat(4);\nconsole.log("Original:", arr2, "New:", newArr);\nconst arr3 = [1, 2, 3];\nconst spreadArr = [...arr3, 4];\nconsole.log("Spread result:", spreadArr);` },
+    { id: 'arr-q7', code: `const arr = ["a", "b", "c", "d"];\nconsole.log("Index of 'd':", arr.indexOf("d"));\nconsole.log("Index of 'z':", arr.indexOf("z"));` },
+    { id: 'arr-q9', code: `const items = ["milk", "bread", "sugar"];\nconst hasMilk = items.includes("milk");\nconsole.log("Has milk?", hasMilk);\nconst milkIndex = items.indexOf("milk");\nconsole.log("Milk index:", milkIndex);\nif (milkIndex !== -1) {\n  items.splice(milkIndex, 1);\n}\nconsole.log("After removing milk:", items);` },
+    { id: 'arr-q10', code: `const fruits = ["apple", "banana", "cherry"];\nconsole.log("--- for loop ---");\nfor (let i = 0; i < fruits.length; i++) {\n  console.log(fruits[i]);\n}\nconsole.log("--- for...of ---");\nfor (const fruit of fruits) {\n  console.log(fruit);\n}\nconsole.log("--- forEach ---");\nfruits.forEach((fruit, i) => console.log(\`\${i}: \${fruit}\`));\nconsole.log("--- while ---");\nlet j = 0;\nwhile (j < fruits.length) {\n  console.log(fruits[j++]);\n}` },
+    { id: 'arr-q12', code: `const numbers = [1, 12, 2, 23, 77, 7, 33, 5, 99, 234];\nconst defaultSort = [...numbers].sort();\nconsole.log("Default sort:", defaultSort);\nconst ascending = [...numbers].sort((a, b) => a - b);\nconsole.log("Ascending:", ascending);\nconst descending = [...numbers].sort((a, b) => b - a);\nconsole.log("Descending:", descending);` },
+    { id: 'arr-q13', code: `const letters = ["a", "z", "e", "y"];\nconst asc = [...letters].sort();\nconsole.log("A-Z:", asc);\nconst desc = [...letters].sort().reverse();\nconsole.log("Z-A:", desc);\nconst words = ["résumé", "apple", "café", "banana"];\nconst localeSorted = [...words].sort((a, b) => a.localeCompare(b));\nconsole.log("Locale sort:", localeSorted);` },
+    { id: 'arr-q14', code: `var arr1 = [, , ,];\nconsole.log("arr1 length:", arr1.length);\nvar arr2 = new Array(3);\nconsole.log("arr2 length:", arr2.length);\nvar arr3 = [1, 2, 3, 4, 5];\nconsole.log("arr3 length:", arr3.length);\nvar arr4 = [\n  [1, 2, 3],\n  [4, 5, 6],\n];\nconsole.log("arr4 length:", arr4.length);` },
+    { id: 'arr-q15', code: `var a = ["zero", "one", "two", "three"];\nvar names = ["jason", "john", "peter", "karen"];\nvar sliced = a.slice(1, 3);\nconsole.log("slice(1,3):", sliced);\nconsole.log("Original after slice:", a);\nvar spliced = names.splice(1, 3);\nconsole.log("splice(1,3):", spliced);\nconsole.log("Original after splice:", names);` },
+    { id: 'arr-q16', code: `var a = [];\na.unshift(1);\na.unshift(22);\nvar b = a;\na.shift();\nvar c = a;\na.unshift(3, [4, 5]);\nvar d = a;\na.shift();\nvar e = a;\na.shift();\nvar f = a;\na.shift();\nvar g = a;\nconsole.log("b:", b);\nconsole.log("c:", c);\nconsole.log("d:", d);\nconsole.log("e:", e);\nconsole.log("f:", f);\nconsole.log("g:", g);` },
+    { id: 'arr-q17', code: `var numbers = [1, 2, 3, 4, 5, 6];\nconst sum = numbers.reduce((acc, cur) => acc + cur, 0);\nconsole.log("Sum:", sum);\nlet total = 0;\nfor (let i = 0; i < numbers.length; i++) {\n  total += numbers[i];\n}\nconsole.log("Total (for loop):", total);` },
+    { id: 'arr-q18', code: `var array = [\n  [0, 1],\n  [2, 3],\n  [4, 5],\n];\nconst flat = array.reduce((acc, cur) => acc.concat(cur), []);\nconsole.log("Flattened:", flat);\nconst flat2 = array.flat();\nconsole.log("Using flat():", flat2);\nconst deep = [[[1, 2], [3, 4]], [[5, 6]]];\nconsole.log("Deep flat(1):", deep.flat(1));\nconsole.log("Deep flat(2):", deep.flat(2));\nconsole.log("Deep flat(Infinity):", deep.flat(Infinity));` },
+  ];
+
+  // Setup all questions
+  questions.forEach(q => {
+    const card = document.getElementById(q.id);
+    if (!card) return;
+
+    const textarea = card.querySelector('.pq-editor textarea');
+    const outputDiv = card.querySelector('.pq-output');
+    const answerDiv = card.querySelector('.pq-answer');
+    const runBtn = card.querySelector('.btn-run');
+    const resetBtn = card.querySelector('.btn-reset');
+    const toggleAnswerBtn = card.querySelector('.btn-toggle-answer');
+
+    if (textarea) textarea.dataset.default = textarea.value;
+
+    if (runBtn) {
+      runBtn.addEventListener('click', () => {
+        outputDiv.classList.add('show');
+        outputDiv.innerHTML = '';
+
+        const code = textarea.value;
+        const lines = [];
+        const mockConsole = {
+          _lines: lines,
+          log(...args) { this._lines.push({ type: 'log', text: args.map(String).join(' ') }); },
+          error(...args) { this._lines.push({ type: 'error', text: args.map(String).join(' ') }); },
+          warn(...args) { this._lines.push({ type: 'warn', text: args.map(String).join(' ') }); },
+          info(...args) { this._lines.push({ type: 'info', text: args.map(String).join(' ') }); },
+          table(data) { this._lines.push({ type: 'log', text: JSON.stringify(data, null, 2) }); },
+          dir(obj) { this._lines.push({ type: 'log', text: JSON.stringify(obj, null, 2) }); },
+        };
+
+        try {
+          const fn = new Function('console', code);
+          fn(mockConsole);
+
+          if (mockConsole._lines.length === 0) {
+            outputDiv.innerHTML = '<span class="log-info">✓ Code executed (no console output)</span>';
+          } else {
+            mockConsole._lines.forEach(l => {
+              const span = document.createElement('div');
+              span.className = 'log-' + l.type;
+              span.textContent = l.text;
+              outputDiv.appendChild(span);
+            });
+          }
+        } catch (err) {
+          outputDiv.innerHTML = `<span class="log-error">✗ ${err.name}: ${err.message}</span>`;
+        }
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (textarea) textarea.value = textarea.dataset.default || textarea.value;
+        if (outputDiv) outputDiv.classList.remove('show');
+      });
+    }
+
+    if (toggleAnswerBtn) {
+      toggleAnswerBtn.addEventListener('click', () => {
+        answerDiv.classList.toggle('show');
+        toggleAnswerBtn.classList.toggle('showing');
+        toggleAnswerBtn.textContent = answerDiv.classList.contains('show') ? '🙈 Hide Answer' : '👁 Show Answer';
+      });
+    }
+  });
+
+  // ---------------------------------
+  // Filter buttons
+  // ---------------------------------
+  document.querySelectorAll('.filter-bar').forEach(bar => {
+    const buttons = bar.querySelectorAll('.filter-btn');
+    const container = bar.closest('.pq-section').nextElementSibling;
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+        if (!container) return;
+
+        const cards = container.querySelectorAll('.pq-card');
+        cards.forEach(card => {
+          if (filter === 'all') {
+            card.style.display = '';
+          } else {
+            card.style.display = card.dataset.difficulty === filter ? '' : 'none';
+          }
+        });
+      });
+    });
+  });
+
+  // ---------------------------------
+  // Scroll spy for nav
+  // ---------------------------------
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.nav-links a').forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
+
+  document.querySelectorAll('.pq-section').forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>

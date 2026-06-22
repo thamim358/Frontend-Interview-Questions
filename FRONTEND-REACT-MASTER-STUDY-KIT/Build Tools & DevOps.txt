@@ -1,0 +1,83 @@
+Build Tools & DevOps Interview Questions (80+ Questions)
+Frontend React Developer • Senior Frontend Engineer • DevOps Engineer
+
+SECTION 1: Build Tools
+Vite vs Webpack — why Vite is preferred?
+Vite dev server — native ESM, fast HMR?
+Webpack — mature, plugin ecosystem, Module Federation?
+esbuild — Go-based, fast transpilation?
+SWC — Rust-based JS/TS compiler, Next.js uses it?
+Rollup — library bundling?
+Turbopack — Rust-based, Next.js future bundler?
+
+SECTION 2: Module Bundling
+Tree-shaking — how does it work?
+Code splitting — route-based vs component-based?
+Dynamic imports — import() syntax?
+Chunking — vendor chunk, shared chunk, async chunk?
+Bundle analysis — vite-bundle-visualizer, webpack-bundle-analyzer?
+Reducing bundle size — analyze dependencies, replace heavy libs?
+Side effects — "sideEffects": false for tree-shaking?
+
+SECTION 3: Babel
+What is Babel? JSX transformation?
+@babel/preset-env — browser targeting?
+@babel/preset-react — JSX transform?
+Babel plugins vs presets?
+Babel vs SWC — SWC is 20x faster?
+Browserlist — configuring target browsers?
+
+SECTION 4: ESLint & Prettier
+ESLint — static code analysis?
+eslint-plugin-react — React-specific rules?
+eslint-plugin-react-hooks — rules of hooks (must have)?
+@typescript-eslint — TypeScript rules?
+Prettier — opinionated formatting?
+eslint-config-prettier — disabling conflicting rules?
+Husky + lint-staged — pre-commit hooks?
+
+SECTION 5: CI/CD
+GitHub Actions — most common for React projects?
+Pipeline stages — lint → type-check → test → build → deploy?
+Preview deployments — Vercel, Netlify per PR?
+Environment management — .env, CI secrets?
+Artifact management — storing build outputs?
+Testing in CI — parallel execution, sharding?
+Docker in CI — consistent environments?
+
+SECTION 6: Docker
+Multi-stage Dockerfile for React apps?
+Node.js build stage + Nginx serve stage?
+.dockerignore — excluding node_modules?
+Docker Compose for dev environment?
+Docker volumes for HMR?
+
+SECTION 7: Deployment
+Vercel — optimized for Next.js, edge functions?
+Netlify — great for static sites?
+AWS — S3 + CloudFront for SPAs, Amplify for full apps?
+Docker + ECS/Kubernetes for containerized deployment?
+Edge Functions — Vercel Edge, Cloudflare Workers?
+Environment-specific builds — dev, staging, production?
+
+SECTION 8: Monorepos
+Turborepo — task orchestration, caching, parallel execution?
+Nx — generators, affected commands, dependency graph?
+pnpm workspaces — fast, disk-efficient?
+Shared packages — utils, config, UI components?
+Benefits — sharing code, atomic commits, unified CI?
+
+SECTION 9: Module Federation
+Webpack 5 Module Federation — micro-frontends?
+Exposing and consuming remote modules?
+Shared dependencies — singleton versions?
+Micro-frontend integration patterns?
+When to use Module Federation vs monorepo?
+
+SECTION 10: Performance Tooling
+Bundle analysis tools?
+Lighthouse CI — performance budgets?
+Core Web Vitals monitoring?
+Image optimization pipeline?
+CDN caching strategies?
+Code coverage reporting?

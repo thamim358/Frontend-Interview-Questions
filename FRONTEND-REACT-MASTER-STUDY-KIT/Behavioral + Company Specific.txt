@@ -1,0 +1,76 @@
+Behavioral + Company Specific Interview Questions (80+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect
+
+SECTION 1: STAR Method
+What is STAR — Situation, Task, Action, Result?
+Tell me about yourself — present/past/future structure?
+Tell me about a time you improved React app performance (LCP, bundle size)?
+Tell me about a production bug you fixed (React stale closure, memory leak)?
+Describe a conflict with a designer/PM about a technical decision?
+Tell me about a time you failed — what did you learn?
+Describe a time you mentored a junior developer?
+Tell me about a time you had to choose between technical approaches (state management, framework)?
+How do you handle tight deadlines and competing priorities?
+Describe a project you architected from scratch?
+
+SECTION 2: Current Project & Architecture
+Walk me through your current React app architecture?
+Why did you choose your current state management solution?
+Explain your CI/CD pipeline?
+How do you handle performance optimization?
+How do you ensure accessibility?
+How do you manage technical debt?
+How do you do code reviews in your team?
+
+SECTION 3: Amazon Leadership Principles
+Customer Obsession — frontend UX improvement story?
+Insist on Highest Standards — code quality, testing?
+Dive Deep — complex React performance investigation?
+Deliver Results — shipped under tight deadline?
+Bias for Action — quick technical decision?
+Learn and Be Curious — staying current with React ecosystem?
+Hire and Develop the Best — mentoring story?
+Have Backbone — disagreeing on technical approach?
+
+SECTION 4: Google-Specific
+How would you design YouTube's frontend architecture?
+How would you test Google Search autocomplete?
+Product Sense — how would you improve Google Maps?
+Googleyness — cross-functional collaboration story?
+How would you handle ambiguous requirements?
+Scalability and reliability questions?
+
+SECTION 5: Meta (Facebook)-Specific
+How would you design Facebook's news feed?
+How would you design Instagram's stories?
+Move Fast with Stable Infra — shipping velocity vs quality?
+How would you improve React's developer experience?
+How would you test a social media feed algorithm?
+
+SECTION 6: Microsoft-Specific
+How would you design Teams' frontend architecture?
+Growth mindset — learning new tech story?
+Enterprise application design considerations?
+Accessibility at scale — Microsoft's approach?
+Cross-platform development (web, desktop, mobile)?
+
+SECTION 7: Senior/Staff Level Questions
+How do you influence without authority?
+How do you drive technical decisions across teams?
+How would you redesign our frontend architecture if you joined?
+How do you build a quality-first culture?
+How do you mentor and grow other engineers?
+How do you balance innovation vs stability?
+How do you handle ambiguity and unknown requirements?
+What's your approach to technical debt management?
+How do you measure frontend team success?
+
+SECTION 8: Common Behavioral Themes
+Conflict resolution with team members?
+Technical decision that went wrong — how you handled it?
+Leading a project with no clear requirements?
+Cross-team collaboration story?
+On-call/production incident resolution?
+Teaching others a new technology or pattern?
+Receiving and giving constructive feedback?
+Working with difficult stakeholders?

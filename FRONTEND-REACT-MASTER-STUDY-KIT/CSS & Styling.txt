@@ -1,0 +1,119 @@
+CSS & Styling Interview Questions (100+ Questions)
+Frontend React Developer • UI Engineer • Senior Frontend Engineer
+
+SECTION 1: CSS Fundamentals
+Box model — content, padding, border, margin?
+box-sizing — border-box vs content-box?
+Margin collapsing — when and why?
+Display — block, inline, inline-block, none?
+Position — static, relative, absolute, fixed, sticky?
+Z-index — stacking context?
+Specificity — how it's calculated?
+!important — why avoid it?
+Cascade — order of precedence?
+
+SECTION 2: Flexbox
+display: flex — container properties?
+flex-direction — row, column?
+justify-content — main axis alignment?
+align-items — cross axis alignment?
+flex-wrap — wrapping items?
+flex — grow, shrink, basis shorthand?
+order — reordering flex items?
+align-self — individual item alignment?
+Common flexbox patterns — navbar, centering, sidebar layout?
+Flexbox vs Grid — when to use each?
+
+SECTION 3: CSS Grid
+display: grid — defining rows and columns?
+grid-template-columns, grid-template-rows?
+gap — row-gap, column-gap?
+grid-area — named grid areas?
+minmax() — responsive sizing?
+auto-fill vs auto-fit — difference?
+Grid placement — grid-column, grid-row?
+Subgrid — inheriting parent grid tracks?
+Common grid patterns — page layout, card grid, dashboard?
+
+SECTION 4: Responsive Design
+Media queries — @media breakpoints?
+Mobile-first vs desktop-first approach?
+Relative units — rem, em, vw, vh, %?
+clamp() — fluid typography and spacing?
+Container queries — @container responding to container size?
+Responsive images — srcSet, sizes, picture element?
+Viewport meta tag?
+
+SECTION 5: Tailwind CSS
+Utility-first approach — benefits?
+Tailwind responsive prefixes — sm:, md:, lg:?
+Dark mode — dark: prefix, class-based vs media?
+Tailwind config — theme extension, custom values?
+PurgeCSS — tree-shaking unused styles?
+@apply — extracting repeated utilities?
+Tailwind vs CSS-in-JS vs CSS Modules?
+Tailwind best practices — component extraction, consistency?
+
+SECTION 6: CSS Modules
+How CSS Modules work — locally scoped class names?
+Composing classes — composes keyword?
+CSS Modules in React — import styles from './Button.module.css'?
+CSS Modules vs Tailwind — when to use each?
+Global styles vs module styles?
+
+SECTION 7: CSS-in-JS
+Styled Components — tagged template literals?
+Emotion — similar to Styled Components?
+Runtime vs zero-runtime — trade-offs?
+CSS-in-JS performance concerns?
+Dynamic styling with props?
+Theming with ThemeProvider?
+SSR considerations — ServerStyleSheet?
+Why Tailwind is replacing CSS-in-JS in 2024+?
+
+SECTION 8: Theming & Dark Mode
+CSS custom properties (variables) — enabling theming?
+prefers-color-scheme media query?
+class-based dark mode toggle?
+data-theme attribute approach?
+Design tokens — colors, spacing, typography as variables?
+Theme persistence — localStorage?
+
+SECTION 9: Animations & Transitions
+CSS transitions — property, duration, easing?
+CSS animations — @keyframes?
+transform — translate, scale, rotate, skew?
+transform-origin?
+will-change — hinting browser about changes?
+Performance — why transform and opacity are GPU-friendly?
+Framer Motion — React animation library?
+AnimatePresence — mount/unmount animations?
+
+SECTION 10: Modern CSS Features
+:has() — parent selector?
+Container queries — @container?
+CSS nesting — without preprocessors?
+@layer — cascade control?
+@scope — scoped styles?
+color-mix() — color blending?
+text-wrap: balance — balanced headlines?
+scroll-timeline — scroll-driven animations?
+view-transitions-api — SPA-like transitions?
+accent-color — form control styling?
+
+SECTION 11: Design Systems
+Design tokens — colors, spacing, typography?
+Component library architecture?
+Storybook — component documentation?
+Design system versioning?
+Accessibility in design systems?
+Theme customization?
+Building a design system with Tailwind?
+
+SECTION 12: Performance & Optimization
+CSS containment — contain property?
+content-visibility: auto — skip off-screen rendering?
+Critical CSS inlining?
+Code splitting CSS per route?
+CSS file size optimization?
+Reducing CSS specificity wars?

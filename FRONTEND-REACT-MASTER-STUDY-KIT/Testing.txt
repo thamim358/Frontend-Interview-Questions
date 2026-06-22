@@ -1,0 +1,102 @@
+Testing Interview Questions (120+ Questions)
+Frontend React Developer • Senior Frontend Engineer • QA Automation Engineer
+
+SECTION 1: Testing Philosophy
+Testing trophy vs testing pyramid — what to prioritize?
+Unit vs integration vs E2E tests — when each?
+Testing behavior vs implementation — why it matters?
+RTL guiding principles — test like a user?
+What makes a good test — confidence, not coverage?
+Testing in CI/CD — when and how?
+
+SECTION 2: Jest
+describe, it, test — test structure?
+expect — matchers (toBe, toEqual, toContain)?
+jest.fn() — mock functions?
+jest.spyOn() — spying on existing methods?
+jest.mock() — mocking modules?
+jest.useFakeTimers() — time-related tests?
+beforeEach, afterEach, beforeAll, afterAll?
+Coverage reports — what to aim for?
+Jest configuration for React projects?
+
+SECTION 3: React Testing Library
+render() — rendering components?
+Queries — getBy, queryBy, findBy?
+Priority — getByRole > getByLabelText > getByText > getByTestId?
+userEvent — simulating user interactions?
+waitFor — waiting for async changes?
+screen.debug() — debugging rendered output?
+fireEvent vs userEvent — why prefer userEvent?
+Testing forms — userEvent.type, userEvent.click?
+Testing async operations — findBy queries?
+Testing error states, loading states, empty states?
+
+SECTION 4: Mocking & MSW
+Mock Service Worker (MSW) — what is it?
+MSW vs mocking fetch directly — why MSW is better?
+Setting up MSW handlers?
+Testing network errors and edge cases?
+MSW for integration tests?
+jest.mock for module mocking — when needed?
+jest.spyOn for partial mocks?
+
+SECTION 5: Testing Hooks
+renderHook — testing custom hooks?
+Testing hook state updates?
+Testing hook side effects?
+Testing hooks with context providers?
+Testing hooks that use timers?
+
+SECTION 6: Testing Context & Redux/Zustand
+Testing Context consumers — wrapper?
+Testing Redux-connected components — Provider?
+Testing Zustand stores — create fresh store per test?
+Testing React Query — QueryClientProvider?
+
+SECTION 7: E2E Testing with Playwright
+Playwright vs Cypress — comparison?
+Playwright architecture — CDP, browser contexts?
+Locators — getByRole, locator, page?
+Auto-waiting — why Playwright is less flaky?
+Web-first assertions?
+Playwright configuration — browsers, retries, workers?
+Trace viewer — debugging failures?
+Sharding — parallel execution?
+Docker integration?
+
+SECTION 8: Snapshot Testing
+toMatchSnapshot — when to use?
+Snapshot best practices — keep small, review on update?
+Snapshot pitfalls — large snapshots, false confidence?
+Inline snapshots — better for small values?
+When NOT to use snapshots?
+
+SECTION 9: Accessibility Testing
+jest-axe — toHaveNoViolations()?
+Playwright + axe-core for E2E a11y tests?
+Keyboard navigation testing?
+Screen reader compatibility?
+Color contrast testing?
+
+SECTION 10: Visual Regression Testing
+Chromatic for Storybook?
+Playwright visual comparisons?
+Percy for visual diffs?
+Baseline images and pixel diff?
+Handling dynamic content in screenshots?
+
+SECTION 11: Test Data & Fixtures
+Test data factories — @faker-js/faker?
+Factory pattern for test data?
+Seed data vs generated data?
+Test fixtures — shared setup?
+Cleanup between tests — isolation?
+
+SECTION 12: Test Organization
+Arrange-Act-Assert pattern?
+describe blocks for grouping?
+Test file organization — co-located vs __tests__?
+Naming conventions — test descriptions as sentences?
+Integration test structure?
+Flaky test handling — quarantine, retries, fix root cause?

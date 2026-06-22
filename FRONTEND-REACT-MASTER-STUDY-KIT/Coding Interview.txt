@@ -1,0 +1,97 @@
+Coding Interview Questions (100+ Problems)
+Frontend React Developer • Senior Frontend Engineer • React Architect
+
+SECTION 1: String Problems
+Longest Substring Without Repeating Characters — sliding window?
+Valid Palindrome — two pointers?
+Valid Anagram — character frequency counter?
+First Unique Character in a String?
+String to Integer (atoi)?
+Reverse Words in a String?
+Group Anagrams — sorted string as key?
+String compression?
+Longest Common Prefix?
+
+SECTION 2: Array Problems
+Two Sum — hash map pattern?
+Remove Duplicates from Sorted Array?
+Contains Duplicate — Set?
+Maximum Subarray (Kadane's Algorithm)?
+Product of Array Except Self — prefix/suffix?
+Move Zeroes — two pointers?
+Find Missing Number — sum formula or XOR?
+Find All Duplicates — in-place marking?
+Intersection of Two Arrays?
+Majority Element — Boyer-Moore voting?
+Rotate Array?
+Buy and Sell Stock — maximum profit?
+
+SECTION 3: Linked List Problems
+Reverse a Linked List — iterative + recursive?
+Detect Cycle (Floyd's Tortoise and Hare)?
+Merge Two Sorted Lists — dummy node technique?
+Middle of the Linked List — fast-slow pointers?
+Remove Nth Node From End — one-pass two pointers?
+Linked List Intersection?
+
+SECTION 4: Stack & Queue Problems
+Valid Parentheses — classic stack problem?
+Min Stack — auxiliary stack for min tracking?
+Implement Queue using Stacks — two stacks?
+Daily Temperatures — monotonic stack?
+Evaluate Reverse Polish Notation?
+
+SECTION 5: Tree Problems
+Maximum Depth of Binary Tree — recursion?
+Invert Binary Tree — swap children?
+Same Tree — recursive comparison?
+Binary Tree Level Order Traversal — BFS?
+Validate Binary Search Tree — in-order traversal?
+Lowest Common Ancestor of BST?
+
+SECTION 6: Dynamic Programming
+Climbing Stairs — Fibonacci DP?
+House Robber — take/skip pattern?
+Coin Change — minimum coins?
+Longest Increasing Subsequence?
+Maximum Subarray (Kadane's again)?
+
+SECTION 7: Matrix Problems
+Search a 2D Matrix — binary search on flattened?
+Rotate Image — transpose + reverse?
+Spiral Matrix — direction pointers?
+Set Matrix Zeroes — in-place marking?
+
+SECTION 8: Frontend-Specific Coding
+Implement Debounce — closure + setTimeout?
+Implement Throttle — timestamp comparison?
+Implement Promise.all — track resolved count?
+Implement Promise.race?
+Deep Clone Object — handle circular refs, Date, Map, Set?
+Deep Equal — recursive comparison with edge cases?
+JSON Validator — try/catch JSON.parse?
+Event Emitter — publish/subscribe pattern?
+Array.prototype.map polyfill?
+Function.prototype.bind polyfill?
+Array.prototype.reduce polyfill?
+Flatten Nested Array — recursive flat with depth?
+Currying — sum(1)(2)(3)?
+Memoize Function — cache keyed by arguments?
+Retry with Exponential Backoff — async retry with delay?
+
+SECTION 9: Data Structures
+LRU Cache — Map insertion order or doubly linked list?
+Design a Rate Limiter — token bucket?
+Implement a simple Virtual DOM — create element, diff, patch?
+Implement a simple Dependency Injection container?
+Implement a Pub/Sub system?
+
+SECTION 10: Problem-Solving Patterns
+Sliding Window — substring, subarray problems?
+Two Pointers — palindrome, pair sum?
+Fast and Slow Pointers — cycle detection, middle node?
+Frequency Counter — anagram, duplicate, intersection?
+Recursion / Backtracking — tree traversal, permutations?
+Top K Elements — heap/priority queue?
+BFS/DFS — graph and tree traversal?
+Prefix/Suffix — product except self, running sum?

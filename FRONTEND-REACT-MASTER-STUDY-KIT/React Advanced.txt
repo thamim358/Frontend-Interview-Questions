@@ -1,0 +1,137 @@
+React Advanced Interview Questions (150+ Questions)
+Senior Frontend Engineer • React Architect • Staff Frontend Engineer
+
+SECTION 1: Performance Optimization
+React.memo — when to use vs when NOT to?
+useMemo — memoizing computed values?
+useCallback — memoizing function references?
+When do useMemo/useCallback actually hurt performance?
+Profiling with React DevTools Profiler?
+Identifying unnecessary re-renders?
+Renderer priority — what causes long renders?
+Bailout strategies — React.memo, useMemo, lifting content up?
+
+SECTION 2: Custom Hooks
+What are custom hooks? Rules of hooks?
+useLocalStorage — persist state?
+useDebounce — debounce search input?
+useFetch — data fetching with loading/error?
+useMediaQuery — responsive design in JS?
+useIntersectionObserver — infinite scroll?
+useEventListener — adding event listeners?
+useClickOutside — closing modals/dropdowns?
+usePrevious — tracking previous value?
+useToggle — simple boolean toggle?
+Compound hooks pattern — related hooks working together?
+Custom hooks return type patterns — array vs object?
+
+SECTION 3: Stale Closures
+What is a stale closure in React hooks?
+Stale closures in useEffect with async code?
+Stale closures in setInterval/setTimeout?
+Stale closures in event handlers?
+Fixes — dependency array, useRef, useCallback?
+Functional updater pattern — setCount(prev => prev + 1)?
+useCallback with stable deps?
+useRef to store latest callback?
+useEvent (React 19) — stable function reference?
+
+SECTION 4: React.memo & Advanced Memoization
+React.memo with custom comparison function?
+When React.memo doesn't help — new objects/arrays props?
+Children prop and React.memo — does it work?
+React.memo with context consumers?
+Comparison cost vs re-render cost?
+React.memo for components in lists?
+
+SECTION 5: Render Patterns
+Render props pattern — when to use?
+Higher-Order Components (HOCs)?
+Hooks replacing render props and HOCs?
+Compound components — shared implicit state (Tabs)?
+Control props pattern?
+State reducer pattern?
+Prop collection and getter patterns?
+
+SECTION 6: Error Boundaries & Recovery
+Implementing Error Boundaries — componentDidCatch?
+getDerivedStateFromError vs componentDidCatch?
+Error Boundary placement strategy?
+Error recovery — retry mechanism?
+Error logging services — Sentry integration?
+Error boundaries for async code (use try/catch instead)?
+
+SECTION 7: Suspense & Concurrent Features
+React.lazy + Suspense for code splitting?
+Suspense for data fetching (React 18+)?
+useTransition — marking non-urgent updates?
+useDeferredValue — deferring value update?
+startTransition — outside hooks?
+Automatic batching — what's batched?
+Concurrent rendering — what does it enable?
+Suspense boundaries — granular loading states?
+
+SECTION 8: Portals & Advanced DOM
+createPortal — rendering outside parent DOM?
+Event bubbling through portals?
+Portal use cases — modals, tooltips, dropdowns?
+Portal + Context — does context pass through portals?
+Multiple portals — rendering to different nodes?
+
+SECTION 9: Fiber Architecture
+What is React Fiber?
+Why was Fiber created?
+Fiber nodes — unit of work?
+Incremental rendering — splitting work into chunks?
+Priority levels — different update priorities?
+How Fiber enables concurrent features?
+Fiber and reconciliation — how they work together?
+
+SECTION 10: Virtual DOM Deep Dive
+What is a React element (plain object)?
+createElement returns — type, props, key, ref?
+$$typeof Symbol — XSS protection?
+Reconciliation algorithm — how it works?
+Diffing algorithm — assumptions (heuristics)?
+Key reconciliation during list updates?
+Tree diffing — O(n) complexity assumption?
+Component type changes — unmount old, mount new?
+
+SECTION 11: useRef & ForwardRef Advanced
+Callback refs vs useRef?
+Measuring DOM node dimensions?
+forwardRef + useImperativeHandle pattern?
+Refs in higher-order components?
+Refs to function components (need forwardRef)?
+Refs and third-party libraries integration?
+
+SECTION 12: useImperativeHandle
+Exposing methods to parent?
+useImperativeHandle with forwardRef?
+Use cases — focus, scroll, animation controls?
+Integration with form libraries?
+
+SECTION 13: useLayoutEffect vs useEffect
+useLayoutEffect — synchronous, before paint?
+useEffect — asynchronous, after paint?
+When to use useLayoutEffect — measuring DOM, animations?
+When NOT to use useLayoutEffect (blocks paint)?
+SSR considerations — useLayoutEffect warning?
+
+SECTION 14: Concurrent Features
+Automatic batching in React 18?
+Transitions — useTransition, startTransition?
+useDeferredValue vs debouncing?
+Concurrent rendering benefits?
+SuspenseList — coordinating Suspense boundaries?
+Transitions and pending states?
+
+SECTION 15: Server Components (React 19)
+React Server Components — what are they?
+Server Components vs Client Components?
+Server Components benefits — smaller bundle, direct backend access?
+Server Components limitations — no state, no effects?
+Next.js App Router — default Server Components?
+'use client' directive — when needed?
+Server Actions — form mutations on server?
+Server Components and streaming?

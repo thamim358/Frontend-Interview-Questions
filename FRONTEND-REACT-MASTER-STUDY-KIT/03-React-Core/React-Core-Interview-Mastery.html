@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Core Interview Mastery — Frontend React Study Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/nebula.css">
+<style>
+  .cover-page::before { background: radial-gradient(circle at 30% 50%, rgba(56,189,248,0.06) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(129,140,248,0.05) 0%, transparent 50%); }
+  .cover-title { background: linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .cover-divider { background: linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%); }
+  .section-divider h2 { background: linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .q-number { background: linear-gradient(135deg, #38bdf8 0%, #2dd4bf 100%); }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Frontend React Master Study Kit</div>
+  <h1 class="cover-title">React Core Interview Mastery</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">50 High-Value Questions for Senior Frontend React Developer Interviews</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">22</span><span class="label">P1 — Must Know</span></div>
+    <div class="cover-meta-item"><span class="number">18</span><span class="label">P2 — Commonly Asked</span></div>
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P3 — Valuable Context</span></div>
+    <div class="cover-meta-item"><span class="number">50</span><span class="label">Total Retained</span></div>
+  </div>
+  <p class="cover-description" style="margin-top:30px;">Covers JSX, components, props, state, hooks (useState, useEffect, useRef, useReducer), lifecycle, forms, lists, Context API, composition patterns, and event handling — the core of every React interview.</p>
+</div>
+
+<div class="container"><h2 style="font-size:24px;margin-bottom:24px;color:var(--accent-blue);">Table of Contents</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:40px;">
+    <div style="color:var(--text-secondary);font-size:14px;"><strong style="color:var(--accent-red);">P1</strong> — Questions 1–22: Frequently Asked</div>
+    <div style="color:var(--text-secondary);font-size:14px;"><strong style="color:var(--accent-orange);">P2</strong> — Questions 23–40: Commonly Asked</div>
+    <div style="color:var(--text-secondary);font-size:14px;"><strong style="color:var(--accent-blue);">P3</strong> — Questions 41–50: Valuable Context</div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P1 — Frequently Asked Questions</h2><p>You MUST know these for any React interview.</p></div>
+
+<div class="container">
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">1</span><div><span class="q-text">What is React? Explain the Virtual DOM and how it works.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>React is a declarative, component-based UI library. The Virtual DOM is a lightweight JavaScript representation of the real DOM. When state changes, React creates a new Virtual DOM tree, diffs it against the previous one (reconciliation), calculates minimal updates, and applies them to the real DOM (commit phase). This process is called "reconciliation" and is powered by the Fiber architecture.</p></div>
+    <div class="q-section"><div class="q-section-title">Real Interview Answer</div><p>"React's Virtual DOM is a lightweight copy of the real DOM in memory. When state changes, React computes the difference (diffing) between the new and old Virtual DOM trees using the Fiber reconciler, then applies only the minimal updates to the actual DOM. This makes React efficient because direct DOM manipulation is slow. The key insight is that React batches these updates and uses a sophisticated reconciliation algorithm with keys for efficient list updates."</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">2</span><div><span class="q-text">What is JSX? How does it work under the hood?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>JSX is a syntax extension that looks like HTML but compiles to <code>React.createElement()</code> calls. Babel transforms JSX into <code>React.createElement(type, props, ...children)</code> which returns a React element (a plain object with <code>type</code>, <code>props</code>, and <code>key</code>). JSX makes React code more readable. React 17+ introduced the new JSX transform that auto-imports from <code>react/jsx-runtime</code>, so you don't need <code>import React</code> at the top of every file.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">3</span><div><span class="q-text">Explain the difference between functional components and class components.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Functional components are plain functions that accept props and return JSX. Class components extend <code>React.Component</code> and have lifecycle methods. With hooks (React 16.8+), functional components can do everything class components can — state (<code>useState</code>), side effects (<code>useEffect</code>), context (<code>useContext</code>), and more. Functional components are simpler, have less boilerplate, and the React team recommends them for all new code.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">4</span><div><span class="q-text">Explain the React component lifecycle and how hooks replace lifecycle methods.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Lifecycle phases: Mounting, Updating, Unmounting. Class component methods: <code>componentDidMount</code>, <code>componentDidUpdate</code>, <code>componentWillUnmount</code>. With hooks: <code>useEffect(() => {}, [])</code> = <code>componentDidMount</code>. <code>useEffect(() => {})</code> = <code>componentDidUpdate</code> (runs on every render). <code>useEffect(() => { return () => {} }, [])</code> cleanup = <code>componentWillUnmount</code>. Multiple <code>useEffect</code> calls separate concerns better than putting everything in one lifecycle method.</p></div>
+    <div class="code-block">
+<span class="comment">// Class Component</span>
+componentDidMount() { fetchData(); }
+componentDidUpdate(prevProps) {
+  if (prevProps.id !== this.props.id) fetchData();
+}
+componentWillUnmount() { cleanup(); }
+
+<span class="comment">// Functional Component with Hooks</span>
+useEffect(() => {
+  fetchData();
+}, [id]);  <span class="comment">// Runs on mount + when id changes</span>
+
+useEffect(() => {
+  <span class="keyword">return</span> () => cleanup();  <span class="comment">// Cleanup on unmount</span>
+}, []);
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">5</span><div><span class="q-text">What is <code>useState</code>? How does it work? Explain the closure trap.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useState</code> returns a state variable and a setter function. The setter triggers a re-render with the new state. State is preserved between renders through React's Fiber nodes (not closures). Each render has its own snapshot of state — closures capture the state at that render's time. The "stale closure" trap happens when async code (setTimeout, Promise) inside an effect captures an old state value. Use the functional updater form <code>setCount(prev => prev + 1)</code> to avoid this.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">6</span><div><span class="q-text">What is <code>useEffect</code>? Explain the dependency array and cleanup function.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useEffect</code> runs side effects after render. Dependency array controls when it re-runs: <code>[]</code> = run once on mount, <code>[dep]</code> = run when dep changes, no array = run after every render. Cleanup function runs before re-run and on unmount. Common mistakes: missing dependencies (use lint rules!), including unnecessary dependencies, using objects/arrays as dependencies (new reference every render).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">7</span><div><span class="q-text">What is <code>useRef</code>? When would you use it?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useRef</code> returns a mutable object (<code>{ current: initialValue }</code>) that persists across renders. Changing <code>.current</code> does NOT trigger re-renders. Uses: accessing DOM elements, storing mutable values that shouldn't cause re-renders (timer IDs, previous state values), and holding instance-like variables in functional components.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">8</span><div><span class="q-text">What is <code>useReducer</code>? When should you use it instead of <code>useState</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useReducer</code> is for complex state logic — multiple sub-values, transitions between states, or when state depends on previous state. Pattern: <code>useReducer(reducer, initialState)</code> where reducer takes <code>(state, action) => newState</code>. Use when state logic is complex (forms with many fields), when state transitions depend on each other, or when you want to centralize state logic for easier testing.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">9</span><div><span class="q-text">Explain controlled vs uncontrolled components in forms.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Controlled: React state manages the form value (<code>value={state} onChange={handler}</code>). The React state is the "single source of truth." Uncontrolled: the DOM manages its own state — use <code>useRef</code> to read values when needed. Prefer controlled components for validation, instant feedback, and complex forms. Use uncontrolled for simple forms, file inputs, or integrating with non-React code.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">10</span><div><span class="q-text">What are keys in React lists? Why is the index an anti-pattern?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Keys help React identify which items changed, were added, or removed. Use stable, unique IDs from your data. Using array index as key is an anti-pattern because: when items are reordered, added, or removed, React incorrectly reuses component instances, causing state bugs and performance issues. Only use index as a last resort for static lists that won't change.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">11</span><div><span class="q-text">What is Context API? When should you use it?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Context provides a way to pass data through the component tree without prop drilling. <code>createContext</code> → <code>Context.Provider</code> → <code>useContext(Context)</code>. Use for: themes, user auth, locale/preferences, and UI state (sidebars, modals). DON'T use for: frequent updates (causes re-renders of all consumers), complex state logic (use a state management library instead), or as a replacement for prop drilling in small component trees.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">12</span><div><span class="q-text">Explain React's reconciliation algorithm (diffing).</span><span class="q-badge badge-expert">Expert</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Reconciliation is the process of comparing two Virtual DOM trees. React uses two assumptions (heuristics): (1) Different element types produce different trees — React rebuilds the entire subtree. (2) Stable keys indicate stable elements across renders. The diffing algorithm: compare root elements, if different → unmount old tree, mount new tree. If same type → update props, recurse on children matched by keys.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">13</span><div><span class="q-text">What are Fragments? Why use <code>React.Fragment</code> or <code><></code>?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Fragments let you return multiple elements without adding extra DOM nodes. Use <code><>...</></code> or <code><React.Fragment></React.Fragment></code>. <code>keyed</code> fragments (<code><React.Fragment key={id}></code>) need explicit Fragment syntax. Benefits: avoids unnecessary wrapper divs, keeps DOM cleaner, improves accessibility (no extra nesting for screen readers).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">14</span><div><span class="q-text">What is conditional rendering? Compare approaches.</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Conditional rendering approaches: ternary (<code>{condition ? <A/> : <B/>}</code>), logical AND (<code>{condition && <Component/>}</code>), if/else outside JSX, IIFE, ternary with null (<code>{condition ? <A/> : null}</code>). Pitfalls: <code>{0 && <Component/>}</code> renders <code>0</code> — use explicit conditions like <code>{count > 0 && <Component/>}</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">15</span><div><span class="q-text">Explain React's event handling system (Synthetic Events).</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>React wraps native events with SyntheticEvent objects for cross-browser consistency. In React 16 and earlier, events were pooled and attached to the document. React 17+ attaches events to the root container (not document) and removed event pooling. Modern React doesn't use event pooling — <code>e.persist()</code> is unnecessary. Event handlers receive SyntheticEvent with <code>preventDefault()</code>, <code>stopPropagation()</code>, etc.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">16</span><div><span class="q-text">What are Portals? When would you use them?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Portals (<code>createPortal(children, domNode)</code>) render children into a different DOM subtree outside the parent component. Use cases: modals, tooltips, dropdowns, toasts — any overlay that needs to escape parent's overflow/stacking context. Portals preserve React context and event bubbling through the React tree, not the DOM tree.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">17</span><div><span class="q-text">What is StrictMode? What does it do?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>StrictMode</code> is a development-only wrapper that helps catch bugs. It: double-invokes render functions and effects (to detect impure logic), checks for deprecated APIs, and warns about unsafe lifecycle methods. The double-invocation is important — it helps find side effects in rendering (which should be pure). Only affects development mode.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">18</span><div><span class="q-text">What is Lifting State Up? Why is it important?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Lifting state up means moving shared state to the closest common ancestor component so multiple children can share and sync state. This is React's fundamental data flow pattern — state flows down via props, and changes flow up via callbacks. When siblings need to communicate, lift state to their parent.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">19</span><div><span class="q-text">What is prop drilling? How do you solve it?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Prop drilling is passing props through multiple intermediate components that don't need them. Solutions: (1) Context API for global/shared data, (2) Component composition — pass components as children/props, (3) State management libraries (Zustand, Redux), (4) Lifting state too high vs keeping state local. Composition is often the cleanest solution.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">20</span><div><span class="q-text">How do you handle errors in React? Explain Error Boundaries.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Error Boundaries are class components that catch JavaScript errors in their child component tree during rendering, lifecycle methods, and constructors. They use <code>componentDidCatch(error, info)</code> and <code>getDerivedStateFromError(error)</code>. They don't catch: event handlers (use try/catch), async code, server-side rendering, or errors in the error boundary itself. React 19 is introducing error boundaries for functional components.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">21</span><div><span class="q-text">Explain composition vs inheritance in React.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>React strongly favors composition over inheritance. Composition patterns: Containment (<code>children</code> prop for generic containers), Specialization (<code>function Wizard({ step, children })</code> — wizard frames), and Passing components as props (<code><Panel header={<Header/>} body={<Body/>}/></code>). In 7+ years of React, Facebook found no use cases for component inheritance hierarchies.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">22</span><div><span class="q-text">What is <code>forwardRef</code> and when would you use it?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>forwardRef</code> allows parent components to pass a ref through to a child's DOM element. Used for: reusable component libraries (input, button), focusing inputs from parent, measuring DOM nodes in children, and integrating with third-party DOM libraries.</p></div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P2 — Commonly Asked Questions</h2></div>
+
+<div class="container">
+  <div class="question-card"><div class="q-header"><span class="q-number">23</span><div><span class="q-text">What are the rules of hooks? Why are they important?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Rules: (1) Only call hooks at the top level — not inside conditions, loops, or nested functions. (2) Only call hooks from React function components or custom hooks. The order of hooks must be consistent across renders because React relies on hook call order to match state between renders (linked list in Fiber).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">24</span><div><span class="q-text">What is <code>useCallback</code> and when should you use it?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useCallback(fn, deps)</code> returns a memoized callback that only changes when deps change. Used to prevent unnecessary re-renders when passing callbacks to optimized child components (<code>React.memo</code>). Don't overuse — the overhead of memoization can exceed the cost of re-creation for simple functions.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">25</span><div><span class="q-text">What is <code>useMemo</code> and when should you use it?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useMemo</code> memoizes computed values. Use for expensive calculations (data transformations, filtering large arrays, complex derivations). Don't use for trivial calculations — the comparison overhead outweighs benefits. Profile before optimizing.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">26</span><div><span class="q-text">What is <code>React.memo</code>? How is it different from <code>useMemo</code>?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>React.memo</code> is a HOC that memoizes the entire component — only re-renders when props change (shallow comparison). <code>useMemo</code> memoizes a value inside a component. <code>React.memo</code> is for preventing re-renders, <code>useMemo</code> is for preventing recalculations.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">27</span><div><span class="q-text">How does React batch state updates? Explain automatic batching.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>React batches state updates that happen within the same synchronous context — event handlers, lifecycle methods. React 18 introduced automatic batching for all contexts (promises, setTimeout, native events) using a microtask-based mechanism. Multiple <code>setState</code> calls produce a single re-render, improving performance.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">28</span><div><span class="q-text">Explain how data flows in React (unidirectional flow).</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>React uses one-way (unidirectional) data flow. State is passed down the component tree via props. Child components communicate upward via callback functions passed as props. This makes data flow predictable and easier to debug compared to two-way binding.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">29</span><div><span class="q-text">What is the difference between Shadow DOM and Virtual DOM?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Virtual DOM: React's lightweight JS representation of the DOM for diffing and batching updates. Shadow DOM: browser API for encapsulating DOM and CSS in web components. They solve different problems — Virtual DOM for performance, Shadow DOM for encapsulation. React doesn't use Shadow DOM, but can render into Shadow DOM for web component integration.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">30</span><div><span class="q-text">How do you optimize performance in a React app?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Strategies: <code>React.memo</code>, <code>useMemo</code>/<code>useCallback</code>, virtualization (<code>react-window</code>), code splitting (<code>lazy</code> + <code>Suspense</code>), avoiding unnecessary re-renders, proper key usage, <code>useTransition</code> for non-urgent updates, avoiding context for frequently updating values, and profiling with React DevTools.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">31</span><div><span class="q-text">What is code splitting in React? How does <code>lazy</code> + <code>Suspense</code> work?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Code splitting breaks the bundle into smaller chunks loaded on demand. <code>React.lazy(() => import('./Component'))</code> enables dynamic imports. <code><Suspense fallback={<Loading/>}></code> shows a fallback while loading. This reduces initial bundle size and improves load time. Combine with route-based splitting for the biggest impact.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">32</span><div><span class="q-text">Explain the different ways to style React components.</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Approaches: CSS Modules (scoped styles), Styled Components (CSS-in-JS), Tailwind CSS (utility-first), inline styles (object-based), global CSS (traditional), and CSS-in-JS libraries (Emotion). React doesn't enforce any approach. Tailwind CSS is currently the most popular for new projects.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">33</span><div><span class="q-text">How do you handle forms in React? Compare libraries.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Manual: <code>useState</code> for each field, <code>onSubmit</code> handler. Libraries: React Hook Form (performant, minimal re-renders), Formik (popular, good validation), and Final Form. React Hook Form is currently most popular — uses refs and uncontrolled components for performance. For validation: Zod or Yup schemas.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">34</span><div><span class="q-text">Explain <code>useImperativeHandle</code> and when to use it.</span><span class="q-badge badge-expert">Expert</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useImperativeHandle(ref, createHandle, deps)</code> customizes the instance value exposed to parent refs. Used with <code>forwardRef</code>. Use cases: exposing focus/scroll methods, custom input components that need to integrate with parent form logic, and animation libraries that need direct access to component methods.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">35</span><div><span class="q-text">What are the different ways to pass data between components?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Parent → Child: props. Child → Parent: callback props. Siblings: lift state up. Distant: Context API. Complex: state management (Zustand, Redux). Server: React Query. URL: Next.js/Layout data. Event bus (not recommended — leads to spaghetti).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">36</span><div><span class="q-text">What is the children prop? Explain render props pattern.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>The <code>children</code> prop is a special prop for nested JSX content. Render props is a pattern where a component receives a function as a prop (or children) that returns JSX, giving the parent control over rendering. Largely replaced by hooks and custom hooks, but still relevant for some component library patterns.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">37</span><div><span class="q-text">What is the difference between state and props?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Props are passed IN (immutable, from parent). State is internal (mutable, managed by the component). Props are like function arguments, state is like local variables. Changing props causes re-render (parent re-render), changing state causes re-render (setState call).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">38</span><div><span class="q-text">How do you create custom hooks? Share examples.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Custom hooks are functions that use React hooks and start with <code>use</code>. They encapsulate reusable stateful logic. Examples: <code>useLocalStorage</code>, <code>useDebounce</code>, <code>useFetch</code>, <code>useMediaQuery</code>, <code>useIntersectionObserver</code>, <code>useAuth</code>. Custom hooks are the primary way to share logic between components.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">39</span><div><span class="q-text">Explain the render cycle — what happens when state changes?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Phase 1: Trigger (state change, parent re-render, force update). Phase 2: Render (React calls component function, creates Virtual DOM tree). Phase 3: Reconciliation (diff old vs new Virtual DOM). Phase 4: Commit (apply DOM updates). Phase 5: <code>useEffect</code> (run side effects after paint). React 18 added "concurrent" features where rendering can be interrupted.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">40</span><div><span class="q-text">What are Higher-Order Components (HOCs)? Compare with hooks.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>HOCs are functions that take a component and return an enhanced component: <code>const Enhanced = withFeature(Wrapped)</code>. They wrap logic around components. Hooks are preferred over HOCs because they: avoid wrapper hell, are more composable, have no naming collisions, and are easier to type. Still used in some library APIs (<code>connect</code> in Redux, <code>withStyles</code> in MUI).</p></div></div>
+</div>
+
+<div class="section-divider"><h2>P3 — Occasionally Asked (Valuable Context)</h2></div>
+
+<div class="container">
+  <div class="question-card"><div class="q-header"><span class="q-number">41</span><div><span class="q-text">What is React Fiber? How does it enable concurrent features?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Fiber is the reimplementation of React's reconciliation algorithm (React 16+). It enables: incremental rendering (splitting work into chunks), ability to pause/abort work, prioritizing different updates, and reusing completed work. Each Fiber node represents a unit of work with state, side effects, and links to siblings/children. This architecture powers concurrent features like <code>useTransition</code>, <code>Suspense</code>, and automatic batching.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">42</span><div><span class="q-text">What is <code>useDeferredValue</code> and <code>useTransition</code>?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>useTransition</code> — marks state update as low priority, keeps UI responsive. <code>useDeferredValue</code> — defers re-rendering of a value. Both are concurrent features for keeping UI responsive during expensive updates. Use for: search inputs with large result lists, tab switching, and filtering large datasets.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">43</span><div><span class="q-text">How does React 19 differ from React 18? What new features are coming?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>React 19: <code>use()</code> hook for reading promises/context directly in render, Server Components (stable), <code>useOptimistic</code> for optimistic updates, <code>useFormStatus</code> for form state, new <code><form></code> actions, improved error handling, and document metadata support. React Canary (pre-release) includes these features.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">44</span><div><span class="q-text">What is <code>flushSync</code> and when would you need it?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>flushSync</code> forces React to flush updates synchronously. Used when you need the DOM updated immediately — like when measuring DOM after a state change (<code>getBoundingClientRect</code>). Overuse breaks the benefits of async rendering. Only use as escape hatch.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">45</span><div><span class="q-text">How does React handle server-side rendering (SSR)?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>React renders components to HTML strings on the server (<code>renderToString</code> or <code>renderToPipeableStream</code>). Client receives HTML (faster FCP), then React hydrates — attaches event handlers to the existing HTML. Next.js handles SSR elegantly with the App Router using Server Components and selective hydration.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">46</span><div><span class="q-text">What is hydration? What are common hydration issues?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Hydration is the process where React attaches event listeners and resumes component state on server-rendered HTML. Common issues: mismatched HTML (different on server vs client — fixed by using <code>suppressHydrationWarning</code> or ensuring deterministic output), hydration errors from dynamic content (dates, user-specific data), and performance (hydrating large component trees).</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">47</span><div><span class="q-text">What is the <code>key</code> prop used for besides lists?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Keys can force component reset by changing the key — React treats it as a new component, unmounting the old and mounting a new one. Useful for: resetting state when data changes, re-mounting a component to restart animations, and forcing forms to reset. Pattern: <code><Chat key={userId}/></code> — resets chat when user changes.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">48</span><div><span class="q-text">How would you implement an undo/redo feature in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p>Pattern: keep a history array of states and a pointer to current position. <code>useReducer</code> works well: <code>undo</code> → move pointer back, <code>redo</code> → move forward, <code>apply</code> → slice off future states and add new. Use a custom hook <code>useHistory</code> to encapsulate the logic. Be careful with large state objects — consider deep cloning strategies.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">49</span><div><span class="q-text">What is the difference between <code>React.PureComponent</code> and <code>React.Component</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>PureComponent</code> implements <code>shouldComponentUpdate</code> with a shallow prop/state comparison. <code>Component</code> always re-renders when parent re-renders. In functional components, <code>React.memo</code> is the equivalent of <code>PureComponent</code>. Shallow comparison works when using immutable updates.</p></div></div>
+  <div class="question-card"><div class="q-header"><span class="q-number">50</span><div><span class="q-text">How does <code>createElement</code> work? What does a React element look like?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div><div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>React.createElement(type, props, ...children)</code> returns a plain object: <code>{ $$typeof: Symbol(react.element), type, props, key, ref }</code>. <code>$$typeof</code> is a Symbol that helps prevent XSS attacks (malicious JSON can't create valid elements). This is the fundamental building block — JSX is syntactic sugar for these calls.</p></div></div>
+</div>
+
+<div class="end-section">
+  <h2>🎯 Most Frequently Asked React Core Questions</h2>
+  <div class="styled-table">
+    <thead><tr><th>Rank</th><th>Topic</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Virtual DOM + Reconciliation</td><td>Nearly every React interview</td></tr>
+      <tr><td>2</td><td>useState + useEffect</td><td>Always asked</td></tr>
+      <tr><td>3</td><td>useEffect dependency array + cleanup</td><td>Essential — common source of bugs</td></tr>
+      <tr><td>4</td><td>Keys in lists</td><td>Very common</td></tr>
+      <tr><td>5</td><td>Controlled vs uncontrolled forms</td><td>Frequently asked</td></tr>
+    </tbody>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

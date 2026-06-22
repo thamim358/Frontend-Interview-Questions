@@ -1,0 +1,109 @@
+TypeScript Interview Questions (150+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect • UI Engineer
+
+SECTION 1: TypeScript Fundamentals
+What is TypeScript?
+Advantages over JavaScript for React projects?
+Static vs dynamic typing?
+TypeScript compiler (tsc)?
+tsconfig.json important options?
+Type inference vs explicit typing?
+How TypeScript improves React DX?
+
+SECTION 2: Basic Types
+Primitive types — string, number, boolean?
+any vs unknown — why prefer unknown?
+void, never, null, undefined?
+Array, tuple, readonly array?
+Enum — numeric, string, const enum?
+Literal types — why preferred for React props?
+
+SECTION 3: Interfaces & Type Aliases
+Interface vs type alias — when to use each?
+Interface declaration merging?
+Optional and readonly properties?
+Interface extension vs intersection types?
+Index signatures?
+Using interfaces for React props?
+
+SECTION 4: Functions in TypeScript
+Function type signatures?
+Optional and default parameters?
+Rest parameters?
+Function overloads?
+Generic functions?
+Async function return types (Promise<T>)?
+React event handler types (React.MouseEvent)?
+
+SECTION 5: Generics
+Generic functions and components?
+Generic interfaces — API response wrapper?
+Generic constraints (extends)?
+keyof with generics?
+Generic React components — List<T>, Table<T>?
+Generic utility functions?
+
+SECTION 6: Union & Intersection Types
+Union types (|) — component variants?
+Intersection types (&) — extending props?
+Discriminated unions — React state modeling?
+Exhaustive checking with never?
+Type narrowing — typeof, instanceof, in?
+
+SECTION 7: Type Guards
+typeof type guard?
+instanceof type guard?
+Custom type guards (is)?
+Discriminated union narrowing?
+Narrowing React prop types?
+
+SECTION 8: Utility Types
+Partial<T>, Required<T>, Readonly<T>?
+Pick<T, K>, Omit<T, K>, Record<K, T>?
+Exclude<T, U>, Extract<T, U>?
+NonNullable<T>?
+ReturnType<T>, Parameters<T>?
+Awaited<T> (for Promise unwrapping)?
+
+SECTION 9: Advanced Types
+Mapped types — create from existing types?
+Conditional types — T extends U ? X : Y?
+infer keyword — extracting types?
+Template literal types — CSS class builders?
+Deep Partial / Deep Readonly — recursive mapped types?
+
+SECTION 10: TypeScript with React
+Typing components — React.FC vs explicit?
+Generic React components?
+Typing hooks — useState, useReducer, custom hooks?
+Typing events — React.MouseEvent, ChangeEvent?
+Typing refs — MutableRefObject vs RefObject?
+Typing context — createContext with default?
+Typing children — ReactNode vs ReactElement vs JSX.Element?
+Typing higher-order components?
+ForwardRef with generics?
+Type-safe API responses with discriminated unions?
+as const — preserving literal types for config?
+satisfies operator — type-safe config validation?
+
+SECTION 11: Modules & Configuration
+ES modules — import/export?
+Module resolution — paths mapping in tsconfig?
+Barrel files (index.ts)?
+Dynamic imports — type-safe?
+Path aliases (@components, @utils)?
+
+SECTION 12: Advanced Patterns
+Brand/nominal typing?
+Declaration merging — custom augmentations?
+Type-safe form state management?
+Type-safe event emitters?
+Type-safe state machines?
+Const assertions for immutable config?
+
+SECTION 13: Scenario Questions
+How would you type a generic API response?
+How would you design type-safe form validation?
+How would you type Redux/Zustand stores?
+How would you create type-safe SQL query builder?
+How would you type a dynamic theme object?

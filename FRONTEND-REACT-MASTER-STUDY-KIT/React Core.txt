@@ -1,0 +1,152 @@
+React Core Interview Questions (200+ Questions)
+Frontend React Developer • Senior Frontend Engineer • React Architect • UI Engineer
+
+SECTION 1: React Fundamentals
+What is React? Why use it?
+Virtual DOM — how does it work?
+JSX — what is it? How does Babel compile it?
+React.createElement() — what does it return?
+Functional vs Class components — when to use each?
+React 18 vs React 19 — key differences?
+React vs other frameworks (Vue, Angular, Svelte)?
+
+SECTION 2: Components & JSX
+Functional components — structure and patterns?
+JSX rules — single root, closing tags, className?
+Embedding expressions with {}?
+Conditional rendering — ternary vs && vs if/else?
+Lists and keys — why key matters?
+Fragments — why use <> </> or React.Fragment?
+Composition vs inheritance — React philosophy?
+Children prop — patterns and usage?
+
+SECTION 3: Props & State
+Props — immutable, flow down?
+Default props — destructuring defaults?
+Prop drilling — problems and solutions?
+State — what triggers re-render?
+useState — how it works? Closure trap?
+useState functional updater — setCount(prev => prev + 1)?
+State vs props — key differences?
+Lifting state up — why and when?
+Controlled vs uncontrolled components?
+State as snapshot — each render has its own state?
+
+SECTION 4: useEffect
+What is useEffect? When does it run?
+Dependency array — empty, with values, no array?
+Cleanup function — when does it run?
+useEffect vs lifecycle methods (componentDidMount, etc.)?
+Common mistakes — missing deps, infinite loops?
+Data fetching in useEffect — pattern with AbortController?
+Multiple useEffect vs single — separation of concerns?
+useEffectEvent (React 19) — what problem does it solve?
+
+SECTION 5: useRef
+What is useRef? Mutable object that persists?
+useRef vs useState — when to use each?
+DOM refs — accessing elements?
+Forwarding refs with forwardRef?
+Storing mutable values (timer IDs, previous state)?
+useImperativeHandle — customizing exposed ref?
+
+SECTION 6: useReducer
+When to use useReducer over useState?
+Reducer pattern — (state, action) => newState?
+useReducer with context — global state without Redux?
+useReducer vs Redux — differences?
+Complex form state with useReducer?
+
+SECTION 7: Context API
+createContext — Provider + Consumer pattern?
+useContext hook?
+When is Context appropriate vs overkill?
+Context performance — all consumers re-render?
+Splitting contexts to prevent unnecessary re-renders?
+Context with useReducer for lightweight state management?
+Context vs props — when to use each?
+
+SECTION 8: Event Handling
+SyntheticEvent — cross-browser wrapper?
+Event pooling — was it removed in React 17+?
+onClick, onChange, onSubmit — common event handlers?
+Passing arguments to event handlers?
+Event handler types in TypeScript?
+Preventing default behavior — e.preventDefault()?
+Stopping propagation — e.stopPropagation()?
+
+SECTION 9: Forms
+Controlled form components — React manages value?
+Uncontrolled form components — DOM manages value?
+useRef for uncontrolled inputs?
+Form validation patterns?
+React Hook Form — why use it?
+Form libraries — React Hook Form vs Formik?
+Handling multiple form fields?
+File inputs — uncontrolled only?
+
+SECTION 10: Refs & DOM
+createRef vs useRef?
+Callback refs — dynamic ref attachment?
+forwardRef — passing ref to child components?
+useImperativeHandle — customizing ref value?
+Portals — createPortal to render outside parent?
+Portals and event bubbling — React tree vs DOM tree?
+
+SECTION 11: Error Handling
+Error Boundaries — class component with componentDidCatch?
+What errors do Error Boundaries catch?
+What errors DON'T Error Boundaries catch?
+React 19 error boundaries for functional components?
+React error handling in event handlers (try/catch)?
+Error boundaries placement strategy?
+Sentry/Rollbar integration?
+
+SECTION 12: Code Splitting & Lazy Loading
+React.lazy() — dynamic imports?
+Suspense — fallback UI while loading?
+Route-based code splitting?
+Component-level code splitting?
+React.lazy + Suspense best practices?
+Loadable Components library — SSR support?
+
+SECTION 13: React Router
+React Router — BrowserRouter, Routes, Route?
+useParams, useNavigate, useLocation?
+Nested routes — Outlet component?
+Route guards — protected routes?
+React Router v6 vs v5 — key changes?
+Next.js routing vs React Router?
+
+SECTION 14: Keys & Reconciliation
+Why does React need keys?
+Using index as key — why is it an anti-pattern?
+Using stable IDs as keys?
+Key prop to force component remount?
+Reconciliation algorithm — how React diffs?
+Different element types → unmount/mount?
+
+SECTION 15: Styling Approaches
+CSS Modules — scoped styles?
+CSS-in-JS — styled-components, Emotion?
+Tailwind CSS — utility-first workflow?
+Inline styles — when to use?
+Global CSS — traditional approach?
+CSS-in-JS runtime cost — why Tailwind is winning?
+
+SECTION 16: Performance Basics
+Why does React re-render?
+Rendering vs committing — two phases?
+What triggers a re-render?
+How to prevent unnecessary re-renders?
+React.memo — when to use?
+Profiling with React DevTools?
+Why you should profile before optimizing?
+
+SECTION 17: Testing Basics
+React Testing Library philosophy — test behavior not implementation?
+Queries priority — getByRole > getByLabelText > getByText?
+fireEvent vs userEvent — which to use?
+waitFor and findBy — async queries?
+Testing forms and user interactions?
+Testing async operations?

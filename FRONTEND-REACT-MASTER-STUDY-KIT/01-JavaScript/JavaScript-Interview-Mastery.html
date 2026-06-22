@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Interview Mastery — Frontend React Study Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/nebula.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 30% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 70% 50%, rgba(129, 140, 248, 0.05) 0%, transparent 50%);
+  }
+  .cover-title { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .cover-divider { background: var(--gradient-primary); }
+  .cover-meta-item .number { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .section-divider h2 { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .q-number { background: var(--gradient-primary); }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Frontend React Master Study Kit</div>
+  <h1 class="cover-title">JavaScript ES6+ Interview Mastery</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">55 High-Value Questions for Senior Frontend React Developer Interviews</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">20</span><span class="label">P1 — Must Know</span></div>
+    <div class="cover-meta-item"><span class="number">25</span><span class="label">P2 — Commonly Asked</span></div>
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P3 — Valuable Context</span></div>
+    <div class="cover-meta-item"><span class="number">55</span><span class="label">Total Retained</span></div>
+  </div>
+  <p class="cover-description" style="margin-top: 30px;">
+    Made for FAANG, Product-Based Companies, FinTech, and Enterprise MNC interviews.
+    Covers closures, event loop, promises, async/await, prototypes, ES6+, and coding patterns
+    with simple answers, code examples, and interview tips for React developers.
+  </p>
+</div>
+
+<div class="container">
+  <h2 style="font-size: 24px; margin-bottom: 24px; color: var(--accent-blue);">Table of Contents</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 40px;">
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-red);">P1</strong> — Questions 1–20: Frequently Asked (Must Know)</div>
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-orange);">P2</strong> — Questions 21–45: Commonly Asked</div>
+    <div style="color: var(--text-secondary); font-size: 14px;"><strong style="color: var(--accent-blue);">P3</strong> — Questions 46–55: Occasionally Asked (Valuable Context)</div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P1 — Frequently Asked Questions</h2><p>You MUST know these. They are asked in almost every interview and technical round.</p></div>
+
+<div class="container">
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-number">1</span>
+      <div>
+        <span class="q-text">Explain the difference between <code>var</code>, <code>let</code>, and <code>const</code> with hoisting and scope.</span>
+        <span class="q-badge badge-advanced">Advanced</span>
+        <span class="priority-p1">P1</span>
+      </div>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Basic Answer</div>
+      <p><code>var</code> works inside the whole function. <code>let</code> and <code>const</code> work only inside the nearest <code>{}</code> block. <code>var</code> is hoisted with <code>undefined</code>. <code>let</code> and <code>const</code> are hoisted but not ready to use (Temporal Dead Zone). <code>const</code> cannot be reassigned, but you can change object properties inside it. Rule: always use <code>const</code> first in React code. Use <code>let</code> only if you need to reassign. Never use <code>var</code>.</p>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Real Interview Answer</div>
+      <p>"<code>var</code> works across the whole function and gets hoisted with <code>undefined</code>. <code>let</code> and <code>const</code> only work inside the block they're declared in. They are hoisted too but stuck in the Temporal Dead Zone until you reach them. In my React code, I use <code>const</code> for everything — components, hooks, state values. I use <code>let</code> only for loop counters or conditional reassignments."</p>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-number">2</span>
+      <div>
+        <span class="q-text">What is a closure? Give real-world examples of closures in React.</span>
+        <span class="q-badge badge-advanced">Advanced</span>
+        <span class="priority-p1">P1</span>
+      </div>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Basic Answer</div>
+      <p>A closure is a function that remembers variables from where it was created, even after that outer function has finished running. This lets you keep data private and save state. In React, closures are everywhere: <code>useEffect</code> callbacks capture state values, event handlers close over props, and custom hooks create private state through closures.</p>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Real Interview Answer</div>
+      <p>"Closures are fundamental to React. Every <code>useEffect</code> callback is a closure over the component's props and state at render time. That's why you need the dependency array — to ensure the closure always has the latest values. Custom hooks create private state through closures, similar to how <code>useState</code> preserves state across renders. One common bug: stale closures in <code>useEffect</code> when you forget to include dependencies, or in <code>setTimeout</code> callbacks inside <code>useEffect</code>."</p>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header">
+      <span class="q-number">3</span>
+      <div>
+        <span class="q-text">How does the event loop work? Explain call stack, microtask queue, and macrotask queue.</span>
+        <span class="q-badge badge-expert">Expert</span>
+        <span class="priority-p1">P1</span>
+      </div>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Basic Answer</div>
+      <p>The event loop is how JavaScript handles async tasks with one thread. It checks if the call stack is empty. If empty, it takes tasks from the microtask queue (high priority — Promises) or macrotask queue (low priority — setTimeout). This is why Promises resolve before <code>setTimeout</code> callbacks. In React, understanding the event loop helps debug why state updates might seem delayed — <code>setState</code> batches updates using microtasks.</p>
+    </div>
+    <div class="q-section">
+      <div class="q-section-title">Real Interview Answer</div>
+      <p>"The event loop runs sync code first, then drains ALL microtasks (Promise resolutions, queueMicrotask), then processes ONE macrotask (setTimeout, setInterval), and repeats. This matters in React because state updates are batched using microtasks — multiple <code>setState</code> calls in a synchronous block are batched into a single re-render. Also, <code>useEffect</code> callbacks run after the render is committed to the DOM, which relates to the event loop scheduling."</p>
+    </div>
+    <div class="code-block">
+console.log(1);                // Sync — runs 1st
+setTimeout(() => console.log(2), 0);  // Macrotask — runs 4th
+Promise.resolve().then(() => console.log(3));  // Microtask — runs 3rd
+console.log(4);                // Sync — runs 2nd
+// Output: 1, 4, 3, 2
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">4</span><div><span class="q-text">Explain <code>this</code> binding — default, implicit, explicit, arrow function, and <code>new</code> binding.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>this</code> depends on HOW you call a function. Default: global object (undefined in strict mode). Implicit: object before the dot. Explicit: <code>call/apply/bind</code>. Arrow: inherits from surrounding scope. <code>new</code>: the new instance. In React classes (legacy), <code>this</code> binding was a common pain point. With hooks, arrow functions in components avoid <code>this</code> issues entirely.</p></div>
+    <div class="q-section"><div class="q-section-title">Real Interview Answer</div><p>"In modern React with hooks, <code>this</code> is less of an issue since function components and hooks don't use it. But understanding <code>this</code> is still important for: event handlers in class components, implementing custom hooks that use method binding patterns, and understanding legacy React code. The key priority order: <code>new</code> > explicit > implicit > default. Arrow functions inherit <code>this</code> lexically."</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">5</span><div><span class="q-text">What are Promises? Explain <code>Promise.all</code>, <code>Promise.race</code>, <code>Promise.any</code>, and <code>Promise.allSettled</code>.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>A Promise represents a future value. States: pending, fulfilled, rejected. <code>Promise.all</code> — waits for ALL, fails fast on any rejection. <code>Promise.race</code> — returns first settled (resolve or reject). <code>Promise.any</code> — returns first SUCCESS, ignores failures. <code>Promise.allSettled</code> — waits for all, never fails, returns results array. In React, these are essential for data fetching patterns in <code>useEffect</code> and React Query.</p></div>
+    <div class="code-block">
+<span class="comment">// In a React component</span>
+useEffect(() => {
+  <span class="keyword">const</span> fetchData = <span class="keyword">async</span> () => {
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> [users, posts] = <span class="keyword">await</span> Promise.all([
+        fetch(<span class="string">'/api/users'</span>).then(r => r.json()),
+        fetch(<span class="string">'/api/posts'</span>).then(r => r.json())
+      ]);
+      setUsers(users);
+      setPosts(posts);
+    } <span class="keyword">catch</span> (error) {
+      setError(error);
+    }
+  };
+  fetchData();
+}, []);
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">6</span><div><span class="q-text">How does <code>async/await</code> work? How is error handling different from <code>.then()/.catch()</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>async/await</code> is syntactic sugar over Promises. An <code>async</code> function always returns a Promise. <code>await</code> pauses the function until the Promise resolves — but doesn't block the main thread. Use <code>try/catch</code> for error handling. In React, <code>async/await</code> is used in <code>useEffect</code>, event handlers, React Query, and Server Components (Next.js).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">7</span><div><span class="q-text">What is hoisting? How does it differ for <code>var</code>, <code>let</code>, <code>const</code>, and function declarations?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Hoisting means declarations are moved to the top during compilation. Function declarations are fully hoisted (can call before declaration). <code>var</code> is hoisted with <code>undefined</code>. <code>let</code> and <code>const</code> are hoisted but uninitialized (Temporal Dead Zone). In React, this affects component ordering — you can define helper components after they're used if they're function declarations.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">8</span><div><span class="q-text">What is prototypal inheritance? How does the prototype chain work?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Every object has a hidden link to its prototype. Property access checks the object, then the prototype chain until found or <code>null</code>. In React, understanding prototypes helps when extending class components (legacy) and understanding how React's synthetic event system works with event pooling (React 16 and earlier).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">9</span><div><span class="q-text">Explain <code>map()</code>, <code>filter()</code>, and <code>reduce()</code> with React examples.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>map()</code> transforms each element — used in React for rendering lists. <code>filter()</code> picks elements passing a test — used for filtering data before rendering. <code>reduce()</code> combines elements into one value — used for calculations and data transformations.</p></div>
+    <div class="code-block">
+<span class="comment">// React usage</span>
+{items.map(item => (
+  <span class="variable">&lt;</span>div key={item.id}<span class="variable">&gt;</span>{item.name}<span class="variable">&lt;/</span>div<span class="variable">&gt;</span>
+))}
+
+<span class="comment">// Filter before render</span>
+<span class="keyword">const</span> activeUsers = users.filter(u => u.isActive);
+<span class="keyword">const</span> totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">10</span><div><span class="q-text">How do you deep clone an object? What are the limitations of <code>JSON.parse(JSON.stringify())</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>JSON.parse(JSON.stringify(obj))</code> drops functions, <code>undefined</code>, Symbols, BigInt, circular references, and converts Date to string. Use <code>structuredClone()</code> (Node 17+) for better deep cloning. In React, deep cloning is important for immutable state updates, especially when working with Redux or Context — you must create new references to trigger re-renders.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">11</span><div><span class="q-text">Explain event delegation, event bubbling, and event capturing in the DOM.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Events go through three phases: capturing (window → target), target, bubbling (target → window). React's synthetic event system wraps native events and provides cross-browser consistency. React 17+ no longer attaches event handlers to the document but to the root React container. Event delegation is useful for performance when rendering long lists.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">12</span><div><span class="q-text">What are arrow functions? How do they differ from regular functions regarding <code>this</code>, <code>arguments</code>, and constructors?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Arrow functions have no own <code>this</code> (inherit from scope), no <code>arguments</code> object, and can't be used as constructors. In React, arrow functions are used everywhere — component definitions, <code>useEffect</code> callbacks, event handlers. They're preferred because they don't bind their own <code>this</code>, avoiding common bugs in class components.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">13</span><div><span class="q-text">What is the difference between <code>==</code> and <code>===</code>? When would you use each?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>==</code> coerces types before comparing. <code>===</code> compares both value and type. Always use <code>===</code> in React code. The only exception is checking both <code>null</code> and <code>undefined</code>: <code>value == null</code>. In React, use strict equality for dependency arrays, conditional rendering, and props comparison.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">14</span><div><span class="q-text">What is the spread operator vs rest operator? Give React examples.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Spread (<code>...</code>) spreads items out. Rest (<code>...</code>) collects items together. In React, spread is used everywhere: <code>{...props}</code> to pass props, <code>{...prevState, newKey: value}</code> for immutable state updates, <code>[...prevArray, newItem]</code> for adding to arrays. Rest is used for <code>const { usedProp, ...restProps } = props</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">15</span><div><span class="q-text">Implement debounce and throttle. When would you use each in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><strong>Debounce:</strong> waits until calls stop before running. Use for search inputs, resizing events. <strong>Throttle:</strong> limits execution rate. Use for scroll handlers, infinite scroll, API rate limiting. In React, debounce is commonly used in custom hooks like <code>useDebounce</code> for search inputs to avoid excessive API calls.</p></div>
+    <div class="code-block">
+<span class="comment">// useDebounce hook</span>
+<span class="keyword">function</span> useDebounce<T>(value: T, delay: number): T {
+  <span class="keyword">const</span> [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    <span class="keyword">const</span> timer = setTimeout(() => setDebouncedValue(value), delay);
+    <span class="keyword">return</span> () => clearTimeout(timer);  <span class="comment">// Cleanup on unmount or value change</span>
+  }, [value, delay]);
+
+  <span class="keyword">return</span> debouncedValue;
+}
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">16</span><div><span class="q-text">What is the nullish coalescing operator (<code>??</code>) vs OR (<code>||</code>)? Give React examples.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>??</code> returns right side only when left is <code>null</code> or <code>undefined</code>. <code>||</code> returns right side for ALL falsy values (<code>false</code>, <code>0</code>, <code>''</code>). In React, use <code>??</code> for default values where <code>0</code> or <code>''</code> are valid — like pagination (page count could be 0) or text input values.</p></div>
+    <div class="code-block">
+<span class="comment">// React examples</span>
+<span class="keyword">const</span> count = props.count ?? <span class="number">0</span>;  <span class="comment">// Correct: 0 is a valid count</span>
+<span class="keyword">const</span> count2 = props.count || <span class="number">0</span>; <span class="comment">// Bug: replaces 0 with... 0 (same result here, but logical error)</span>
+
+<span class="comment">// Conditional rendering</span>
+{name ?? <span class="string">'Guest'</span>}  <span class="comment">// Shows nothing if name is '' — correct</span>
+{name || <span class="string">'Guest'</span>}  <span class="comment">// Shows 'Guest' if name is '' — might be wrong!</span>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">17</span><div><span class="q-text">How does <code>Object.freeze()</code> differ from <code>Object.seal()</code>?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>seal</code> — no add/delete, can change values. <code>freeze</code> — no add/delete/change. Both are shallow. In React/Redux, <code>Object.freeze</code> is used in development mode to prevent accidental state mutations — Redux Toolkit uses Immer which makes this easier.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">18</span><div><span class="q-text">What is the difference between <code>Map</code>/<code>WeakMap</code> and <code>Set</code>/<code>WeakSet</code>?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>WeakMap</code> keys must be objects and are garbage-collected when the key is no longer referenced. In React, <code>Map</code> is useful for storing lookup tables for performance, and <code>Set</code> for tracking selected items in lists. <code>WeakMap</code> can be useful for caching DOM node metadata without preventing garbage collection.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">19</span><div><span class="q-text">What is <code>NaN</code>? How do you reliably check for it?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>NaN</code> is "Not-a-Number" and is the only value not equal to itself (<code>NaN !== NaN</code> is <code>true</code>). Use <code>Number.isNaN()</code> (not global <code>isNaN()</code> which coerces). In React forms, validate numeric inputs with <code>Number.isNaN</code> to detect invalid number conversions.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">20</span><div><span class="q-text">Explain <code>call()</code>, <code>apply()</code>, and <code>bind()</code>. Implement a <code>bind()</code> polyfill.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p1">P1</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>call</code> — invoke with <code>this</code> + individual args. <code>apply</code> — invoke with <code>this</code> + args array. <code>bind</code> — returns new function with <code>this</code> permanently set. In React, <code>bind</code> was common in class components for event handlers. With hooks, this is less needed.</p></div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P2 — Commonly Asked Questions</h2><p>Questions often asked in technical screens and mid-level interviews.</p></div>
+
+<div class="container">
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">21</span><div><span class="q-text">What are the primitive data types? How do they differ from reference types?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>7 primitives: string, number, boolean, null, undefined, symbol, bigint. Stored by value. Reference types: objects, arrays, functions — stored by reference. In React, this is why state mutations don't trigger re-renders — you must create new references.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">22</span><div><span class="q-text">What are truthy and falsy values? How do they affect conditional rendering?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>6 falsy values: <code>false</code>, <code>0</code>, <code>''</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code>. Everything else is truthy. In React conditional rendering: <code>{count && <Component/>}</code> will render <code>0</code> if count is 0 — use <code>{count > 0 && <Component/>}</code> or ternary instead.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">23</span><div><span class="q-text">What is the difference between <code>null</code> and <code>undefined</code>?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>undefined</code> means a variable exists but hasn't been assigned. <code>null</code> is intentionally set "nothing". In React, checking <code>value == null</code> catches both. When destructuring props with defaults, <code>undefined</code> triggers the default but <code>null</code> does not.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">24</span><div><span class="q-text">How do <code>splice()</code> and <code>slice()</code> differ? Why should you be careful with them in React?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>slice()</code> returns a new array (non-mutating). <code>splice()</code> changes the original array (mutating). In React state management, NEVER use <code>splice()</code> on state arrays — it mutates the original. Use <code>slice()</code> or spread operator for immutable updates.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">25</span><div><span class="q-text">What is <code>JSON.stringify()</code> and <code>JSON.parse()</code>? How are they used in React?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>stringify</code> converts object → JSON string. <code>parse</code> converts JSON string → object. Used in React for: API responses, <code>localStorage</code> persistence, dependency arrays for object comparison (though this is an anti-pattern), deep cloning, and debugging with <code>console.log(JSON.stringify(obj, null, 2))</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">26</span><div><span class="q-text">How does <code>try/catch/finally</code> work? Give a React error boundary example.</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>try</code> wraps risky code. <code>catch</code> handles errors. <code>finally</code> always runs. In React, <code>try/catch</code> works in event handlers and <code>useEffect</code>, but NOT during rendering — you need Error Boundaries for that. Async errors in <code>useEffect</code> should be caught with <code>try/catch</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">27</span><div><span class="q-text">What is an IIFE? Why would you use one?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>IIFE (Immediately Invoked Function Expression) runs immediately. Creates private scope. Less common in modern React with ES modules, but useful for: initializing state with computation, running async code at module level, or creating private variables.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">28</span><div><span class="q-text">What is currying? How is it useful in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Currying transforms <code>f(a, b, c)</code> into <code>f(a)(b)(c)</code>. In React, useful for: HOCs (Higher-Order Components), custom hooks with configuration, event handlers with extra params: <code>onClick={(e) => handleClick(id, e)}</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">29</span><div><span class="q-text">How do you remove duplicates from an array? Compare approaches.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>For primitives: <code>[...new Set(arr)]</code>. For objects: use <code>Map</code> with unique key or <code>filter</code> + <code>findIndex</code>. In React, deduplication is common when normalizing API data or filtering out duplicates before rendering lists.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">30</span><div><span class="q-text">What is memoization? Implement a memoize function.</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Memoization caches function results by arguments. In React, memoization is built-in with <code>React.memo</code>, <code>useMemo</code>, and <code>useCallback</code>. Key insight: these are NOT free — they add comparison overhead. Only use when the computation is expensive or prevents unnecessary re-renders.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">31</span><div><span class="q-text">How does <code>forEach()</code> differ from <code>map()</code>? When to use each in React?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>forEach</code> returns nothing (for side effects). <code>map</code> returns a new array (for transformations). In React, use <code>map()</code> for rendering lists (<code>items.map(item => <Component/>)</code>). Use <code>forEach</code> for side effects like logging or triggering actions.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">32</span><div><span class="q-text">How does destructuring work? Give React patterns.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Destructuring unpacks values from arrays/objects. In React: <code>function Component({ title, children, ...props })</code> — props destructuring, <code>const { data, isLoading } = useQuery()</code> — hook destructuring, <code>const [count, setCount] = useState(0)</code> — array destructuring from <code>useState</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">33</span><div><span class="q-text">What are template literals? Give React/JSX examples.</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Template literals use backticks with <code>${expr}</code>. In React: dynamic class names <code>`btn-${variant}`</code>, dynamic URLs <code>`/users/${id}`</code>, multi-line strings, and tagged templates for CSS-in-JS (Styled Components).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">34</span><div><span class="q-text">What is the difference between local storage, session storage, and cookies?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Local storage: persists across tabs, until cleared. Session storage: per-tab, cleared on close. Cookies: sent with HTTP requests, max 4KB, can set expiry. In React, use localStorage for theme preferences, auth tokens (with caution), or cached data.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">35</span><div><span class="q-text">What is <code>typeof</code>? What is <code>typeof null</code>?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>typeof null</code> returns <code>'object'</code> — a known JS bug. <code>typeof []</code> returns <code>'object'</code> — use <code>Array.isArray()</code>. In React prop validation (or TypeScript), be aware of these quirks when checking prop types dynamically.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">36</span><div><span class="q-text">What is a pure function vs impure function? Why does it matter for React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Pure functions: same input → same output, no side effects. React components should be pure — given the same props, they should render the same output. Side effects go in <code>useEffect</code>. Redux reducers must be pure. React's performance optimizations (memoization) rely on purity.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">37</span><div><span class="q-text">How do you flatten a nested array? Use cases in React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>arr.flat(depth)</code> or <code>arr.flat(Infinity)</code>. In React, useful when normalizing nested API data, flattening comments/replies, or processing tree-structured data for flat lists.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">38</span><div><span class="q-text">What are generators? When would you use them?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Generators (<code>function*</code>) can pause/resume execution with <code>yield</code>. Less common in React but useful for: infinite loading with custom iteration, Redux Saga (legacy), generating unique IDs or test data.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">39</span><div><span class="q-text">How does short-circuit evaluation work with <code>&&</code> and <code>||</code>?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>&&</code> returns first falsy or last truthy. <code>||</code> returns first truthy or last falsy. In React: <code>{isLoggedIn && <Dashboard/>}</code> is a common conditional rendering pattern. BUT be careful: <code>{count && <Component/>}</code> renders <code>0</code> when count is 0.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">40</span><div><span class="q-text">What is the difference between <code>for...in</code> and <code>for...of</code>?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>for...in</code> loops over keys (use for objects). <code>for...of</code> loops over values (use for arrays, strings, Maps). In React, prefer <code>for...of</code> for array iteration or <code>.map()</code> for rendering.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">41</span><div><span class="q-text">How does type coercion work? Give examples.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Implicit: <code>'5' - 3 = 2</code>, <code>'5' + 3 = '53'</code>. Explicit: <code>Number('5')</code>, <code>String(5)</code>. In React, be careful with <code>+</code> for concatenation vs addition — especially with form values which are always strings.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">42</span><div><span class="q-text">What is <code>Array.isArray()</code> vs <code>instanceof Array</code>?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Array.isArray()</code> is reliable across frames. <code>instanceof Array</code> can fail with cross-frame arrays. In React, when normalizing API data, use <code>Array.isArray(data)</code> to safely check response types.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">43</span><div><span class="q-text">How do you check if an object has a property (own vs inherited)?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Object.hasOwn(obj, 'key')</code> — own properties only. <code>'key' in obj</code> — own + inherited. In React, when validating API responses or config objects, use <code>Object.hasOwn</code> to check for specific fields.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">44</span><div><span class="q-text">What is the difference between <code>undefined</code> and <code>null</code> checks in React props?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>React's default props only work for <code>undefined</code>, not <code>null</code>. Destructuring defaults: <code>const { name = 'Guest' } = props</code> only applies when <code>props.name</code> is <code>undefined</code>. Use <code>??</code> for null-safe defaults: <code>const name = props.name ?? 'Guest'</code>.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">45</span><div><span class="q-text">Explain <code>reduce()</code> for grouping, counting, and flattening in React.</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p2">P2</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>reduce</code> combines elements into one value. Use cases in React: grouping API data by category for organized rendering, counting status occurrences for dashboards, computing totals and aggregates, transforming arrays into lookup objects for O(1) access.</p></div>
+    <div class="code-block">
+<span class="comment">// Group by status for a Kanban board</span>
+<span class="keyword">const</span> grouped = tasks.reduce((acc, task) => {
+  acc[task.status] = acc[task.status] || [];
+  acc[task.status].push(task);
+  <span class="keyword">return</span> acc;
+}, {});
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><h2>P3 — Occasionally Asked (Valuable Context)</h2><p>Less common but useful for senior roles and deep-dive interview rounds.</p></div>
+
+<div class="container">
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">46</span><div><span class="q-text">What is strict mode and what does it prevent?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Strict mode (<code>"use strict"</code>) catches common coding errors. Prevents: undeclared variables, deleting non-deletable properties, duplicate params, <code>this</code> being global, the <code>with</code> statement. React uses strict mode internally in development.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">47</span><div><span class="q-text">What are Symbols? Where are they useful in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Symbols are unique, immutable values used as property keys. React uses <code>Symbol.for('react.element')</code> internally for element identification. Useful for creating truly unique keys in complex data structures, avoiding property name collisions, and implementing custom iterators.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">48</span><div><span class="q-text">Explain the <code>Proxy</code> API. React/Immer use case?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Proxy</code> intercepts object operations (get, set, has). Immer uses Proxies extensively — when you write mutable-looking code inside <code>produce()</code>, Immer intercepts all mutations via Proxy and creates immutable snapshots. Vue 3 uses Proxies for reactivity. React could potentially use them for state management (MobX uses them).</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">49</span><div><span class="q-text">How does <code>Object.create()</code> work? React use case?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Object.create(proto)</code> creates a new object with a given prototype. <code>Object.create(null)</code> creates a prototype-less object — useful for dictionaries/safe maps. In React, useful for lookup tables in reducers or memoized selectors.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">50</span><div><span class="q-text">What is <code>requestAnimationFrame</code>? When would you use it in React?</span><span class="q-badge badge-advanced">Advanced</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>requestAnimationFrame</code> schedules code before the next browser repaint (~60fps). Useful for: animations, canvas rendering, scroll-based animations. In React, can be used with custom hooks for performant animations. Pauses when tab is inactive.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">51</span><div><span class="q-text">What are Web Workers? How would you use them in a React app?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>Web Workers run JS in a background thread with their own event loop. Can't access DOM. Use in React: heavy data processing (CSV parsing, data transformation), image manipulation, large list filtering, or running WebAssembly modules.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">52</span><div><span class="q-text">What is the <code>Reflect</code> API? How does it relate to Proxy?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>Reflect</code> provides methods matching Proxy traps. Use inside Proxy traps to forward default behavior: <code>return Reflect.get(target, prop, receiver)</code>. In React ecosystem, Immer uses Reflect/Proxy internally.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">53</span><div><span class="q-text">What is <code>setTimeout</code> vs <code>setInterval</code>? Pitfalls in React?</span><span class="q-badge badge-beginner">Beginner</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p><code>setTimeout</code> runs once after delay. <code>setInterval</code> runs repeatedly. In React, always clean up timers in <code>useEffect</code> cleanup to prevent memory leaks and stale closures. Use refs to store timer IDs for proper cleanup.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">54</span><div><span class="q-text">What is the difference between deep and shallow comparison in React?</span><span class="q-badge badge-intermediate">Intermediate</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>React uses shallow comparison by default (<code>===</code>) for props. <code>React.memo</code> does shallow comparison. <code>useEffect</code> dependencies use <code>Object.is()</code> (same as <code>===</code> except for NaN). Deep comparison is expensive — avoid it. Use immutable updates so shallow comparison works.</p></div>
+  </div>
+
+  <div class="question-card">
+    <div class="q-header"><span class="q-number">55</span><div><span class="q-text">How does <code>Error.captureStackTrace()</code> work?</span><span class="q-badge badge-expert">Expert</span><span class="priority-p3">P3</span></div></div>
+    <div class="q-section"><div class="q-section-title">Basic Answer</div><p>V8 method that captures a stack trace at call time. Used by libraries like React and Redux to provide clean error stack traces that point to user code, not library internals. Important for understanding React error messages.</p></div>
+  </div>
+</div>
+
+<div class="end-section">
+  <h2>🎯 Most Frequently Asked Questions</h2>
+  <div class="styled-table">
+    <thead><tr><th>Rank</th><th>Topic</th><th>Frequency in React Interviews</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Closures + Event Loop</td><td>Asked in nearly every interview</td></tr>
+      <tr><td>2</td><td>var/let/const + Hoisting</td><td>Almost always in screening rounds</td></tr>
+      <tr><td>3</td><td>Promises + async/await</td><td>Essential for React data fetching</td></tr>
+      <tr><td>4</td><td>Map/Filter/Reduce</td><td>Must-know for React rendering</td></tr>
+      <tr><td>5</td><td>Debounce + Throttle</td><td>Common in search/autocomplete</td></tr>
+    </tbody>
+  </div>
+</div>
+
+<div class="end-section">
+  <h2>Quick Interview Revision Guide</h2>
+  <p style="color: var(--text-secondary); line-height: 2;">
+    <strong style="color: var(--accent-green);">Before the interview:</strong> Master P1 questions. Understand P2 concepts well.<br>
+    <strong style="color: var(--accent-orange);">For senior roles:</strong> Be ready to discuss how closures relate to React hooks, implement debounce from scratch, and explain the event loop in context of state batching.<br>
+    <strong style="color: var(--accent-red);">Common traps:</strong> Saying "let/const aren't hoisted" (they are, just not initialized), confusing == and ===, forgetting arrow function this behavior.<br>
+    <strong style="color: var(--accent-cyan);">React-specific:</strong> Always connect JS answers to React — closures in useEffect, async patterns in data fetching, immutability in state management.
+  </p>
+</div>
+
+</div>
+
+</body>
+</html>
