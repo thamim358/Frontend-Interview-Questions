@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Mock Interview</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  :root {
+    --mock-blue: #3B82F6;
+    --mock-green: #10B981;
+    --mock-purple: #8B5CF6;
+    --mock-orange: #F59E0B;
+    --mock-red: #EF4444;
+    --mock-pink: #EC4899;
+  }
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(16,185,129,0.04) 0%, transparent 40%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #3B82F6 33%, #8B5CF6 66%, #10B981 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .round-header {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .round-header h2 {
+    border: none;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+  .round-tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 0.5rem;
+  }
+  .tag-blue { background: rgba(59,130,246,0.15); color: var(--mock-blue); }
+  .tag-green { background: rgba(16,185,129,0.15); color: var(--mock-green); }
+  .tag-purple { background: rgba(139,92,246,0.15); color: var(--mock-purple); }
+  .tag-orange { background: rgba(245,158,11,0.15); color: var(--mock-orange); }
+  .tag-red { background: rgba(239,68,68,0.15); color: var(--mock-red); }
+  .tag-pink { background: rgba(236,72,153,0.15); color: var(--mock-pink); }
+  .evaluator-note {
+    padding: 0.75rem 1rem;
+    background: rgba(88,166,255,0.08);
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .evaluator-note strong { color: var(--accent-blue); }
+  .answer-box {
+    padding: 1.25rem;
+    background: rgba(16,185,129,0.06);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: var(--radius-md);
+    margin: 1rem 0;
+  }
+  .answer-box strong { color: var(--mock-green); }
+  .ascii-diagram {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--accent-cyan);
+    background: var(--bg-code);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    white-space: pre;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-badge">MOCK INTERVIEW SIMULATION</div>
+  <h1 class="cover-title">Complete Mock Interview</h1>
+  <p class="cover-subtitle">6 Rounds with Model Answers — simulate the full interview loop from technical screen to offer negotiation.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">6</span><span class="label">Interview Rounds</span></div>
+    <div class="cover-meta-item"><span class="number">4h</span><span class="label">Total Duration</span></div>
+    <div class="cover-meta-item"><span class="number">30+</span><span class="label">Questions</span></div>
+    <div class="cover-meta-item"><span class="number">1</span><span class="label">Offer</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============ ROUND 1 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-blue">Round 1</span> JavaScript + TypeScript Deep Dive</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 45 min | <strong>Type:</strong> Technical Screen | <strong>Interviewer:</strong> Senior Frontend Engineer</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">Explain the event loop in JavaScript. What happens when you call setTimeout(fn, 0)?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Understanding of async execution model, microtask vs macrotask queues, and why setTimout(fn, 0) doesn't execute immediately. Tests whether you debug async race conditions or just guess.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> The event loop is the mechanism that allows JavaScript (single-threaded) to handle async operations. It consists of: <strong>Call Stack</strong> (executes sync code), <strong>Task Queue / Macrotask Queue</strong> (setTimeout, setInterval, I/O, UI rendering), <strong>Microtask Queue</strong> (Promise.then/catch/finally, queueMicrotask, MutationObserver). The loop runs: execute all sync code on the call stack → drain the microtask queue completely → optionally render UI → take ONE macrotask → repeat.</p>
+    <p><code>setTimeout(fn, 0)</code> schedules <code>fn</code> into the macrotask queue. Even with 0ms delay, <code>fn</code> won't run until: (1) the call stack is empty, (2) all pending microtasks are drained. So between <code>setTimeout(fn, 0)</code> and <code>fn</code> executing, any queued microtasks (Promise callbacks) will run first. This is why <code>setTimeout(..., 0)</code> is used to defer execution to the next iteration of the event loop — useful for yielding to the browser to paint or handle user input during heavy computation.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>"setTimeout(fn, 0) runs the function immediately" — this shows you don't understand async ordering. Always mention the microtask queue. If you forget microtasks, the interviewer assumes you've never debugged Promise ordering issues.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">What's a closure? Write a function that creates a counter with private state.</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you explain closures in your own words (not just a definition)? Can you demonstrate practical use? The counter is table stakes — the interview might push further into module patterns, data hiding, and React hooks.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> A closure is created when a function "remembers" and can access variables from its outer (enclosing) scope, even after that outer function has finished executing. It's JavaScript's mechanism for data privacy and the foundation of the module pattern.</p>
+    <p>The counter with private state: the inner function closes over <code>count</code> — nobody outside can read or modify it except through the returned methods. This is how React's <code>useState</code> works conceptually: the state value is held in a closure managed by React's fiber reconciler.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Counter with Private State via Closure</div>
+    <pre><code><span class="keyword">function</span> <span class="function">createCounter</span>(<span class="attr">initial</span> = <span class="number">0</span>) {
+  <span class="keyword">let</span> <span class="attr">count</span> = <span class="attr">initial</span>;  <span class="comment">// Private — inaccessible from outside</span>
+
+  <span class="keyword">return</span> {
+    <span class="function">increment</span>() { <span class="keyword">return</span> ++<span class="attr">count</span>; },
+    <span class="function">decrement</span>() { <span class="keyword">return</span> --<span class="attr">count</span>; },
+    <span class="function">getValue</span>() { <span class="keyword">return</span> <span class="attr">count</span>; },
+    <span class="function">reset</span>()    { <span class="attr">count</span> = <span class="attr">initial</span>; <span class="keyword">return</span> <span class="attr">count</span>; },
+  };
+}
+
+<span class="keyword">const</span> <span class="attr">counter</span> = <span class="function">createCounter</span>(<span class="number">5</span>);
+<span class="attr">counter</span>.<span class="function">increment</span>();  <span class="comment">// 6</span>
+<span class="attr">counter</span>.<span class="attr">count</span>;        <span class="comment">// undefined — private!</span></code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">What's the difference between var, let, and const? Explain hoisting and the Temporal Dead Zone.</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Hoisting beyond "var moves to the top." Do you understand the TDZ? Can you explain why let/const have a TDZ? This separates devs who memorized from devs who understand the spec.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> All three are hoisted, but differently. <strong>var:</strong> Hoisted and initialized to <code>undefined</code>. You can access a var before its declaration and get <code>undefined</code> (not an error). <strong>let/const:</strong> Hoisted but NOT initialized. The period between the start of the scope and the actual declaration is the <strong>Temporal Dead Zone (TDZ)</strong>. Accessing a let/const variable in the TDZ throws a <code>ReferenceError</code>. <strong>const</strong> additionally requires initialization at declaration and prevents reassignment (but not mutation of objects/arrays).</p>
+    <p>The TDZ exists to catch bugs — accessing a variable before declaration is almost always a mistake. Browsers implemented this deliberately to help developers; it's not a spec curiosity. Use <code>const</code> by default, <code>let</code> when reassignment is needed, and never <code>var</code> in modern code.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TDZ Demonstration</div>
+    <pre><code><span class="function">console</span>.<span class="function">log</span>(<span class="attr">a</span>);  <span class="comment">// undefined (var is hoisted + initialized)</span>
+<span class="keyword">var</span> <span class="attr">a</span> = <span class="number">5</span>;
+
+<span class="function">console</span>.<span class="function">log</span>(<span class="attr">b</span>);  <span class="comment">// ReferenceError: Cannot access 'b' before initialization</span>
+<span class="keyword">let</span> <span class="attr">b</span> = <span class="number">10</span>;        <span class="comment">// b is hoisted but in TDZ until this line</span></code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">4</div>
+    <div>
+      <div class="q-text">Promise.all vs Promise.allSettled vs Promise.race vs Promise.any — when to use each?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Practical async orchestration knowledge. Every production app makes parallel API calls. Do you know which combinator to use when?</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> <strong>Promise.all:</strong> All succeed → array of results. Any reject → immediately rejects. Use for <em>independent, all-required</em> data: fetch user profile + settings + permissions — if any fail, the page can't render. <strong>Promise.allSettled:</strong> Waits for all to finish (success or failure). Returns array of <code>{status, value/reason}</code>. Use for <em>independent, non-blocking</em> data: dashboard with 5 widgets — one failing shouldn't break the others. <strong>Promise.race:</strong> Resolves/rejects with first to settle. Use for <em>timeouts</em>: race a fetch against a timeout promise. <strong>Promise.any:</strong> Resolves with the first <em>successful</em> promise. Rejects only if all fail (with AggregateError). Use for <em>redundant requests</em>: fetch from primary CDN, fallback to secondary — whichever responds fastest wins.</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Method</th><th>Resolves When</th><th>Rejects When</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td><code>Promise.all</code></td><td>All succeed</td><td>Any fails</td><td>All-required data</td></tr>
+      <tr><td><code>Promise.allSettled</code></td><td>All finish</td><td>Never rejects</td><td>Dashboard widgets</td></tr>
+      <tr><td><code>Promise.race</code></td><td>First settles</td><td>First rejects</td><td>Timeouts</td></tr>
+      <tr><td><code>Promise.any</code></td><td>First succeeds</td><td>All fail</td><td>CDN fallback</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">5</div>
+    <div>
+      <div class="q-text">What are TypeScript generics? Write a generic function that picks a property from an object with full type safety.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you write generics beyond <code>Array&lt;T&gt;</code>? Do you understand constraints (extends), keyof, and how generics compose? This is a senior-level discriminator.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> Generics are type parameters that make functions, classes, and interfaces reusable across different types while preserving type safety. Instead of <code>any</code> (which loses type info), generics <em>capture</em> the type and use it consistently.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Generic pick + keyof constraint</div>
+    <pre><code><span class="keyword">function</span> <span class="function">pick</span>&lt;<span class="type">T</span>, <span class="type">K</span> <span class="keyword">extends</span> <span class="attr">keyof</span> <span class="type">T</span>&gt;(<span class="attr">obj</span>: <span class="type">T</span>, <span class="attr">keys</span>: <span class="type">K</span>[]): <span class="type">Pick</span>&lt;<span class="type">T</span>, <span class="type">K</span>&gt; {
+  <span class="keyword">return</span> <span class="attr">keys</span>.<span class="function">reduce</span>((<span class="attr">acc</span>, <span class="attr">key</span>) => ({ ...<span class="attr">acc</span>, [<span class="attr">key</span>]: <span class="attr">obj</span>[<span class="attr">key</span>] }), {} <span class="keyword">as</span> <span class="type">Pick</span>&lt;<span class="type">T</span>, <span class="type">K</span>&gt;);
+}
+
+<span class="keyword">const</span> <span class="attr">user</span> = { <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">'Alice'</span>, <span class="attr">email</span>: <span class="string">'a@b.com'</span>, <span class="attr">age</span>: <span class="number">30</span> };
+
+<span class="keyword">const</span> <span class="attr">result</span> = <span class="function">pick</span>(<span class="attr">user</span>, [<span class="string">'name'</span>, <span class="string">'email'</span>]);
+<span class="comment">// result: { name: string; email: string } — fully typed!</span>
+
+<span class="comment">// TypeScript error (caught at compile time):</span>
+<span class="comment">// pick(user, ['invalid']);</span>
+<span class="comment">//         ~~~~~~~~~ Type '"invalid"' is not assignable to keyof typeof user</span></code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">6</div>
+    <div>
+      <div class="q-text">this keyword — explain call, apply, bind, and arrow function behavior.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> <code>this</code> is the most misunderstood JS concept. The interviewer wants to see you explain the 4 binding rules and arrow function behavior clearly. Bonus: mention that arrow functions don't have their own <code>this</code> — they capture it from the enclosing lexical scope.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> The value of <code>this</code> is determined by how a function is <strong>called</strong>, not where it's defined (for regular functions). Four rules in priority order: (1) <strong>new binding:</strong> when called with <code>new</code>, <code>this</code> is the new instance. (2) <strong>Explicit binding:</strong> <code>call</code>, <code>apply</code>, <code>bind</code> set <code>this</code> explicitly. <code>call</code> passes args individually, <code>apply</code> as an array, <code>bind</code> returns a new function with permanently bound <code>this</code>. (3) <strong>Implicit binding:</strong> when called as <code>obj.method()</code>, <code>this</code> is <code>obj</code>. (4) <strong>Default binding:</strong> in non-strict mode, <code>this</code> is the global object (window); in strict mode, <code>this</code> is <code>undefined</code>.</p>
+    <p><strong>Arrow functions</strong> break these rules: they don't have their own <code>this</code>. They capture <code>this</code> from the surrounding lexical scope at creation time. This is why arrow functions are perfect for React class component event handlers and callbacks — no need for <code>.bind(this)</code>.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">7</div>
+    <div>
+      <div class="q-text">Explain prototypal inheritance. How does it differ from classical inheritance?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you explain the core mechanism JavaScript uses for inheritance? The <code>__proto__</code> chain, <code>Object.create</code>, and how <code>class</code> syntax is just sugar over prototypes. Tests whether you understand what's happening under the hood.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> In classical inheritance (Java, C++), classes are blueprints and objects are instances — you create an object from a class. In prototypal inheritance (JavaScript), objects inherit directly from other objects via the prototype chain. Every object has an internal <code>[[Prototype]]</code> link (accessible via <code>__proto__</code> or <code>Object.getPrototypeOf</code>). When you access a property, JS walks the prototype chain until it finds it or reaches <code>null</code> (the top).</p>
+    <p>The <code>class</code> syntax introduced in ES6 is syntactic sugar over prototypes. <code>class Dog extends Animal</code> creates a prototype chain: <code>Dog.prototype.__proto__ === Animal.prototype</code>. The key difference: prototypal inheritance is more flexible — you can change an object's prototype at runtime, create objects without classes (<code>Object.create(null)</code>), and share behavior through delegation (composition) rather than rigid hierarchies.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">8</div>
+    <div>
+      <div class="q-text">What's the output? Microtask vs Macrotask ordering challenge.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Predict the output order</div>
+    <pre><code><span class="function">console</span>.<span class="function">log</span>(<span class="string">'1'</span>);
+
+<span class="function">setTimeout</span>(() => <span class="function">console</span>.<span class="function">log</span>(<span class="string">'2'</span>), <span class="number">0</span>);
+
+<span class="function">Promise</span>.<span class="function">resolve</span>().<span class="function">then</span>(() => <span class="function">console</span>.<span class="function">log</span>(<span class="string">'3'</span>));
+
+<span class="function">console</span>.<span class="function">log</span>(<span class="string">'4'</span>);
+
+<span class="function">queueMicrotask</span>(() => <span class="function">console</span>.<span class="function">log</span>(<span class="string">'5'</span>));
+
+<span class="keyword">new</span> <span class="function">Promise</span>(<span class="attr">resolve</span> => {
+  <span class="function">console</span>.<span class="function">log</span>(<span class="string">'6'</span>);
+  <span class="function">resolve</span>();
+}).<span class="function">then</span>(() => <span class="function">console</span>.<span class="function">log</span>(<span class="string">'7'</span>));
+
+<span class="comment">// Output: 1, 4, 6, 3, 5, 7, 2</span></code></pre>
+  </div>
+  <div class="answer-box">
+    <p><strong>Explanation:</strong> (1) Sync code runs first: <code>1</code> → setTimeout schedules macrotask → Promise.resolve().then schedules microtask → <code>4</code> → queueMicrotask schedules microtask → Promise constructor body is sync → <code>6</code> → resolve() schedules .then microtask. (2) Call stack empty → drain microtask queue: <code>3</code> (registered first) → <code>5</code> → <code>7</code>. (3) One macrotask: <code>2</code>.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">9</div>
+    <div>
+      <div class="q-text">TypeScript: discriminated unions — design a type-safe API response with loading/success/error states.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you model async state in TypeScript? This pattern replaces Redux + thunks in modern React. The interviewer wants <code>discriminated union</code> specifically — a common <code>status</code> field that narrows the type.</div>
+  <div class="code-block">
+    <div class="code-block-header">Discriminated Union — Async State</div>
+    <pre><code><span class="keyword">type</span> <span class="type">AsyncState</span>&lt;<span class="type">T</span>&gt; =
+  | { <span class="attr">status</span>: <span class="string">'idle'</span> }
+  | { <span class="attr">status</span>: <span class="string">'loading'</span> }
+  | { <span class="attr">status</span>: <span class="string">'success'</span>; <span class="attr">data</span>: <span class="type">T</span> }
+  | { <span class="attr">status</span>: <span class="string">'error'</span>;   <span class="attr">error</span>: <span class="type">Error</span> };
+
+<span class="keyword">function</span> <span class="function">renderState</span>&lt;<span class="type">T</span>&gt;(<span class="attr">state</span>: <span class="type">AsyncState</span>&lt;<span class="type">T</span>&gt;) {
+  <span class="keyword">switch</span> (<span class="attr">state</span>.<span class="attr">status</span>) {
+    <span class="keyword">case</span> <span class="string">'idle'</span>:    <span class="comment">// state: { status: 'idle' }</span>
+      <span class="keyword">return</span> <span class="string">'Click to load'</span>;
+    <span class="keyword">case</span> <span class="string">'loading'</span>: <span class="comment">// state: { status: 'loading' }</span>
+      <span class="keyword">return</span> <span class="string">'Loading...'</span>;
+    <span class="keyword">case</span> <span class="string">'success'</span>: <span class="comment">// state: { status: 'success'; data: T }</span>
+      <span class="keyword">return</span> <span class="attr">state</span>.<span class="attr">data</span>;  <span class="comment">// T is accessible here</span>
+    <span class="keyword">case</span> <span class="string">'error'</span>:   <span class="comment">// state: { status: 'error'; error: Error }</span>
+      <span class="keyword">return</span> <span class="attr">state</span>.<span class="attr">error</span>.<span class="attr">message</span>;
+  }
+}</code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Write a debounce function from scratch. Then explain when you'd use leading vs trailing edge.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> Debounce delays execution until the caller stops invoking for a specified delay. <strong>Trailing edge</strong> (default): invoke at the end — perfect for search autocomplete (wait until user stops typing). <strong>Leading edge:</strong> invoke on the first call, then block subsequent calls — perfect for button clicks (prevent double-submit: fire immediately, ignore rapid clicks). <strong>Both:</strong> first call fires immediately, last call fires after the burst — used for window resize (immediate feedback + final accurate call).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Debounce — Production-Ready</div>
+    <pre><code><span class="keyword">function</span> <span class="function">debounce</span>(<span class="attr">fn</span>, <span class="attr">delay</span>, <span class="attr">opts</span> = {}) {
+  <span class="keyword">const</span> { <span class="attr">leading</span> = <span class="keyword">false</span>, <span class="attr">trailing</span> = <span class="keyword">true</span> } = <span class="attr">opts</span>;
+  <span class="keyword">let</span> <span class="attr">timerId</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastArgs</span>, <span class="attr">lastThis</span>;
+
+  <span class="keyword">const</span> <span class="attr">invoke</span> = () => { <span class="attr">fn</span>.<span class="function">apply</span>(<span class="attr">lastThis</span>, <span class="attr">lastArgs</span>); <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>; };
+
+  <span class="keyword">function</span> <span class="function">debounced</span>(...<span class="attr">args</span>) {
+    <span class="attr">lastArgs</span> = <span class="attr">args</span>; <span class="attr">lastThis</span> = <span class="keyword">this</span>;
+    <span class="keyword">if</span> (<span class="attr">timerId</span>) <span class="function">clearTimeout</span>(<span class="attr">timerId</span>);
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="attr">leading</span>) <span class="function">invoke</span>();
+    <span class="keyword">if</span> (<span class="attr">trailing</span>) <span class="attr">timerId</span> = <span class="function">setTimeout</span>(() => { <span class="attr">timerId</span> = <span class="keyword">null</span>; <span class="function">invoke</span>(); }, <span class="attr">delay</span>);
+  }
+
+  <span class="attr">debounced</span>.<span class="attr">cancel</span> = () => { <span class="function">clearTimeout</span>(<span class="attr">timerId</span>); <span class="attr">timerId</span> = <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>; };
+  <span class="keyword">return</span> <span class="attr">debounced</span>;
+}</code></pre>
+  </div>
+</div>
+
+<!-- ============ ROUND 2 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-purple">Round 2</span> React Deep Dive</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 60 min | <strong>Type:</strong> Technical Screen | <strong>Interviewer:</strong> Staff Frontend Engineer</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">Explain React's reconciliation algorithm. What is the Virtual DOM and why does it exist?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you explain the "why" behind React's architecture, not just the "what"? Tests whether you understand the performance problem the Virtual DOM solves.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> The Virtual DOM is an in-memory JavaScript object representation of the real DOM. React uses it to solve the core problem: <strong>direct DOM manipulation is expensive</strong> — every DOM write triggers layout, paint, and composite. Instead of touching the real DOM on every state change, React: (1) Creates a new Virtual DOM tree in memory (cheap, pure JS objects). (2) Diffs it against the previous Virtual DOM tree using a <strong>reconciliation algorithm</strong> (O(n) heuristics: different element types → full rebuild, same type → update props only, lists need <code>key</code> for stable identity). (3) Computes the minimal set of real DOM operations needed (batch update). (4) Applies them in a single synchronous commit phase.</p>
+    <p>The Virtual DOM is not "faster than the real DOM" — operations on it are faster, but React also has to apply changes to the real DOM eventually. The value is: (a) <strong>declarative programming model</strong> — you describe what the UI should look like, React figures out how to get there, (b) <strong>cross-platform abstraction</strong> — the same reconciliation works for React Native, React PDF, React 3D, (c) <strong>batching</strong> — multiple state updates in one event handler produce one commit.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">What problem do React hooks solve? Compare a class component lifecycle to useEffect.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Do you understand the motivation behind hooks? Can you articulate the problems with class components (this binding, HOC wrapper hell, scattered logic) and how hooks solve them?</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> Class components suffered from three fundamental problems: (1) <strong>Scattered logic:</strong> Related logic was split across <code>componentDidMount</code>, <code>componentDidUpdate</code>, and <code>componentWillUnmount</code>. A single concern (e.g., subscribing to chat messages) had code in 3 different lifecycle methods. (2) <strong>Wrapper hell:</strong> Sharing stateful logic required Higher-Order Components or Render Props, creating deeply nested component trees that were hard to debug. (3) <strong>this confusion:</strong> Event handlers needed <code>.bind(this)</code> or arrow functions, confusing new developers. Hooks solve these: <code>useEffect</code> colocalizes setup and cleanup, <strong>custom hooks</strong> share logic without wrapper components, and there's no <code>this</code>.</p>
+    <p><strong>useEffect mapping:</strong> <code>useEffect(fn)</code> without deps → runs after every render (like componentDidMount + componentDidUpdate combined). <code>useEffect(fn, [])</code> with empty array → runs once (componentDidMount). <code>useEffect(fn, [dep])</code> → runs when dep changes. The cleanup function returned from useEffect replaces componentWillUnmount.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">useMemo vs useCallback vs React.memo — when does each actually prevent re-renders?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Can you explain the "referential equality" problem? Do you know that misuse of these hooks can make performance <em>worse</em>? Tests practical experience over documentation reading.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> <strong>React.memo:</strong> Wraps a component. If props haven't changed (shallow comparison), skip re-render. Best for "pure" components that render often with the same props. <strong>useMemo:</strong> Memoizes a <em>computed value</em>. The computation only re-runs if dependencies change. Best for expensive calculations (sorting/filtering large arrays, derived data). <strong>useCallback:</strong> Memoizes a <em>function reference</em>. Returns the same function instance unless dependencies change. Best when passing callbacks to memoized child components (prevents them from re-rendering).</p>
+    <p><strong>Anti-patterns:</strong> Wrapping every function in useCallback adds overhead without benefit — the memoization itself has a cost. Only use these hooks when: (a) you have measured a performance issue, or (b) the value is a dependency of another hook that would cause cascading effects. Premature optimization with these is the most common React performance mistake.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">4</div>
+    <div>
+      <div class="q-text">Explain React Fiber. What problem did it solve that the old Stack Reconciler couldn't?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> Fiber is the architectural change that enabled concurrent React. Can you explain the scheduling problem, time-slicing, and priority-based rendering?</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> The old Stack Reconciler processed the Virtual DOM tree synchronously in a single pass — once reconciliation started, it couldn't be interrupted. This meant: (a) large component trees blocked the main thread (janky animations, unresponsive inputs), (b) React couldn't prioritize urgent updates (user typing) over less urgent ones (data fetching results).</p>
+    <p>Fiber re-architected reconciliation as a <strong>linked list of "units of work"</strong> (fiber nodes). Core innovations: (1) <strong>Incremental rendering:</strong> work can be split into chunks and spread across multiple frames. (2) <strong>Pause/resume:</strong> React can pause work to handle a higher-priority update, then resume. (3) <strong>Priority levels:</strong> user interactions (clicks, typing) get higher priority than data fetching. (4) <strong>Concurrent Mode / Features:</strong> <code>Suspense</code>, <code>useTransition</code>, <code>useDeferredValue</code> all depend on Fiber's ability to interrupt and reprioritize work. The <code>requestIdleCallback</code>-like scheduling is how React cooperates with the browser's event loop.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">5</div>
+    <div>
+      <div class="q-text">useRef — give me 3 practical use cases beyond accessing DOM elements.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> (1) <strong>Mutable values that shouldn't trigger re-renders:</strong> tracking previous values (previous props/state for comparison), interval IDs, animation frame IDs — things you need to persist across renders but aren't visual state. (2) <strong>Stale closure workaround:</strong> storing the latest value of a prop or state in a ref so callbacks (setInterval, event listeners) always read the current value without re-creating the callback. This is the core pattern used in the production bug fix from earlier. (3) <strong>Imperative handle exposure:</strong> <code>useImperativeHandle</code> + <code>forwardRef</code> to expose methods from a child to a parent (focus input, scroll to section, trigger animation) — the escape hatch when the declarative model doesn't fit.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">useRef for avoiding stale closures</div>
+    <pre><code><span class="keyword">function</span> <span class="function">useLatest</span>(<span class="attr">value</span>) {
+  <span class="keyword">const</span> <span class="attr">ref</span> = <span class="function">useRef</span>(<span class="attr">value</span>);
+  <span class="attr">ref</span>.<span class="attr">current</span> = <span class="attr">value</span>;  <span class="comment">// Always keep ref in sync, no re-render</span>
+  <span class="keyword">return</span> <span class="attr">ref</span>;
+}
+
+<span class="comment">// Usage: callback always reads the latest props without re-creating itself</span>
+<span class="keyword">function</span> <span class="function">ChatRoom</span>({ <span class="attr">roomId</span> }) {
+  <span class="keyword">const</span> <span class="attr">latestRoomId</span> = <span class="function">useLatest</span>(<span class="attr">roomId</span>);
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="attr">interval</span> = <span class="function">setInterval</span>(() => {
+      <span class="function">fetchMessages</span>(<span class="attr">latestRoomId</span>.<span class="attr">current</span>);  <span class="comment">// Always current</span>
+    }, <span class="number">5000</span>);
+    <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attr">interval</span>);
+  }, []);  <span class="comment">// No roomId dependency — interval never restarts</span>
+}</code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">6</div>
+    <div>
+      <div class="q-text">What are React Server Components? How do they differ from SSR?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="evaluator-note"><strong>What interviewer is evaluating:</strong> This is the future of React. Do you understand RSC vs SSR? SSR renders the component tree to HTML on the server (runs once), then hydrates on the client. RSC runs components exclusively on the server — they never ship to the client. Client components run in both places.</div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> <strong>SSR (Server-Side Rendering):</strong> React renders the component tree to HTML on the server. The HTML is sent to the client. Then React <strong>hydrates</strong> — attaching event listeners and making the page interactive. The same component code runs on both server and client. Bundled JavaScript for ALL components is still sent to the client.</p>
+    <p><strong>RSC (React Server Components):</strong> Server Components <strong>never run on the client</strong>. Their JavaScript is never sent to the browser. They can directly access databases, file systems, and backend services — no API layer needed. Benefits: (a) <strong>Zero bundle size impact</strong> for server-only components (imagine a markdown renderer that stays on the server), (b) <strong>Direct backend access</strong> — no REST/GraphQL layer for data fetching, (c) <strong>Automatic code splitting</strong> — client boundaries define split points. The tradeoff: Server Components can't use state, effects, or browser APIs — they're pure render functions.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">7</div>
+    <div>
+      <div class="q-text">Custom hooks — write a useFetch hook with loading, error, data, and abort support.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">useFetch — Production Quality</div>
+    <pre><code><span class="keyword">function</span> <span class="function">useFetch</span>&lt;<span class="type">T</span>&gt;(<span class="attr">url</span>: <span class="attr">string</span>) {
+  <span class="keyword">const</span> [<span class="attr">state</span>, <span class="attr">setState</span>] = <span class="function">useState</span>&lt;<span class="type">AsyncState</span>&lt;<span class="type">T</span>&gt;&gt;({ <span class="attr">status</span>: <span class="string">'loading'</span> });
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">if</span> (!<span class="attr">url</span>) <span class="keyword">return</span> <span class="function">setState</span>({ <span class="attr">status</span>: <span class="string">'idle'</span> });
+
+    <span class="keyword">const</span> <span class="attr">controller</span> = <span class="keyword">new</span> <span class="function">AbortController</span>();
+    <span class="function">setState</span>({ <span class="attr">status</span>: <span class="string">'loading'</span> });
+
+    <span class="function">fetch</span>(<span class="attr">url</span>, { <span class="attr">signal</span>: <span class="attr">controller</span>.<span class="attr">signal</span> })
+      .<span class="function">then</span>(<span class="attr">res</span> => { <span class="keyword">if</span> (!<span class="attr">res</span>.<span class="attr">ok</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Error</span>(<span class="string">`HTTP ${res.status}`</span>); <span class="keyword">return</span> <span class="attr">res</span>.<span class="function">json</span>(); })
+      .<span class="function">then</span>(<span class="attr">data</span> => <span class="function">setState</span>({ <span class="attr">status</span>: <span class="string">'success'</span>, <span class="attr">data</span> }))
+      .<span class="function">catch</span>(<span class="attr">err</span> => {
+        <span class="keyword">if</span> (<span class="attr">err</span>.<span class="attr">name</span> !== <span class="string">'AbortError'</span>) {
+          <span class="function">setState</span>({ <span class="attr">status</span>: <span class="string">'error'</span>, <span class="attr">error</span>: <span class="attr">err</span> });
+        }
+      });
+
+    <span class="keyword">return</span> () => <span class="attr">controller</span>.<span class="function">abort</span>();  <span class="comment">// Cleanup on unmount or url change</span>
+  }, [<span class="attr">url</span>]);
+
+  <span class="keyword">return</span> <span class="attr">state</span>;
+}</code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">8</div>
+    <div>
+      <div class="q-text">Error Boundaries — what they are, what they can't catch, and how to structure them.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> Error Boundaries are React components that catch JavaScript errors in their child component tree, log those errors, and display a fallback UI instead of crashing the whole app. They catch errors during: (a) rendering, (b) lifecycle methods, (c) constructors. They <strong>do NOT catch</strong>: (a) event handlers (use try/catch or Promise.catch), (b) async code (use .catch() or Error Boundary + state), (c) server-side rendering errors, (d) errors in the Error Boundary itself. Strategic placement: wrap route-level components, widget-level components, and third-party integrations. Avoid wrapping the entire app in one boundary — a single error shouldn't take down the header, sidebar, and all content simultaneously.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Error Boundary (Class — hooks don't support componentDidCatch yet)</div>
+    <pre><code><span class="keyword">class</span> <span class="type">ErrorBoundary</span> <span class="keyword">extends</span> <span class="type">React</span>.<span class="type">Component</span> {
+  <span class="attr">state</span> = { <span class="attr">hasError</span>: <span class="keyword">false</span>, <span class="attr">error</span>: <span class="keyword">null</span> };
+
+  <span class="keyword">static</span> <span class="function">getDerivedStateFromError</span>(<span class="attr">error</span>) {
+    <span class="keyword">return</span> { <span class="attr">hasError</span>: <span class="keyword">true</span>, <span class="attr">error</span> };
+  }
+
+  <span class="function">componentDidCatch</span>(<span class="attr">error</span>, <span class="attr">errorInfo</span>) {
+    <span class="function">logErrorToService</span>(<span class="attr">error</span>, <span class="attr">errorInfo</span>);  <span class="comment">// Datadog / Sentry</span>
+  }
+
+  <span class="function">render</span>() {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="attr">state</span>.<span class="attr">hasError</span>) {
+      <span class="keyword">return</span> <span class="keyword">this</span>.<span class="attr">props</span>.<span class="attr">fallback</span> || &lt;<span class="attr">h1</span>&gt;Something went wrong.&lt;/<span class="attr">h1</span>&gt;;
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>.<span class="attr">props</span>.<span class="attr">children</span>;
+  }
+}</code></pre>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">9</div>
+    <div>
+      <div class="q-text">useReducer vs useState — when should you reach for useReducer?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> <strong>useState</strong> is best for independent, simple state values. <strong>useReducer</strong> shines when: (1) <strong>Complex state shape:</strong> objects with multiple interdependent fields (form with 10 fields + validation state). (2) <strong>Next state depends on previous state:</strong> counters, toggles — reducer makes the transition explicit. (3) <strong>Multiple state updates in one action:</strong> submitting a form sets loading=true, clears errors, disables the button — one dispatch instead of 3 setState calls. (4) <strong>Testability:</strong> reducers are pure functions — testable without React. The heuristic: if a state update touches more than 2 state variables simultaneously, use useReducer. It also keeps the state transitions predictable when the component grows.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">How would you optimize a React app that renders a list of 10,000 items?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> (1) <strong>Windowing/Virtualization:</strong> Libraries like <code>react-window</code> or <code>@tanstack/virtual</code> render only the visible items + a small buffer. A 10K-item list with 20px row height means only ~40 items are in the DOM at any time. (2) <strong>React.memo + useCallback:</strong> Wrap each list item in <code>React.memo</code> and memoize callbacks so items don't re-render when their data hasn't changed. (3) <strong>useMemo for derived data:</strong> If you're filtering/sorting, memoize the filtered list so it doesn't recompute on every render. (4) <strong>useDeferredValue:</strong> For search/filter on the list, use <code>useDeferredValue</code> to keep the input responsive while the list updates in the background. (5) <strong>Web Worker for heavy processing:</strong> Offload filtering/sorting of 10K items to a Web Worker so the main thread stays free for rendering. (6) <strong>Paginate if possible:</strong> The best optimization is not rendering 10K items. Pagination or infinite scroll with a virtual list is the ideal solution.</p>
+  </div>
+</div>
+
+<!-- ============ ROUND 3 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-green">Round 3</span> System Design</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 60 min | <strong>Type:</strong> System Design | <strong>Prompt:</strong> "Design a Netflix-like Video Streaming Frontend"</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">SD</div>
+    <div>
+      <div class="q-text">Design a Netflix-like Video Streaming Frontend — Complete Walkthrough</div>
+      <span class="q-badge badge-expert">Expert</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 1: Requirements Clarification (5 min)</div>
+    <p>Ask clarifying questions first — don't jump into architecture. Core features: browse catalog (rows by genre/category), search, playback with adaptive bitrate (ABR), user profiles, continue watching, watchlist. Non-functional: 200M+ users globally, 4K HDR streaming, < 2s startup time, offline downloads, WCAG AA, cross-platform (web, mobile, TV).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 2: High-Level Architecture</div>
+    <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────────┐
+│                        CLIENT LAYER                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐   │
+│  │   Web    │  │  Mobile  │  │  Smart TV│  │  Desktop App │   │
+│  │ (Next.js)│  │(RNative) │  │(Lightning│  │  (Electron)  │   │
+│  │          │  │          │  │   JS)    │  │              │   │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬───────┘   │
+│       │             │             │               │            │
+│       └─────────────┴──────┬──────┴───────────────┘            │
+│                            │                                    │
+│                    ┌───────┴────────┐                           │
+│                    │   API Gateway   │                           │
+│                    │ (GraphQL / BFF) │                           │
+│                    └───────┬────────┘                           │
+├────────────────────────────┼────────────────────────────────────┤
+│                    BACKEND SERVICES                             │
+│  ┌──────────┐ ┌───────────┐ ┌──────────┐ ┌────────────────┐   │
+│  │  Content │ │  User     │ │  Search  │ │ Video Encoding │   │
+│  │  Catalog │ │  Profiles │ │  Service │ │  (ABR: 4K to  │   │
+│  │  Service │ │  + Auth   │ │(Elastic) │ │   144p chunks) │   │
+│  └──────────┘ └───────────┘ └──────────┘ └────────────────┘   │
+├─────────────────────────────────────────────────────────────────┤
+│                    INFRASTRUCTURE                                │
+│  CDN (CloudFront/Akamai)  │  S3 (video chunks)  │  Redis Cache │
+└─────────────────────────────────────────────────────────────────┘</div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 3: Component Tree</div>
+    <div class="ascii-diagram">&lt;App&gt;
+├── &lt;AuthProvider&gt;          (auth state + token refresh)
+├── &lt;ProfileSelector&gt;       (Who's watching? device-specific)
+├── &lt;Layout&gt;
+│   ├── &lt;Header&gt;
+│   │   ├── &lt;Logo /&gt;
+│   │   ├── &lt;NavLinks /&gt;
+│   │   ├── &lt;SearchBar /&gt;     (debounced, trie-backed suggestions)
+│   │   └── &lt;UserMenu /&gt;      (profile, account, sign out)
+│   ├── &lt;BrowsePage&gt; (Home)
+│   │   ├── &lt;HeroBanner /&gt;     (featured content, auto-play preview)
+│   │   ├── &lt;CategoryRow /&gt; × N  (horizontal scroll, lazy-loaded)
+│   │   │   └── &lt;ContentCard /&gt; × N   (poster, hover preview)
+│   │   └── &lt;InfiniteScroll /&gt;
+│   ├── &lt;WatchPage&gt;
+│   │   ├── &lt;VideoPlayer /&gt;    (HLS.js / Shaka Player)
+│   │   │   ├── &lt;ABRController /&gt;   (adaptive bitrate switching)
+│   │   │   ├── &lt;SubtitleRenderer /&gt;
+│   │   │   └── &lt;PlaybackControls /&gt;
+│   │   ├── &lt;EpisodeList /&gt;
+│   │   └── &lt;RelatedContent /&gt;
+│   └── &lt;Footer /&gt;</div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 4: Data Flow</div>
+    <p><strong>Browse:</strong> Client requests homepage → API returns personalized rows (Trending Now, Continue Watching, Because You Watched...) → Each row has a content ID list → Images loaded from CDN with progressive loading (LQIP → full resolution) → User scroll triggers next row fetch (Intersection Observer + React Query <code>useInfiniteQuery</code>).</p>
+    <p><strong>Search:</strong> Input → debounced (300ms) → fetch suggestions (trie/Elasticsearch, < 100ms response) → select result → navigate to title detail page (SSR for SEO, client-side for logged-in state).</p>
+    <p><strong>Playback:</strong> Select title → fetch DRM license → fetch manifest (.m3u8 for HLS) → HLS.js parses manifest, selects starting quality based on measured bandwidth → downloads first chunks → begins playback → ABR algorithm continuously measures buffer health + bandwidth + dropped frames, switches quality up/down → reports playback telemetry every 5s (quality, buffer health, errors) for analytics.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 5: Performance Strategy</div>
+    <table class="styled-table">
+      <thead><tr><th>Concern</th><th>Strategy</th></tr></thead>
+      <tbody>
+        <tr><td>Initial Load</td><td>SSR homepage skeleton, lazy-hydrate below-fold rows, CDN edge caching of static assets</td></tr>
+        <tr><td>Image Loading</td><td>next/image with blurDataURL (LQIP), AVIF/WebP formats, responsive srcSet, lazy load below fold</td></tr>
+        <tr><td>Video Startup</td><td>Preload manifest + first 2s of content on hover, start at lowest quality then ramp up (fast start), keep player JS in a separate chunk</td></tr>
+        <tr><td>Scrolling</td><td>Virtualize category rows, passive scroll listeners, requestIdleCallback for non-critical updates</td></tr>
+        <tr><td>Offline</td><td>Service Worker caches UI shell + downloaded content, IndexedDB for watch progress sync</td></tr>
+        <tr><td>Bundle Size</td><td>Route-based code splitting, video player lazy-loaded only on WatchPage, 3rd-party libs (analytics, chat) loaded idle</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Phase 6: Accessibility</div>
+    <p>WCAG 2.1 AA: full keyboard navigation (arrow keys for category rows, Enter to play, Escape to exit fullscreen), screen reader announcements for content changes (aria-live for search results, playback state), closed captions + audio descriptions toggle, focus trapping in modals and the video player, high contrast mode, reduced motion support (prefers-reduced-motion: disable autoplay previews and parallax).</p>
+  </div>
+
+  <div class="callout callout-faang">
+    <div class="callout-title">Interviewer's Evaluation Criteria</div>
+    <p>You're scored on: (1) Did you clarify requirements before designing? (2) Did you consider scale (200M users)? (3) Did you address performance, accessibility, and offline? (4) Did you mention real tools (HLS.js, Shaka Player, Elasticsearch)? (5) Can you draw a clear component tree and explain data flow end-to-end?</p>
+  </div>
+</div>
+
+<!-- ============ ROUND 4 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-orange">Round 4</span> Coding Round — 3 Live Problems</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 60 min | <strong>Type:</strong> Live Coding | <strong>Format:</strong> 3 problems, 20 min each</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">Build a Typeahead / Autocomplete Component</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Requirements</div>
+    <p>Search input that shows a dropdown of suggestions as the user types. Requirements: (1) Debounced API call (300ms), (2) Keyboard navigation (Arrow Up/Down, Enter, Escape), (3) Highlight matching text in suggestions, (4) Loading and empty states, (5) Click outside to close, (6) ARIA attributes for accessibility (combobox role, aria-activedescendant, aria-expanded).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Typeahead — Key Implementation Points</div>
+    <pre><code><span class="comment">// State: query, suggestions[], activeIndex, isLoading, isOpen</span>
+<span class="comment">// Flow: onChange → debounce → fetch suggestions → render dropdown</span>
+<span class="comment">// Keyboard: onKeyDown → ArrowDown: increment activeIndex, Enter: select, Escape: close</span>
+<span class="comment">// Outside click: useRef on wrapper + useEffect with document click listener</span>
+<span class="comment">// ARIA: input[role=combobox][aria-expanded][aria-autocomplete=list],</span>
+<span class="comment">//        ul[role=listbox], li[role=option][aria-selected]</span>
+
+<span class="keyword">function</span> <span class="function">Typeahead</span>({ <span class="attr">fetchSuggestions</span> }) {
+  <span class="keyword">const</span> [<span class="attr">query</span>, <span class="attr">setQuery</span>] = <span class="function">useState</span>(<span class="string">''</span>);
+  <span class="keyword">const</span> [<span class="attr">suggestions</span>, <span class="attr">setSuggestions</span>] = <span class="function">useState</span>([]);
+  <span class="keyword">const</span> [<span class="attr">activeIndex</span>, <span class="attr">setActiveIndex</span>] = <span class="function">useState</span>(-<span class="number">1</span>);
+  <span class="keyword">const</span> [<span class="attr">isOpen</span>, <span class="attr">setIsOpen</span>] = <span class="function">useState</span>(<span class="keyword">false</span>);
+  <span class="keyword">const</span> [<span class="attr">isLoading</span>, <span class="attr">setIsLoading</span>] = <span class="function">useState</span>(<span class="keyword">false</span>);
+  <span class="keyword">const</span> <span class="attr">wrapperRef</span> = <span class="function">useRef</span>(<span class="keyword">null</span>);
+  <span class="keyword">const</span> <span class="attr">listRef</span> = <span class="function">useRef</span>(<span class="keyword">null</span>);
+
+  <span class="keyword">const</span> <span class="attr">debouncedFetch</span> = <span class="function">useMemo</span>(
+    () => <span class="function">debounce</span>(<span class="keyword">async</span> (<span class="attr">q</span>) => {
+      <span class="function">setIsLoading</span>(<span class="keyword">true</span>);
+      <span class="keyword">const</span> <span class="attr">results</span> = <span class="keyword">await</span> <span class="function">fetchSuggestions</span>(<span class="attr">q</span>);
+      <span class="function">setSuggestions</span>(<span class="attr">results</span>);
+      <span class="function">setIsLoading</span>(<span class="keyword">false</span>);
+      <span class="function">setIsOpen</span>(<span class="attr">results</span>.<span class="attr">length</span> > <span class="number">0</span>);
+      <span class="function">setActiveIndex</span>(-<span class="number">1</span>);
+    }, <span class="number">300</span>),
+    [<span class="attr">fetchSuggestions</span>]
+  );
+
+  <span class="keyword">const</span> <span class="attr">handleChange</span> = (<span class="attr">e</span>) => {
+    <span class="keyword">const</span> <span class="attr">val</span> = <span class="attr">e</span>.<span class="attr">target</span>.<span class="attr">value</span>;
+    <span class="function">setQuery</span>(<span class="attr">val</span>);
+    <span class="attr">debouncedFetch</span>(<span class="attr">val</span>);
+  };
+
+  <span class="keyword">const</span> <span class="attr">handleKeyDown</span> = (<span class="attr">e</span>) => {
+    <span class="keyword">switch</span> (<span class="attr">e</span>.<span class="attr">key</span>) {
+      <span class="keyword">case</span> <span class="string">'ArrowDown'</span>:
+        <span class="attr">e</span>.<span class="function">preventDefault</span>();
+        <span class="function">setActiveIndex</span>(<span class="attr">i</span> => <span class="function">Math</span>.<span class="function">min</span>(<span class="attr">i</span> + <span class="number">1</span>, <span class="attr">suggestions</span>.<span class="attr">length</span> - <span class="number">1</span>));
+        <span class="keyword">break</span>;
+      <span class="keyword">case</span> <span class="string">'ArrowUp'</span>:
+        <span class="attr">e</span>.<span class="function">preventDefault</span>();
+        <span class="function">setActiveIndex</span>(<span class="attr">i</span> => <span class="function">Math</span>.<span class="function">max</span>(<span class="attr">i</span> - <span class="number">1</span>, -<span class="number">1</span>));
+        <span class="keyword">break</span>;
+      <span class="keyword">case</span> <span class="string">'Enter'</span>:
+        <span class="keyword">if</span> (<span class="attr">activeIndex</span> >= <span class="number">0</span>) <span class="function">selectSuggestion</span>(<span class="attr">suggestions</span>[<span class="attr">activeIndex</span>]);
+        <span class="keyword">break</span>;
+      <span class="keyword">case</span> <span class="string">'Escape'</span>:
+        <span class="function">setIsOpen</span>(<span class="keyword">false</span>);
+        <span class="keyword">break</span>;
+    }
+  };
+
+  <span class="comment">// Outside click handler using wrapperRef — omitted for brevity</span>
+  <span class="comment">// Highlight matching text: split suggestion by query, wrap matches in &lt;mark&gt;</span>
+  <span class="comment">// Empty state: "No results for '{query}'"</span>
+  <span class="comment">// Loading state: spinner inside dropdown</span>
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">What They're Testing</div>
+    <p>States covered: idle, loading, results, empty, error. Interactions: click, keyboard, blur. Accessibility: ARIA roles and live regions. Edge cases: fast typing (debounce), stale responses (ignore if query changed), empty query (close dropdown).</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">Implement a Virtualized List</div>
+      <span class="q-badge badge-expert">Expert</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Requirements</div>
+    <p>Render a scrolling list of 100K items without performance degradation. Only render items visible in the viewport + a small overscan buffer. Support variable height items (measure after render). The user should not notice that items are being recycled.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Virtualized List — Core Algorithm</div>
+    <pre><code><span class="keyword">function</span> <span class="function">VirtualList</span>({ <span class="attr">items</span>, <span class="attr">itemHeight</span>, <span class="attr">overscan</span> = <span class="number">5</span> }) {
+  <span class="keyword">const</span> [<span class="attr">scrollTop</span>, <span class="attr">setScrollTop</span>] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">const</span> [<span class="attr">containerHeight</span>, <span class="attr">setContainerHeight</span>] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">const</span> <span class="attr">containerRef</span> = <span class="function">useRef</span>(<span class="keyword">null</span>);
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="attr">el</span> = <span class="attr">containerRef</span>.<span class="attr">current</span>;
+    <span class="function">setContainerHeight</span>(<span class="attr">el</span>.<span class="attr">clientHeight</span>);
+    <span class="keyword">const</span> <span class="attr">observer</span> = <span class="keyword">new</span> <span class="function">ResizeObserver</span>(() => <span class="function">setContainerHeight</span>(<span class="attr">el</span>.<span class="attr">clientHeight</span>));
+    <span class="attr">observer</span>.<span class="function">observe</span>(<span class="attr">el</span>);
+    <span class="keyword">return</span> () => <span class="attr">observer</span>.<span class="function">disconnect</span>();
+  }, []);
+
+  <span class="keyword">const</span> <span class="attr">handleScroll</span> = <span class="function">useCallback</span>(
+    <span class="function">throttle</span>(() => {
+      <span class="function">setScrollTop</span>(<span class="attr">containerRef</span>.<span class="attr">current</span>.<span class="attr">scrollTop</span>);
+    }, <span class="number">16</span>),  <span class="comment">// ~60fps</span>
+    []
+  );
+
+  <span class="comment">// Visible range calculation</span>
+  <span class="keyword">const</span> <span class="attr">startIndex</span> = <span class="function">Math</span>.<span class="function">max</span>(<span class="number">0</span>, <span class="function">Math</span>.<span class="function">floor</span>(<span class="attr">scrollTop</span> / <span class="attr">itemHeight</span>) - <span class="attr">overscan</span>);
+  <span class="keyword">const</span> <span class="attr">endIndex</span> = <span class="function">Math</span>.<span class="function">min</span>(
+    <span class="attr">items</span>.<span class="attr">length</span>,
+    <span class="function">Math</span>.<span class="function">ceil</span>((<span class="attr">scrollTop</span> + <span class="attr">containerHeight</span>) / <span class="attr">itemHeight</span>) + <span class="attr">overscan</span>
+  );
+
+  <span class="keyword">const</span> <span class="attr">visibleItems</span> = <span class="attr">items</span>.<span class="function">slice</span>(<span class="attr">startIndex</span>, <span class="attr">endIndex</span>);
+  <span class="keyword">const</span> <span class="attr">totalHeight</span> = <span class="attr">items</span>.<span class="attr">length</span> * <span class="attr">itemHeight</span>;
+  <span class="keyword">const</span> <span class="attr">offsetY</span> = <span class="attr">startIndex</span> * <span class="attr">itemHeight</span>;
+
+  <span class="keyword">return</span> (
+    &lt;<span class="attr">div</span>
+      <span class="attr">ref</span>={<span class="attr">containerRef</span>}
+      <span class="attr">onScroll</span>={<span class="attr">handleScroll</span>}
+      <span class="attr">style</span>={{ <span class="attr">height</span>: <span class="number">600</span>, <span class="attr">overflow</span>: <span class="string">'auto'</span> }}
+    &gt;
+      &lt;<span class="attr">div</span> <span class="attr">style</span>={{ <span class="attr">height</span>: <span class="attr">totalHeight</span>, <span class="attr">position</span>: <span class="string">'relative'</span> }}&gt;
+        &lt;<span class="attr">div</span> <span class="attr">style</span>={{ <span class="attr">transform</span>: <span class="string">`translateY(${offsetY}px)`</span> }}&gt;
+          {<span class="attr">visibleItems</span>.<span class="function">map</span>((<span class="attr">item</span>, <span class="attr">i</span>) => (
+            &lt;<span class="attr">div</span> <span class="attr">key</span>={<span class="attr">startIndex</span> + <span class="attr">i</span>} <span class="attr">style</span>={{ <span class="attr">height</span>: <span class="attr">itemHeight</span> }}&gt;
+              {<span class="attr">item</span>}
+            &lt;/<span class="attr">div</span>&gt;
+          ))}
+        &lt;/<span class="attr">div</span>&gt;
+      &lt;/<span class="attr">div</span>&gt;
+    &lt;/<span class="attr">div</span>&gt;
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Bonus Points</div>
+    <p>Variable height: maintain a <code>Map&lt;index, height&gt;</code> and use <code>getBoundingClientRect()</code> after render to measure actual heights, accumulating offsets. Intersection Observer for lazy image loading within virtualized items. Mention that this is what libraries like <code>react-window</code> and <code>@tanstack/virtual</code> do.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">Design a Notification System</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Requirements</div>
+    <p>Build a notification system supporting: (1) Multiple types: success, error, warning, info, (2) Auto-dismiss with configurable duration, (3) Stacking (max 5 visible), (4) Animations (slide in, fade out), (5) Pause timer on hover, (6) Action buttons (Undo, Retry), (7) Global store accessible from anywhere.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Notification System — Store + Provider Pattern</div>
+    <pre><code><span class="comment">// store.ts — Zustand for simplicity</span>
+<span class="keyword">import</span> { <span class="attr">create</span> } <span class="keyword">from</span> <span class="string">'zustand'</span>;
+
+<span class="keyword">let</span> <span class="attr">nextId</span> = <span class="number">0</span>;
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="attr">useNotificationStore</span> = <span class="function">create</span>(<span class="attr">set</span> => ({
+  <span class="attr">notifications</span>: [],
+
+  <span class="attr">addNotification</span>: (<span class="attr">notification</span>) => {
+    <span class="keyword">const</span> <span class="attr">id</span> = ++<span class="attr">nextId</span>;
+    <span class="comment">// Config defaults</span>
+    <span class="keyword">const</span> <span class="attr">config</span> = {
+      <span class="attr">duration</span>: <span class="number">5000</span>,
+      <span class="attr">type</span>: <span class="string">'info'</span>,
+      ...<span class="attr">notification</span>,
+      <span class="attr">id</span>,
+    };
+
+    <span class="function">set</span>(<span class="attr">state</span> => ({
+      <span class="comment">// Max 5 — remove oldest if exceeding</span>
+      <span class="attr">notifications</span>: [...<span class="attr">state</span>.<span class="attr">notifications</span>, <span class="attr">config</span>].<span class="function">slice</span>(-<span class="number">5</span>),
+    }));
+
+    <span class="keyword">if</span> (<span class="attr">config</span>.<span class="attr">duration</span> > <span class="number">0</span>) {
+      <span class="function">setTimeout</span>(() => <span class="attr">useNotificationStore</span>.<span class="attr">getState</span>().<span class="function">removeNotification</span>(<span class="attr">id</span>), <span class="attr">config</span>.<span class="attr">duration</span>);
+    }
+
+    <span class="keyword">return</span> <span class="attr">id</span>;
+  },
+
+  <span class="attr">removeNotification</span>: (<span class="attr">id</span>) =>
+    <span class="function">set</span>(<span class="attr">state</span> => ({ <span class="attr">notifications</span>: <span class="attr">state</span>.<span class="attr">notifications</span>.<span class="function">filter</span>(<span class="attr">n</span> => <span class="attr">n</span>.<span class="attr">id</span> !== <span class="attr">id</span>) })),
+}));
+
+<span class="comment">// Usage: toast.success('File saved', { action: { label: 'Undo', onClick: undo } })</span></code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Architecture Notes</div>
+    <p>Use a fixed-position container (top-right) with <code>pointer-events: none</code> so the overlay doesn't block clicks, but <code>pointer-events: auto</code> on notifications themselves. CSS transitions for enter/exit (slide-in-from-right, fade-out). Pause timers on hover: set a ref flag <code>isHovered</code>, clear the timeout on hover, restart on mouse leave. Action buttons: render inside the notification with onClick handlers that call back into the store or trigger side effects. For React Native: use <code>Animated</code> API instead of CSS transitions.</p>
+  </div>
+</div>
+
+<!-- ============ ROUND 5 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-red">Round 5</span> Manager / Leadership Round</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 45 min | <strong>Type:</strong> Behavioral + Leadership | <strong>Interviewer:</strong> Engineering Manager / Director</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">Tell me about a time you had to influence a technical decision across multiple teams. How did you handle disagreement?</div>
+      <span class="q-badge badge-expert">Expert</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer (STAR):</strong> Situation: 3 frontend teams using 3 different form libraries (React Hook Form, Formik, and a custom solution). This caused inconsistent validation behavior, duplicated form components, and no shared accessibility patterns. Task: Unify on one library without a top-down mandate. Action: (1) I benchmarked all 3 libraries against our requirements (TypeScript support, accessibility, bundle size, validation schema support, learning curve). Published a comparison doc. (2) I didn't pick a winner — I asked each team to evaluate the doc and vote. (3) React Hook Form won 2/3 votes. The Formik team lead pushed back because Formik had "compound component" pattern he preferred. (4) I built a proof-of-concept: a complex multi-step form in React Hook Form that matched their Formik pattern. Showed it took 40% less code and had built-in accessibility. (5) He agreed to migrate. I personally helped his team migrate their first form. Result: Unified across all 3 teams within 8 weeks. Form-related accessibility bugs dropped 80%. The comparison doc became our team's standard template for tech evaluations.</p>
+  </div>
+  <div class="evaluator-note"><strong>What they're evaluating:</strong> Cross-team influence, data-driven decision making, handling disagreement without authority, and the ability to bring people along rather than forcing decisions.</div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">How do you approach mentoring? Give me a specific example.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> I use a graduated model: <strong>I do, you watch</strong> (first week — pair program where I drive and explain my reasoning aloud), <strong>We do together</strong> (weeks 2-3 — they drive, I navigate and ask guiding questions), <strong>You do, I review</strong> (week 4+ — they own features, I review PRs, available for unblocking). Specific example: mentored a bootcamp grad who was overwhelmed by our monorepo. Week 1: we paired on a small bug fix. I explained the folder structure, how to trace data flow across 4 packages, and how to write a failing test first. By week 3, she independently shipped a feature with tests. By month 3, she was mentoring the next hire. Key principle: my goal is to make myself unnecessary for their daily work within 3 months.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">How do you handle a situation where a teammate's code quality is consistently below the bar?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="answer-box">
+    <p><strong>Model Answer:</strong> (1) Never assume malice or laziness — assume a skill gap, unclear expectations, or pressure to ship fast. (2) Start with a private, specific, and kind conversation: "I noticed the last 3 PRs had the same patterns — missing error states, no tests for the unhappy path. Can we pair on the next one? I'd love to share how I approach it." (3) During pairing, model the desired quality level — not by fixing their code, but by asking questions: "What happens if the API returns a 500? What should the user see?" (4) If the issue persists, make quality expectations explicit: add a PR template with a checklist (error states, loading states, empty states, tests, a11y, mobile). (5) If it's a systemic issue (tight deadlines pushing quality down), escalate to the EM with a proposal: "I think our sprint planning doesn't allocate time for polish. Here's how adding 20% buffer reduced bugs by 60% in my previous team." Key principle: the goal is to improve the teammate, not to punish them. Every engineer wants to do good work — sometimes they just need the right support.</p>
+  </div>
+</div>
+
+<!-- ============ ROUND 6 ============ -->
+<div class="round-header">
+  <h2><span class="round-tag tag-pink">Round 6</span> HR Round — Offer &amp; Negotiation</h2>
+  <p style="color:var(--text-tertiary);margin:0.5rem 0 0;"><strong>Duration:</strong> 30 min | <strong>Type:</strong> Culture Fit + Compensation | <strong>Interviewer:</strong> Recruiter / HRBP</p>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">$</div>
+    <div>
+      <div class="q-text">Salary Negotiation Strategy &amp; Questions to Ask</div>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Negotiation Script</div>
+    <p><strong>Before the offer:</strong> Never give a number first. When they ask about salary expectations, say: <em>"I'm focused on finding the right role and team. I'm confident that if we're a mutual fit, we'll find a fair number. What's the budgeted range for this role?"</em> This makes them anchor first.</p>
+    <p><strong>After receiving an offer:</strong> "Thank you — I'm really excited about the team and the role. Let me review the full package and get back to you in [24-48 hours]." Never accept on the spot. You need time to evaluate equity, benefits, and counteroffer if you have competing offers.</p>
+    <p><strong>Counteroffer script:</strong> "Based on my research and [competing offer / market data], I was targeting [X base + Y equity]. Is there flexibility on the base or equity? I'm ready to sign if we can get to [target number]." Always justify with data, never with "I feel I deserve more."</p>
+    <p><strong>Total compensation levers (in order of negotiability):</strong> (1) Sign-on bonus — easiest, comes from a different budget, (2) Equity / RSUs — often flexible, (3) Base salary — harder because it sets precedent for raises, (4) Performance bonus percentage — usually fixed by level.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">10 Questions to Ask the HR/Recruiter</div>
+    <ol class="followup-list">
+      <li>"What does the career progression look like from this level? What separates 'meets expectations' from 'exceeds expectations'?"</li>
+      <li>"How does the performance review cycle work? What metrics are used to evaluate engineers?"</li>
+      <li>"What's the on-call expectation for this role? How frequent are incidents and what's the typical page volume?"</li>
+      <li>"How does the team handle tech debt? Is there dedicated time or is it ad-hoc?"</li>
+      <li>"What's the ramp-up expectation for the first 90 days? What would success look like at 3, 6, and 12 months?"</li>
+      <li>"How does the team make technical decisions? Is there an RFC process or architecture review board?"</li>
+      <li>"What's the ratio of greenfield to maintenance work on this team?"</li>
+      <li>"How is the engineering organization structured? Who does this role report to and who reports to them?"</li>
+      <li>"What's the remote/hybrid policy? How does the team handle async communication across time zones?"</li>
+      <li>"What's the biggest challenge the team is facing right now that I could help solve?"</li>
+    </ol>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Red Flags to Watch For</div>
+    <p>(1) "We work hard and play hard" = expect 60-hour weeks. (2) Vague answers about on-call or tech debt = they're hiding something. (3) "We're like a family" = poor boundaries. (4) No clear career ladder = you'll stagnate. (5) High turnover mentioned casually — ask: "What's the average tenure on this team?" (6) "We'll figure out the process as we go" = chaos. (7) The offer has an exploding deadline (< 48 hours) = pressure tactic. (8) They can't explain what the next 6 months look like = no roadmap.</p>
+  </div>
+</div>
+
+<!-- ============ FINAL: SELF ASSESSMENT ============ -->
+<div class="section-divider">
+  <h2>Final — Self-Assessment Checklist</h2>
+  <p>"Am I ready?" — Check every box before your first interview.</p>
+</div>
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">✓</div>
+    <div>
+      <div class="q-text">The Pre-Interview Readiness Checklist</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">JavaScript &amp; TypeScript</div>
+    <ul class="summary-list">
+      <li>Can explain event loop (call stack, microtasks, macrotasks) without notes</li>
+      <li>Can write debounce, throttle, Promise.all, deep clone from scratch</li>
+      <li>Can explain closure, hoisting, this binding rules, prototype chain</li>
+      <li>Can write TypeScript generics with constraints (extends, keyof)</li>
+      <li>Can model async state as a discriminated union</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">React</div>
+    <ul class="summary-list">
+      <li>Can explain Virtual DOM, reconciliation, and Fiber architecture</li>
+      <li>Can explain every built-in hook with a practical use case</li>
+      <li>Can build a custom hook (useFetch, useDebounce, useLocalStorage)</li>
+      <li>Can explain Server Components vs SSR vs Client Components</li>
+      <li>Can optimize a list of 10K items (windowing, memoization)</li>
+      <li>Can explain React.memo, useMemo, useCallback with real examples</li>
+      <li>Can handle all UI states: loading, empty, error, edge cases</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">System Design</div>
+    <ul class="summary-list">
+      <li>Can design a large-scale frontend (Netflix, Facebook, Google Docs)</li>
+      <li>Can draw component tree + data flow diagram on a whiteboard</li>
+      <li>Addresses: performance, caching, CDN, accessibility, offline, i18n</li>
+      <li>Mentions real tools (HLS.js, react-window, Elasticsearch, etc.)</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Behavioral</div>
+    <ul class="summary-list">
+      <li>Have 8 STAR stories prepared with specific numbers and outcomes</li>
+      <li>Each story is under 2 minutes (practice with a timer)</li>
+      <li>Stories cover: conflict resolution, failure/learning, mentorship, impact, tight deadlines, cross-team influence, technical decision-making</li>
+      <li>Can adapt the same story for different companies (Amazon LP vs Google Googleyness)</li>
+      <li>Have a 60-second "Tell me about yourself" that tells a story, not a resume</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Coding</div>
+    <ul class="summary-list">
+      <li>Can solve Two Sum, Valid Parentheses in under 10 minutes each</li>
+      <li>Can implement debounce, throttle, Promise.all, deep clone from memory</li>
+      <li>Can implement Array.map, Array.reduce, Function.bind polyfills</li>
+      <li>Can implement LRU Cache, memoize, Event Emitter</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Career &amp; Negotiation</div>
+    <ul class="summary-list">
+      <li>Have 3-5 companies targeted with research on their tech stack and culture</li>
+      <li>Know market salary range for your level + location (levels.fyi, Glassdoor)</li>
+      <li>Have a competing offer or timeline that creates urgency</li>
+      <li>Know your walk-away number before the negotiation starts</li>
+    </ul>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">When You're Actually Ready</div>
+    <p>If you can answer 80% of the questions in this handbook without looking at notes, you're ready. If you can explain every concept to a rubber duck in plain English, you're more than ready. Most candidates fail not because they don't know the material, but because they've never practiced saying it aloud. Spend at least 10 hours in mock interviews before your first real one.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="end-section">
+  <h2>You've Completed the Simulation</h2>
+  <p class="cover-subtitle" style="margin:0 auto;text-align:center;">6 rounds. 30+ questions. Every scenario covered. Now practice, iterate, and go get that offer.</p>
+</div>
+
+</body>
+</html>

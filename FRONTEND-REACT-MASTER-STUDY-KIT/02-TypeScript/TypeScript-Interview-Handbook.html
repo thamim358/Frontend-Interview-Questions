@@ -1,0 +1,1335 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(49,120,198,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(49,120,198,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #3178C6 50%, #8B5CF6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #3178C6 0%, #8B5CF6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-badge">INTERVIEW HANDBOOK</div>
+  <h1 class="cover-title">TypeScript Interview Handbook</h1>
+  <p class="cover-subtitle">18 Essential Questions for React/TypeScript Developers — type-safe answers from a senior engineer.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P1 — Must Know</span></div>
+    <div class="cover-meta-item"><span class="number">8</span><span class="label">P2 — Common</span></div>
+    <div class="cover-meta-item"><span class="number">60+</span><span class="label">Code Snippets</span></div>
+    <div class="cover-meta-item"><span class="number">18</span><span class="label">Total Questions</span></div>
+  </div>
+</div>
+<div class="section-divider">
+  <h2>P1 — Must Know Questions</h2>
+  <p>10 questions that define whether you truly understand TypeScript or just add type annotations.</p>
+</div>
+<div class="container">
+
+<!-- Q1: Interface vs Type Alias -->
+<div class="question-card" id="q1">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">Interface vs Type Alias — When to use each in React?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Both describe object shapes, but with key differences: <strong>Interface</strong> supports declaration merging (useful for library augmentation), extends via <code>extends</code>, and is preferred for public API types. <strong>Type Alias</strong> is more flexible — it can represent unions, intersections, primitives, tuples, and mapped types. For React props: use <strong>interface</strong> by default, <strong>type</strong> when you need unions or computed types.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>Interface</strong> is like a contract that can be amended later (someone can add more terms). <strong>Type</strong> is like a snapshot — once created, it is immutable. Interfaces play well with OOP patterns (extends); types excel at functional/composition patterns (unions, intersections).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>React component props: the React community convention is to use <code>interface Props { ... }</code>. Union types for state: <code>type Status = 'loading' | 'success' | 'error'</code> — interfaces cannot express this. Intersection for composing types: <code>type AdminUser = User &amp; { role: 'admin' }</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Interviewers want to see you understand the practical tradeoffs, not just memorize differences. This question tests whether you have built real TypeScript applications.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Always using <code>type</code> for everything or always using <code>interface</code>. Not knowing that interfaces can be merged (useful for augmenting third-party types). Using <code>type</code> where declaration merging would be beneficial (like extending Window or Express types).</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>TypeScript's own performance differs: interfaces are checked by name (faster for complex object types), while types are checked by structure. For large codebases, prefer interfaces for object shapes and types for unions/intersections. React's type definitions use interfaces for props, state, and context.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Interface vs Type</div>
+    <pre><code><span class="comment">// Interface: best for object shapes, extendable</span>
+<span class="keyword">interface</span> <span class="type">UserProps</span> {
+  name: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+  email?: <span class="type">string</span>; <span class="comment">// optional</span>
+}
+
+<span class="comment">// Declaration merging — only interfaces can do this</span>
+<span class="keyword">interface</span> <span class="type">Window</span> {
+  <span class="comment">// augment built-in Window type</span>
+  analytics: { <span class="function">track</span>(event: <span class="type">string</span>): <span class="type">void</span> };
+}
+
+<span class="comment">// Type: best for unions, intersections, primitives, tuples</span>
+<span class="keyword">type</span> <span class="type">Status</span> = <span class="string">'loading'</span> | <span class="string">'success'</span> | <span class="string">'error'</span>;     <span class="comment">// union — interface cannot do this</span>
+<span class="keyword">type</span> <span class="type">StringOrNum</span> = <span class="type">string</span> | <span class="type">number</span>;                <span class="comment">// primitive union</span>
+<span class="keyword">type</span> <span class="type">Point</span> = [<span class="type">number</span>, <span class="type">number</span>];                       <span class="comment">// tuple</span>
+<span class="keyword">type</span> <span class="type">AdminUser</span> = User &amp; { role: <span class="string">'admin'</span> };         <span class="comment">// intersection</span>
+
+<span class="comment">// React component props — community convention: interface</span>
+<span class="keyword">interface</span> <span class="type">ButtonProps</span> <span class="keyword">extends</span> <span class="type">React.ButtonHTMLAttributes</span>&lt;<span class="type">HTMLButtonElement</span>&gt; {
+  variant: <span class="string">'primary'</span> | <span class="string">'secondary'</span> | <span class="string">'ghost'</span>;
+  isLoading?: <span class="type">boolean</span>;
+}
+<span class="keyword">const</span> <span class="function">Button</span>: <span class="type">React.FC</span>&lt;<span class="type">ButtonProps</span>&gt; = ({ variant, isLoading, ...rest }) =&gt; {
+  <span class="keyword">return</span> &lt;<span class="attr">button</span> {...rest} disabled={isLoading} /&gt;;
+};</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>How does declaration merging work and when would you use it?</li>
+      <li>Can a type alias extend an interface? Can an interface extend a type?</li>
+      <li>Why does the React community prefer <code>interface</code> for props?</li>
+      <li>What happens if you try to merge two types with the same name?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Interface = contract you can amend. Type = snapshot, frozen. If it looks like an object shape and might be extended -> interface. If it is a union, tuple, or primitive -> type."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>Interface:</strong> object shapes, declaration merging, <code>extends</code>, preferred for React props</li>
+      <li><strong>Type:</strong> unions, intersections, tuples, primitives, mapped types, conditional types</li>
+      <li>Interfaces are checked by name (faster); types by structure</li>
+      <li>Both can extend each other (type can extend interface, interface can extend type)</li>
+      <li>Default: interface for objects, type for everything else</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q2: Generics -->
+<div class="question-card" id="q2">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">Explain Generics in TypeScript — with React examples</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Generics</strong> allow you to write functions, classes, and types that work with any data type while preserving type safety. Instead of using <code>any</code> (which loses type info), generics capture the type at the call site and carry it through, giving you autocompletion and type checking. The classic example is an identity function: <code>function identity&lt;T&gt;(arg: T): T { return arg; }</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of generics as a "type variable" — like a function parameter, but for types. When you call <code>identity("hello")</code>, TypeScript fills in <code>T = string</code>. The function now knows it receives and returns a string. Compare to <code>any</code>: with generics you keep type information; with <code>any</code> you throw it away.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>React: generic components (<code>&lt;Select&lt;T&gt; options={...} /&gt;</code>), generic hooks (useFetch, useLocalStorage), generic utility functions (debounce with preserved types), API response wrappers, and strongly-typed event handlers.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Generics are the gateway to advanced TypeScript. If you understand generics, you can read and write library-grade type definitions. Without them, you are stuck writing <code>any</code> and losing type safety.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Over-complicating with too many type parameters. Using <code>any</code> inside generic functions when <code>unknown</code> or proper constraints would work. Not constraining generics when needed (leading to runtime errors). Confusing generic types with generic components in React.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Generics in React</div>
+    <pre><code><span class="comment">// Basic generic: identity function</span>
+<span class="keyword">function</span> <span class="function">identity</span>&lt;<span class="type">T</span>&gt;(arg: <span class="type">T</span>): <span class="type">T</span> { <span class="keyword">return</span> arg; }
+<span class="keyword">const</span> str = <span class="function">identity</span>(<span class="string">'hello'</span>); <span class="comment">// T = string</span>
+<span class="keyword">const</span> num = <span class="function">identity</span>(<span class="number">42</span>);     <span class="comment">// T = number</span>
+
+<span class="comment">// Generic constraints — restrict what T can be</span>
+<span class="keyword">function</span> <span class="function">getLength</span>&lt;<span class="type">T extends { length: number }</span>&gt;(arg: <span class="type">T</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> arg.length;
+}
+<span class="function">getLength</span>(<span class="string">'hello'</span>);  <span class="comment">// 5 — OK</span>
+<span class="function">getLength</span>([<span class="number">1</span>, <span class="number">2</span>]);   <span class="comment">// 2 — OK</span>
+<span class="comment">// getLength(123);    // Error: number doesn't have .length</span>
+
+<span class="comment">// Generic React component — type-safe Select</span>
+<span class="keyword">interface</span> <span class="type">SelectProps</span>&lt;<span class="type">T</span>&gt; {
+  options: <span class="type">T</span>[];
+  value: <span class="type">T</span>;
+  onChange: (value: <span class="type">T</span>) =&gt; <span class="type">void</span>;
+  getLabel: (option: <span class="type">T</span>) =&gt; <span class="type">string</span>;
+}
+<span class="keyword">function</span> <span class="function">Select</span>&lt;<span class="type">T</span>&gt;({ options, value, onChange, getLabel }: <span class="type">SelectProps</span>&lt;<span class="type">T</span>&gt;) {
+  <span class="keyword">return</span> options.<span class="function">map</span>(<span class="function">opt</span> =&gt; (
+    &lt;<span class="attr">option</span>
+      selected={opt === value}
+      onClick={() =&gt; <span class="function">onChange</span>(opt)}
+    &gt;{<span class="function">getLabel</span>(opt)}&lt;/<span class="attr">option</span>&gt;
+  ));
+}
+
+<span class="comment">// Generic hook — typed useLocalStorage</span>
+<span class="keyword">function</span> <span class="function">useLocalStorage</span>&lt;<span class="type">T</span>&gt;(key: <span class="type">string</span>, initial: <span class="type">T</span>): [<span class="type">T</span>, (val: <span class="type">T</span>) =&gt; <span class="type">void</span>] {
+  <span class="keyword">const</span> [value, setValue] = <span class="function">useState</span>&lt;<span class="type">T</span>&gt;(() =&gt; {
+    <span class="keyword">const</span> stored = localStorage.<span class="function">getItem</span>(key);
+    <span class="keyword">return</span> stored ? JSON.<span class="function">parse</span>(stored) : initial;
+  });
+  <span class="function">useEffect</span>(() =&gt; {
+    localStorage.<span class="function">setItem</span>(key, JSON.<span class="function">stringify</span>(value));
+  }, [key, value]);
+  <span class="keyword">return</span> [value, setValue];
+}
+<span class="comment">// Usage: const [theme, setTheme] = useLocalStorage('theme', 'light');</span>
+<span class="comment">// theme is typed as string, not any</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is the difference between <code>&lt;T&gt;</code> and <code>&lt;T extends SomeType&gt;</code>?</li>
+      <li>Can you have generic default values? (<code>&lt;T = string&gt;</code>)</li>
+      <li>How do generics work with arrow functions in <code>.tsx</code> files? (The <code>&lt;T extends unknown&gt;</code> trick)</li>
+      <li>How would you type a generic <code>useFetch</code> hook?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Generics = type parameters. Like function params, but for types. <code>T</code> is the conventional name (<strong>T</strong>ype). In <code>.tsx</code> files, add <code>extends unknown</code> to avoid JSX parsing ambiguity."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Generics preserve type information through functions, classes, and types</li>
+      <li>Constraints (<code>extends</code>) limit what types are accepted</li>
+      <li>React: generic components, hooks, event handlers</li>
+      <li>In TSX files, use <code>&lt;T extends unknown&gt;</code> for arrow function generics</li>
+      <li>Multiple generics: <code>function pair&lt;K, V&gt;(key: K, value: V)</code></li>
+    </ul>
+  </div>
+</div>
+<!-- Q3: Utility Types -->
+<div class="question-card" id="q3">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Explain Utility Types — Partial, Pick, Omit, Record, ReturnType</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>TypeScript's built-in <strong>utility types</strong> transform existing types without rewriting them. <strong>Partial&lt;T&gt;</strong> makes all properties optional. <strong>Pick&lt;T, K&gt;</strong> selects specific properties. <strong>Omit&lt;T, K&gt;</strong> excludes specific properties. <strong>Record&lt;K, V&gt;</strong> creates an object type with keys K and values V. <strong>ReturnType&lt;T&gt;</strong> extracts the return type of a function. These are essential for React: form state (Partial), API responses (Pick), component refactoring (Omit), and hook return types (ReturnType).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>Partial</strong> = "every field is now optional" — perfect for form drafts where not all fields are filled yet. <strong>Pick</strong> = "I only want these columns" — like selecting specific columns from a table. <strong>Omit</strong> = "remove these columns" — like deleting columns. <strong>Record</strong> = "create a lookup table" — like building a dictionary. <strong>ReturnType</strong> = "what does this function give back?" — useful when wrapping existing functions.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Update forms: <code>Partial&lt;User&gt;</code> allows submitting only changed fields. API responses: <code>Pick&lt;User, 'id' | 'name'&gt;</code> for a user list endpoint. React component props extending HTML: <code>Omit&lt;ButtonHTMLAttributes, 'type'&gt;</code>. Type-safe reducers: <code>Record&lt;ActionType, (state) => state&gt;</code>. Extracting hook return types for context values.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Utility types are the most used TypeScript feature in real React codebases. Not knowing them means writing duplicate types constantly.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Utility Types in React</div>
+    <pre><code><span class="keyword">interface</span> <span class="type">User</span> {
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  role: <span class="string">'admin'</span> | <span class="string">'user'</span>;
+  createdAt: <span class="type">Date</span>;
+}
+
+<span class="comment">// Partial — all optional (form state before submission)</span>
+<span class="keyword">type</span> <span class="type">UserForm</span> = <span class="type">Partial</span>&lt;<span class="type">User</span>&gt;;
+<span class="keyword">const</span> draft: <span class="type">UserForm</span> = { name: <span class="string">'Alice'</span> }; <span class="comment">// OK — no other fields required</span>
+
+<span class="comment">// Pick — select specific fields (API response for list view)</span>
+<span class="keyword">type</span> <span class="type">UserCard</span> = <span class="type">Pick</span>&lt;<span class="type">User</span>, <span class="string">'id'</span> | <span class="string">'name'</span> | <span class="string">'role'</span>&gt;;
+
+<span class="comment">// Omit — exclude specific fields (remove sensitive data)</span>
+<span class="keyword">type</span> <span class="type">PublicUser</span> = <span class="type">Omit</span>&lt;<span class="type">User</span>, <span class="string">'email'</span> | <span class="string">'createdAt'</span>&gt;;
+
+<span class="comment">// Record — typed lookup objects (Redux action handlers)</span>
+<span class="keyword">type</span> <span class="type">StatusLabel</span> = <span class="type">Record</span>&lt;<span class="string">'loading'</span> | <span class="string">'success'</span> | <span class="string">'error'</span>, <span class="type">string</span>&gt;;
+<span class="keyword">const</span> labels: <span class="type">StatusLabel</span> = {
+  loading: <span class="string">'Loading up...'</span>,
+  success: <span class="string">'Done!'</span>,
+  error: <span class="string">'Something went wrong'</span>,
+};
+
+<span class="comment">// ReturnType — extract return type of hooks/functions</span>
+<span class="keyword">type</span> <span class="type">ThemeFromHook</span> = <span class="type">ReturnType</span>&lt;<span class="keyword">typeof</span> <span class="type">useLocalStorage</span>&lt;<span class="type">string</span>&gt;&gt;;
+<span class="comment">// ThemeFromHook = [string, (val: string) => void]</span>
+
+<span class="comment">// React: component with Omit (replace HTML attributes)</span>
+<span class="keyword">interface</span> <span class="type">InputProps</span> <span class="keyword">extends</span> <span class="type">Omit</span>&lt;<span class="type">React.InputHTMLAttributes</span>&lt;<span class="type">HTMLInputElement</span>&gt;, <span class="string">'size'</span>&gt; {
+  size: <span class="string">'sm'</span> | <span class="string">'md'</span> | <span class="string">'lg'</span>; <span class="comment">// own size with different values</span>
+}</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is the difference between <code>Pick</code> and <code>Omit</code> in terms of maintainability?</li>
+      <li>How would you implement <code>Partial&lt;T&gt;</code> as a custom mapped type?</li>
+      <li>What does <code>Required&lt;T&gt;</code> do? What about <code>Readonly&lt;T&gt;</code>?</li>
+      <li>When is <code>Record&lt;string, T&gt;</code> better than <code>{ [key: string]: T }</code>?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Partial = optional. Pick = select columns. Omit = delete columns. Record = key-value map. ReturnType = function's output type. All save you from rewriting type definitions."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>Partial&lt;T&gt;</strong>: all properties optional — forms, updates</li>
+      <li><strong>Pick&lt;T, K&gt;</strong>: select specific properties — API responses, list views</li>
+      <li><strong>Omit&lt;T, K&gt;</strong>: exclude properties — strip sensitive fields, override HTML attrs</li>
+      <li><strong>Record&lt;K, V&gt;</strong>: typed lookup objects — reducers, configuration maps</li>
+      <li><strong>ReturnType&lt;T&gt;</strong>: extract function return type — hook types, factory functions</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q4: Discriminated Unions -->
+<div class="question-card" id="q4">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">What are Discriminated Unions? Exhaustive checking in React state</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A <strong>discriminated union</strong> (or tagged union) is a union type where each member has a common literal property (the <strong>discriminant</strong>) that TypeScript can use to narrow the type. By checking the discriminant, TypeScript automatically narrows to the specific variant, enabling <strong>exhaustive checking</strong> — the compiler ensures you handle every case. In React, this is the gold standard for modeling async state (loading/success/error) and complex component variants.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Imagine a package delivery. All packages have a "type" label. Opening a "Document" package means you know exactly what is inside (papers). Opening a "Fragile" package means something different. By checking the label (discriminant), you know what to expect inside (narrowed type). If you forget to handle a package type, TypeScript yells at you.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Async state in React: <code>{ status: 'idle' } | { status: 'loading' } | { status: 'success', data: T } | { status: 'error', error: Error }</code>. Redux actions: <code>| { type: 'ADD_TODO', text: string } | { type: 'TOGGLE_TODO', id: number }</code>. Modal variants: <code>| { variant: 'confirm', onConfirm: () => void } | { variant: 'alert', message: string }</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>This pattern eliminates entire categories of bugs — impossible states become unrepresentable. Interviewers at companies with large codebases (FAANG) ask this because it is how they model state.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>The <code>never</code> type is the key to exhaustive checking: in the default case of a switch, assign the value to a <code>never</code> type variable. If any case is unhandled, TypeScript will error. This is called the "exhaustiveness check pattern" and catches bugs at compile time when you add new union variants.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Discriminated Unions in React</div>
+    <pre><code><span class="comment">// Async state — the canonical React example</span>
+<span class="keyword">type</span> <span class="type">AsyncState</span>&lt;<span class="type">T</span>&gt; =
+  | { status: <span class="string">'idle'</span> }
+  | { status: <span class="string">'loading'</span> }
+  | { status: <span class="string">'success'</span>; data: <span class="type">T</span> }
+  | { status: <span class="string">'error'</span>; error: <span class="type">Error</span> };
+
+<span class="keyword">function</span> <span class="function">UserProfile</span>() {
+  <span class="keyword">const</span> [state, setState] = <span class="function">useState</span>&lt;<span class="type">AsyncState</span>&lt;<span class="type">User</span>&gt;&gt;({ status: <span class="string">'idle'</span> });
+
+  <span class="keyword">switch</span> (state.status) {
+    <span class="keyword">case</span> <span class="string">'idle'</span>:    <span class="keyword">return</span> &lt;<span class="attr">p</span>&gt;Click to load&lt;/<span class="attr">p</span>&gt;;
+    <span class="keyword">case</span> <span class="string">'loading'</span>: <span class="keyword">return</span> &lt;<span class="attr">Spinner</span> /&gt;;
+    <span class="keyword">case</span> <span class="string">'success'</span>: <span class="keyword">return</span> &lt;<span class="attr">UserCard</span> user={state.data} /&gt;; <span class="comment">// data is typed!</span>
+    <span class="keyword">case</span> <span class="string">'error'</span>:   <span class="keyword">return</span> &lt;<span class="attr">ErrorMessage</span> error={state.error} /&gt;;
+    <span class="keyword">default</span>: {
+      <span class="comment">// Exhaustive check — compiler errors if we miss a case</span>
+      <span class="keyword">const</span> _exhaustive: <span class="type">never</span> = state;
+      <span class="keyword">return</span> _exhaustive;
+    }
+  }
+}
+
+<span class="comment">// Action type pattern — each action has a type discriminant</span>
+<span class="keyword">type</span> <span class="type">TodoAction</span> =
+  | { type: <span class="string">'ADD_TODO'</span>; text: <span class="string">string</span> }
+  | { type: <span class="string">'TOGGLE_TODO'</span>; id: <span class="string">number</span> }
+  | { type: <span class="string">'DELETE_TODO'</span>; id: <span class="string">number</span> }
+  | { type: <span class="string">'CLEAR_COMPLETED'</span> };
+
+<span class="keyword">function</span> <span class="function">todoReducer</span>(state: <span class="type">Todo</span>[], action: <span class="type">TodoAction</span>): <span class="type">Todo</span>[] {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'ADD_TODO'</span>:       <span class="keyword">return</span> [...state, { id: Date.<span class="function">now</span>(), text: action.text, done: <span class="number">false</span> }];
+    <span class="keyword">case</span> <span class="string">'TOGGLE_TODO'</span>:    <span class="keyword">return</span> state.<span class="function">map</span>(<span class="function">t</span> =&gt; t.id === action.id ? { ...t, done: !t.done } : t);
+    <span class="keyword">case</span> <span class="string">'DELETE_TODO'</span>:    <span class="keyword">return</span> state.<span class="function">filter</span>(<span class="function">t</span> =&gt; t.id !== action.id);
+    <span class="keyword">case</span> <span class="string">'CLEAR_COMPLETED'</span>: <span class="keyword">return</span> state.<span class="function">filter</span>(<span class="function">t</span> =&gt; !t.done);
+  }
+}
+<span class="comment">// If we add a new action type, TypeScript forces us to handle it here</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>How does the <code>never</code> check ensure exhaustive matching?</li>
+      <li>Can you use a discriminated union without a <code>type</code> field? (Yes, any literal property works: <code>kind</code>, <code>status</code>, <code>variant</code>)</li>
+      <li>How would you model a multi-step form wizard with discriminated unions?</li>
+      <li>What is the advantage over using boolean flags like <code>isLoading</code> + <code>isError</code> + <code>data</code>?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "One <code>status</code> field to rule them all. Check it -> TypeScript narrows -> impossible states become impossible. The <code>never</code> check in the default case is your compile-time safety net."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Discriminant = a shared literal property (<code>type</code>, <code>status</code>, <code>kind</code>)</li>
+      <li>TypeScript narrows automatically when you check the discriminant</li>
+      <li>Exhaustive checking via <code>never</code> in the default case catches missing variants</li>
+      <li>React: async state, action types, modal variants, form steps</li>
+      <li>Eliminates entire class of bugs — impossible states are literally unrepresentable</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q5: Type Guards -->
+<div class="question-card" id="q5">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">Type Guards and Narrowing in TypeScript</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Type narrowing</strong> is how TypeScript reduces a broad type to a more specific one based on runtime checks. <strong>Type guards</strong> are the mechanisms: <code>typeof</code> (primitives), <code>instanceof</code> (classes), <code>in</code> operator (property existence), equality checks, <strong>discriminant property checks</strong>, and <strong>custom type predicates</strong> (<code>arg is Type</code>). After a successful guard, TypeScript narrows the type within that branch.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>TypeScript starts with a broad assumption about a value's type (e.g., <code>string | number</code>). When you write <code>if (typeof x === 'string')</code>, TypeScript says "inside this if-block, I know x is a string." That is narrowing — you proved what type it is, so TypeScript treats it as that type going forward.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>React: processing form input (<code>Event.target.value</code>), handling API responses (checking shape with <code>in</code>), null checks before rendering (<code>user !== null</code>), union type narrowing in component props, and filtering <code>undefined</code> from arrays (<code>.filter(Boolean)</code> as a type guard).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Without type narrowing, union types are useless. Interviewers want to see that you can safely handle polymorphic data (APIs returning different shapes, component props with multiple variants).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Type Guards &amp; Narrowing</div>
+    <pre><code><span class="comment">// typeof — narrows primitives</span>
+<span class="keyword">function</span> <span class="function">format</span>(input: <span class="type">string</span> | <span class="type">number</span>): <span class="type">string</span> {
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> input === <span class="string">'number'</span>) {
+    <span class="keyword">return</span> input.<span class="function">toFixed</span>(<span class="number">2</span>); <span class="comment">// input is number here</span>
+  }
+  <span class="keyword">return</span> input.<span class="function">toUpperCase</span>();   <span class="comment">// input is string here</span>
+}
+
+<span class="comment">// Custom type predicate — the "is" keyword</span>
+<span class="keyword">interface</span> <span class="type">Cat</span> { meow(): <span class="type">void</span>; lives: <span class="type">number</span>; }
+<span class="keyword">interface</span> <span class="type">Dog</span> { bark(): <span class="type">void</span>; breed: <span class="type">string</span>; }
+<span class="keyword">type</span> <span class="type">Animal</span> = <span class="type">Cat</span> | <span class="type">Dog</span>;
+
+<span class="keyword">function</span> <span class="function">isDog</span>(animal: <span class="type">Animal</span>): animal <span class="keyword">is</span> <span class="type">Dog</span> {
+  <span class="keyword">return</span> (<span class="keyword">typeof</span> animal === <span class="string">'object'</span>) &amp;&amp; <span class="string">'breed'</span> <span class="keyword">in</span> animal;
+}
+<span class="keyword">const</span> pet: <span class="type">Animal</span> = { <span class="function">bark</span>() {}, breed: <span class="string">'Lab'</span> };
+<span class="keyword">if</span> (<span class="function">isDog</span>(pet)) { pet.bark(); } <span class="comment">// narrowed to Dog</span>
+
+<span class="comment">// instanceof — narrows class instances</span>
+<span class="keyword">class</span> <span class="type">ApiError</span> <span class="keyword">extends</span> <span class="type">Error</span> { code: <span class="type">number</span>; }
+<span class="keyword">try</span> { <span class="comment">/* ... */</span> } <span class="keyword">catch</span> (e) {
+  <span class="keyword">if</span> (e <span class="keyword">instanceof</span> <span class="type">ApiError</span>) {
+    e.code; <span class="comment">// typed access to .code</span>
+  }
+}
+
+<span class="comment">// Discriminated union narrowing (most common in React)</span>
+<span class="keyword">type</span> <span class="type">Result</span>&lt;<span class="type">T</span>&gt; = { ok: <span class="number">true</span>; data: <span class="type">T</span> } | { ok: <span class="number">false</span>; message: <span class="type">string</span> };
+<span class="keyword">function</span> <span class="function">handle</span>&lt;<span class="type">T</span>&gt;(result: <span class="type">Result</span>&lt;<span class="type">T</span>&gt;) {
+  <span class="keyword">if</span> (result.ok) { result.data; }     <span class="comment">// narrowed to success</span>
+  <span class="keyword">else</span>          { result.message; }    <span class="comment">// narrowed to error</span>
+}
+
+<span class="comment">// Filtering null/undefined with .filter(Boolean)</span>
+<span class="keyword">const</span> items: (<span class="type">string</span> | <span class="type">undefined</span>)[] = [<span class="string">'a'</span>, <span class="number">undefined</span>, <span class="string">'b'</span>];
+<span class="keyword">const</span> filtered: <span class="type">string</span>[] = items.<span class="function">filter</span>(<span class="function">(item)</span>: item <span class="keyword">is</span> <span class="type">string</span> =&gt; item !== <span class="number">undefined</span>);</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>How does the <code>is</code> keyword work in a custom type predicate?</li>
+      <li>What is the difference between <code>typeof</code> narrowing and <code>instanceof</code> narrowing?</li>
+      <li>Can type guards return false positives? (Yes — they are runtime checks, TypeScript trusts them)</li>
+      <li>How would you narrow an array of mixed types to only string elements?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "<code>typeof</code> for primitives, <code>instanceof</code> for classes, <code>is</code> for custom logic, <code>in</code> for properties, discriminant for unions. After the check, TypeScript narrows automatically."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>typeof:</strong> primitives (string, number, boolean, symbol, undefined, object, function, bigint)</li>
+      <li><strong>instanceof:</strong> class instances (Error, custom classes)</li>
+      <li><strong>Custom predicate:</strong> <code>arg is Type</code> — return true to narrow</li>
+      <li><strong>in operator:</strong> check if property exists on an object</li>
+      <li><strong>Discriminant:</strong> check shared literal property to narrow union</li>
+      <li><strong>Truthiness:</strong> <code>if (value)</code> removes <code>null</code> and <code>undefined</code></li>
+    </ul>
+  </div>
+</div>
+<!-- Q6: any vs unknown vs never -->
+<div class="question-card" id="q6">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">any vs unknown vs never — Why unknown is better than any</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>any:</strong> opt out of type checking entirely — you can do anything with it, no safety. <strong>unknown:</strong> the type-safe version of any — you CANNOT do anything with it until you narrow it via a type guard. <strong>never:</strong> the type of values that can never exist — the empty set, used for exhaustive checks and functions that throw/never return.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>any</strong> = "I give up, TypeScript, leave me alone." <strong>unknown</strong> = "I do not know what this is yet, but I promise to check before using it." <strong>never</strong> = "This cannot possibly happen — if it does, the universe is broken."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Parsing JSON responses: <code>JSON.parse()</code> returns <code>any</code> — use <code>unknown</code> instead via a generic wrapper. Error handling: <code>catch (e: unknown)</code> forces you to type-check before accessing properties. React error boundaries: the error type should be <code>unknown</code>, not <code>any</code>. Exhaustive check in switch statements uses <code>never</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Moving from <code>any</code> to <code>unknown</code> is the single biggest maturity indicator in TypeScript developers. It shows you value type safety.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Using <code>any</code> as the catch clause error type (<code>catch (e: any)</code>) — it should be <code>unknown</code>. Defaulting to <code>any</code> when <code>unknown</code> with a guard would work. Not understanding that <code>never</code> allows assignment to anything (bottom type).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — any vs unknown vs never</div>
+    <pre><code><span class="comment">// any — complete type escape hatch (DANGEROUS)</span>
+<span class="keyword">let</span> a: <span class="type">any</span> = <span class="number">42</span>;
+a.<span class="function">toUpperCase</span>();     <span class="comment">// No error! Crash at runtime</span>
+a = <span class="string">'hello'</span>;
+<span class="keyword">const</span> b: <span class="type">string</span> = a; <span class="comment">// any infects other types silently</span>
+
+<span class="comment">// unknown — type-safe alternative (RECOMMENDED)</span>
+<span class="keyword">let</span> u: <span class="type">unknown</span> = <span class="number">42</span>;
+<span class="comment">// u.toUpperCase();   // Error! Must narrow first</span>
+<span class="keyword">if</span> (<span class="keyword">typeof</span> u === <span class="string">'string'</span>) { u.<span class="function">toUpperCase</span>(); } <span class="comment">// OK</span>
+<span class="comment">// const c: string = u; // Error! unknown not assignable to string</span>
+
+<span class="comment">// React: safe JSON parsing with unknown</span>
+<span class="keyword">function</span> <span class="function">parseJSON</span>&lt;<span class="type">T</span>&gt;(json: <span class="type">string</span>, validator: (data: <span class="type">unknown</span>) =&gt; data <span class="keyword">is</span> <span class="type">T</span>): <span class="type">T</span> {
+  <span class="keyword">const</span> data: <span class="type">unknown</span> = JSON.<span class="function">parse</span>(json);
+  <span class="keyword">if</span> (<span class="function">validator</span>(data)) <span class="keyword">return</span> data;
+  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">'Invalid data'</span>);
+}
+
+<span class="comment">// React: proper error handling (since TS 4.0)</span>
+<span class="keyword">try</span> {
+  <span class="keyword">await</span> <span class="function">fetchData</span>();
+} <span class="keyword">catch</span> (e: <span class="type">unknown</span>) {
+  <span class="keyword">if</span> (e <span class="keyword">instanceof</span> <span class="type">Error</span>) {
+    console.<span class="function">log</span>(e.message); <span class="comment">// safe — narrowed to Error</span>
+  }
+}
+
+<span class="comment">// never — values that never occur (exhaustive checks)</span>
+<span class="keyword">function</span> <span class="function">assertNever</span>(x: <span class="type">never</span>): <span class="type">never</span> {
+  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">`Unexpected: ${x}`</span>);
+}
+<span class="comment">// never absorbs all types — string | never = string</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Why is <code>unknown</code> assignable only to <code>unknown</code> and <code>any</code>?</li>
+      <li>How does <code>never</code> differ from <code>void</code>? (never = function does not finish, void = returns undefined)</li>
+      <li>What is the NoInfer utility and how does it relate to unknown?</li>
+      <li>When would you intentionally use <code>any</code> over <code>unknown</code>?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "<code>any</code> = party mode (no rules). <code>unknown</code> = quarantine (must test before use). <code>never</code> = void (impossible). Upgrade from <code>any</code> to <code>unknown</code> and your TypeScript maturity doubles."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>any:</strong> disables type checking — avoid in production, use only for migration boundaries</li>
+      <li><strong>unknown:</strong> type-safe any — must narrow before use, ideal for API responses and error handling</li>
+      <li><strong>never:</strong> empty set — functions that throw, infinite loops, exhaustive checks</li>
+      <li><code>unknown</code> is assignable only to <code>unknown</code> and <code>any</code> — not even to <code>string</code></li>
+      <li>React: use <code>unknown</code> for catch clauses, API responses, and third-party data</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q7: as const and satisfies -->
+<div class="question-card" id="q7">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">as const and satisfies — Modern TypeScript Essentials</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>as const</strong> makes a value deeply readonly and narrows its type to literal types. An array becomes a readonly tuple, an object's properties become <code>readonly</code> with literal types. <strong>satisfies</strong> (TS 4.9+) validates that a value matches a type WITHOUT widening the value's type — you keep the narrower inferred type while ensuring it conforms to the wider one. Both are invaluable for config objects, Redux actions, and React component patterns.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>as const</strong> = "treat this value as the most specific type possible." <code>[1, 2]</code> becomes <code>readonly [1, 2]</code> instead of <code>number[]</code>. <strong>satisfies</strong> = "check that this fits the shape, but do not forget the details." You get both validation AND precise type inference.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Redux action constants: <code>const ACTIONS = ['ADD', 'DELETE'] as const</code> creates a <code>'ADD' | 'DELETE'</code> union. Config objects with <code>satisfies</code>: validate the shape against <code>Record&lt;string, Config&gt;</code> while keeping individual config details. Color palette objects where you want both validation and autocomplete on hex values.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p><code>as const</code> and <code>satisfies</code> are relatively new additions that dramatically improve DX. Not knowing them means you write more verbose types and lose type information.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — as const &amp; satisfies</div>
+    <pre><code><span class="comment">// as const — narrow to literal types</span>
+<span class="keyword">const</span> colors = [<span class="string">'red'</span>, <span class="string">'green'</span>, <span class="string">'blue'</span>] <span class="keyword">as const</span>;
+<span class="comment">// type: readonly ['red', 'green', 'blue']</span>
+<span class="keyword">type</span> <span class="type">Color</span> = <span class="keyword">typeof</span> colors[<span class="type">number</span>]; <span class="comment">// 'red' | 'green' | 'blue'</span>
+
+<span class="comment">// as const on objects — all properties become readonly literals</span>
+<span class="keyword">const</span> config = {
+  api: <span class="string">'https://api.example.com'</span>,
+  timeout: <span class="number">5000</span>,
+  retries: <span class="number">3</span>,
+} <span class="keyword">as const</span>;
+<span class="comment">// type: { readonly api: 'https://api.example.com'; readonly timeout: 5000; ... }</span>
+
+<span class="comment">// satisfies — validate without widening (TS 4.9+)</span>
+<span class="keyword">type</span> <span class="type">ColorConfig</span> = <span class="type">Record</span>&lt;<span class="type">string</span>, { hex: <span class="type">string</span>; rgb: <span class="type">string</span> }&gt;;
+
+<span class="keyword">const</span> palette = {
+  red:   { hex: <span class="string">'#FF0000'</span>, rgb: <span class="string">'rgb(255,0,0)'</span> },
+  green: { hex: <span class="string">'#00FF00'</span>, rgb: <span class="string">'rgb(0,255,0)'</span> },
+} <span class="keyword">satisfies</span> <span class="type">ColorConfig</span>; <span class="comment">// validated but NOT widened</span>
+
+palette.red.hex; <span class="comment">// type: '#FF0000' — exact literal, not just string!</span>
+<span class="comment">// palette.blue // Error — missing from palette</span>
+
+<span class="comment">// satisfies with as const — the ultimate combo</span>
+<span class="keyword">const</span> routes = {
+  home:    <span class="string">'/'</span>,
+  about:   <span class="string">'/about'</span>,
+  profile: <span class="string">'/user/:id'</span>,
+} <span class="keyword">as const satisfies</span> <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">string</span>&gt;;
+<span class="comment">// Each value has its literal type, AND all values are validated as strings</span>
+<span class="keyword">type</span> <span class="type">RoutePath</span> = <span class="keyword">typeof</span> routes[keyof <span class="keyword">typeof</span> routes]; <span class="comment">// '/' | '/about' | '/user/:id'</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is the difference between <code>as const</code> and <code>Object.freeze</code>?</li>
+      <li>Can <code>satisfies</code> be combined with <code>as const</code>?</li>
+      <li>How does <code>as const</code> affect arrays differently from objects?</li>
+      <li>What version of TypeScript introduced <code>satisfies</code>? (4.9)</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "<code>as const</code> = lock it down (readonly + literal types). <code>satisfies</code> = check the shape but keep the details. Combine them: <code>as const satisfies Type</code> = the ultimate type-safe config pattern."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>as const:</strong> deeply readonly + literal type narrowing for objects, arrays, and primitives</li>
+      <li><strong>satisfies:</strong> validate against a type without losing narrower inferred type</li>
+      <li>Perfect combo: <code>as const satisfies Type</code> — gets validation + narrowest types</li>
+      <li>Redux: action type unions from <code>as const</code> arrays</li>
+      <li>Config: <code>satisfies</code> ensures shape while keeping exact values for autocomplete</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q8: keyof and Mapped Types -->
+<div class="question-card" id="q8">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">keyof and Mapped Types — Type-safe object transformations</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>keyof T</strong> produces a union of all keys in type T — a <strong>string literal union of property names</strong>. <strong>Mapped types</strong> (<code>{ [K in keyof T]: NewType }</code>) iterate over keys to create a new type, transforming each property. They are the foundation for almost all utility types (Partial, Required, Readonly, Pick, Record) and enable type-safe object transformations without runtime code.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>keyof</strong> = "give me all the key names as a union." If <code>User</code> has <code>id</code>, <code>name</code>, <code>email</code>, then <code>keyof User = 'id' | 'name' | 'email'</code>. <strong>Mapped type</strong> = a for-loop over those keys to build a new type: "for each key in User, make it optional" is exactly how <code>Partial&lt;T&gt;</code> works.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Creating a type-safe form validation schema: <code>{ [K in keyof T]: (value: T[K]) => string | null }</code>. Readonly deep: making nested objects immutable. API response wrappers: wrapping each property in <code>{ data: T[K]; loading: boolean }</code>. Event handler typing based on component props.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Mapped types are the gateway to understanding how TypeScript's type system is built. Partial, Pick, Record — all utility types are implemented with mapped types. This question separates juniors from seniors.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — keyof &amp; Mapped Types</div>
+    <pre><code><span class="comment">// keyof — union of property names</span>
+<span class="keyword">interface</span> <span class="type">User</span> {
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+}
+<span class="keyword">type</span> <span class="type">UserKeys</span> = <span class="keyword">keyof</span> <span class="type">User</span>; <span class="comment">// 'id' | 'name' | 'email'</span>
+
+<span class="comment">// Generic property access with keyof</span>
+<span class="keyword">function</span> <span class="function">getProp</span>&lt;<span class="type">T, K extends keyof T</span>&gt;(obj: <span class="type">T</span>, key: <span class="type">K</span>): <span class="type">T</span>[<span class="type">K</span>] {
+  <span class="keyword">return</span> obj[key];
+}
+<span class="function">getProp</span>(user, <span class="string">'name'</span>); <span class="comment">// returns string</span>
+<span class="function">getProp</span>(user, <span class="string">'id'</span>);   <span class="comment">// returns number</span>
+<span class="comment">// getProp(user, 'invalid'); // Error!</span>
+
+<span class="comment">// Mapped type — iterate over keys, transform each one</span>
+<span class="keyword">type</span> <span class="type">Nullable</span>&lt;<span class="type">T</span>&gt; = { [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span>]: <span class="type">T</span>[<span class="type">K</span>] | <span class="type">null</span> };
+<span class="keyword">type</span> <span class="type">NullableUser</span> = <span class="type">Nullable</span>&lt;<span class="type">User</span>&gt;;
+<span class="comment">// { id: number | null; name: string | null; email: string | null }</span>
+
+<span class="comment">// Built-in Partial is just a mapped type:</span>
+<span class="comment">// type Partial&lt;T&gt; = { [K in keyof T]?: T[K] };</span>
+
+<span class="comment">// React: typed validation schema</span>
+<span class="keyword">type</span> <span class="type">ValidationSchema</span>&lt;<span class="type">T</span>&gt; = {
+  [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span>]: (value: <span class="type">T</span>[<span class="type">K</span>]) =&gt; <span class="type">string</span> | <span class="type">null</span>;
+};
+<span class="keyword">const</span> userValidation: <span class="type">ValidationSchema</span>&lt;<span class="type">User</span>&gt; = {
+  id:    <span class="function">(v)</span> =&gt; v &gt; <span class="number">0</span> ? <span class="type">null</span> : <span class="string">'Invalid ID'</span>,
+  name:  <span class="function">(v)</span> =&gt; v.length &gt; <span class="number">0</span> ? <span class="type">null</span> : <span class="string">'Name required'</span>,
+  email: <span class="function">(v)</span> =&gt; v.<span class="function">includes</span>(<span class="string">'@'</span>) ? <span class="type">null</span> : <span class="string">'Invalid email'</span>,
+};
+
+<span class="comment">// Mapped type with key remapping (TS 4.1+)</span>
+<span class="keyword">type</span> <span class="type">Getters</span>&lt;<span class="type">T</span>&gt; = { [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span> <span class="keyword">as</span> <span class="string">`get${Capitalize&lt;string &amp; K&gt;}`</span>]: () =&gt; <span class="type">T</span>[<span class="type">K</span>] };
+<span class="comment">// Getters&lt;User&gt; = { getId: () => number; getName: () => string; getEmail: () => string }</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Implement your own <code>Pick&lt;T, K&gt;</code> using mapped types.</li>
+      <li>How does key remapping (<code>as NewKey</code>) work in mapped types?</li>
+      <li>What is the difference between <code>[K in keyof T]</code> and <code>[K in K]</code>?</li>
+      <li>How would you type an object where every key maps to its own validation function?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "<code>keyof</code> = key names as a union. Mapped type = for-loop over keys, creating new properties. <code>[K in keyof T]: Transform&lt;T[K]&gt;</code> = the foundation of all utility types."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>keyof T:</strong> union of all keys in T (string literal union)</li>
+      <li><strong>Mapped type:</strong> <code>{ [K in keyof T]: NewType }</code> — iterate + transform each property</li>
+      <li>Built-in utility types (Partial, Required, Readonly, Record) are all mapped types</li>
+      <li>Key remapping (TS 4.1+): <code>as NewKey</code> to rename keys during iteration</li>
+      <li>React: type-safe validation schemas, event handler maps, form state types</li>
+    </ul>
+  </div>
+</div>
+<!-- Q9: Typing React Components -->
+<div class="question-card" id="q9">
+  <div class="q-header">
+    <div class="q-number">09</div>
+    <div>
+      <div class="q-text">Typing React Components — Props, useState, useRef, Event Handlers</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>React components in TypeScript require typing: <strong>props</strong> (interface or type with <code>React.FC</code> or direct parameter typing), <strong>useState</strong> (inferred or explicit generic), <strong>useRef</strong> (3 overloads: for DOM elements, mutable values, and read-only refs), and <strong>event handlers</strong> (using <code>React.ChangeEvent</code>, <code>React.MouseEvent</code>, <code>React.FormEvent</code>, etc.). Understanding these patterns prevents the most common React/TypeScript errors.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of typing React as labeling everything that flows: props come in (label them), state lives inside (label the shape), refs point to things (label what they reference), events carry data (label what triggered them). If everything is labeled, TypeScript catches misalignments before runtime.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Every React component you build needs typed props. Every form needs typed event handlers. Every hook (useState, useRef, useContext) benefits from explicit typing. Third-party component libraries (MUI, Ant Design) rely on generic component types.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>This is the "can you actually build a React app in TypeScript?" question. If you cannot type these patterns, you cannot work on a production React/TS codebase.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Typing React Components</div>
+    <pre><code><span class="comment">// Props — two approaches (prefer interface)</span>
+<span class="keyword">interface</span> <span class="type">CardProps</span> {
+  title: <span class="type">string</span>;
+  children: <span class="type">React.ReactNode</span>; <span class="comment">// most flexible children type</span>
+  onClick?: () =&gt; <span class="type">void</span>;
+}
+
+<span class="comment">// Option A: React.FC (includes children implicitly)</span>
+<span class="keyword">const</span> <span class="function">Card</span>: <span class="type">React.FC</span>&lt;<span class="type">CardProps</span>&gt; = ({ title, children }) =&gt; (
+  &lt;<span class="attr">div</span>&gt;&lt;<span class="attr">h2</span>&gt;{title}&lt;/<span class="attr">h2</span>&gt;{children}&lt;/<span class="attr">div</span>&gt;
+);
+
+<span class="comment">// Option B: Direct parameter typing (preferred in React 18+)</span>
+<span class="keyword">function</span> <span class="function">Card</span>({ title, children }: <span class="type">CardProps</span>) {
+  <span class="keyword">return</span> &lt;<span class="attr">div</span>&gt;&lt;<span class="attr">h2</span>&gt;{title}&lt;/<span class="attr">h2</span>&gt;{children}&lt;/<span class="attr">div</span>&gt;;
+}
+
+<span class="comment">// useState — inferred is usually enough</span>
+<span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>); <span class="comment">// inferred: number</span>
+<span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>&lt;<span class="type">User</span> | <span class="type">null</span>&gt;(<span class="type">null</span>); <span class="comment">// explicit generic needed for null</span>
+
+<span class="comment">// useRef — three overloads</span>
+<span class="comment">// 1. DOM element ref (read-only)</span>
+<span class="keyword">const</span> inputRef = <span class="function">useRef</span>&lt;<span class="type">HTMLInputElement</span>&gt;(<span class="type">null</span>);
+<span class="comment">// inputRef.current?.focus(); — current is read-only</span>
+
+<span class="comment">// 2. Mutable value ref</span>
+<span class="keyword">const</span> timerRef = <span class="function">useRef</span>&lt;<span class="type">number</span>&gt;(<span class="number">0</span>); <span class="comment">// mutable, no re-render</span>
+timerRef.current = <span class="number">42</span>; <span class="comment">// OK — writable</span>
+
+<span class="comment">// 3. Without initial argument — current is readonly</span>
+<span class="keyword">const</span> ref = <span class="function">useRef</span>&lt;<span class="type">string</span>&gt;(); <span class="comment">// current: string | undefined (readonly)</span>
+
+<span class="comment">// Event handlers — React provides typed events</span>
+<span class="keyword">const</span> <span class="function">handleChange</span> = (e: <span class="type">React.ChangeEvent</span>&lt;<span class="type">HTMLInputElement</span>&gt;) =&gt; {
+  e.target.value; <span class="comment">// typed as string</span>
+};
+<span class="keyword">const</span> <span class="function">handleClick</span> = (e: <span class="type">React.MouseEvent</span>&lt;<span class="type">HTMLButtonElement</span>&gt;) =&gt; {
+  e.currentTarget; <span class="comment">// typed as HTMLButtonElement</span>
+};
+<span class="keyword">const</span> <span class="function">handleSubmit</span> = (e: <span class="type">React.FormEvent</span>&lt;<span class="type">HTMLFormElement</span>&gt;) =&gt; {
+  e.<span class="function">preventDefault</span>();
+  <span class="comment">// FormData: const data = new FormData(e.currentTarget);</span>
+};
+
+<span class="comment">// Extending native HTML props</span>
+<span class="keyword">interface</span> <span class="type">ButtonProps</span> <span class="keyword">extends</span> <span class="type">React.ButtonHTMLAttributes</span>&lt;<span class="type">HTMLButtonElement</span>&gt; {
+  variant: <span class="string">'primary'</span> | <span class="string">'secondary'</span>;
+}</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Why is <code>React.FC</code> falling out of favor? (Implicit children, does not work with generics well)</li>
+      <li>What is the difference between <code>ReactNode</code>, <code>ReactElement</code>, and <code>JSX.Element</code>?</li>
+      <li>How do you type a <code>useCallback</code> with generic event handlers?</li>
+      <li>How do you type <code>forwardRef</code> for polymorphic components?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Props = interface. useState = inferred or explicit generic for null. useRef = DOM element = readonly, primitive = mutable. Events = React.ChangeEvent/ClickEvent/FormEvent. Extend HTML = <code>extends React.ComponentPropsWithoutRef</code>."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>Props:</strong> interface with <code>React.FC&lt;Props&gt;</code> or direct parameter typing</li>
+      <li><strong>useState:</strong> inferred for simple types, explicit generic for unions with null</li>
+      <li><strong>useRef:</strong> <code>HTMLInputElement</code> for DOM, primitive for mutable values</li>
+      <li><strong>Events:</strong> <code>React.ChangeEvent&lt;HTMLInputElement&gt;</code>, <code>React.MouseEvent</code>, <code>React.FormEvent</code></li>
+      <li><strong>Children:</strong> <code>React.ReactNode</code> (most flexible), <code>React.ReactElement</code> (specific)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q10: Conditional Types -->
+<div class="question-card" id="q10">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Conditional Types and infer — API response unwrapping</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Conditional types</strong> (<code>T extends U ? X : Y</code>) select a type based on a condition — like a ternary for types. The <strong>infer</strong> keyword captures a type variable within the condition, enabling powerful extraction patterns. Together, they form the basis for utility types like <code>ReturnType</code>, <code>Parameters</code>, <code>Awaited</code>, and custom unwrapping of API responses, React component props, and promise chains.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>"If this type looks like X, then give me Y, otherwise Z." <strong>infer</strong> is like saying "if this type matches this pattern, capture that part into a new type variable." Example: "If this is a Promise that resolves to something, give me that something" — that is exactly <code>Awaited&lt;T&gt;</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>Unwrapping Axios/Fetch responses: extracting the <code>data</code> type from <code>AxiosResponse&lt;T&gt;</code>. Extracting component prop types from <code>React.FC&lt;Props&gt;</code>. Unwrapping Promise return types from async functions. Building a typed <code>useQuery</code> hook that infers the data type from the fetcher function.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Asked</div>
+    <p>Conditional types separate TypeScript power users from average developers. They enable writing library-grade type utilities that make entire APIs type-safe with a single type parameter.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Conditional Types &amp; infer</div>
+    <pre><code><span class="comment">// Basic conditional type — ternary for types</span>
+<span class="keyword">type</span> <span class="type">IsString</span>&lt;<span class="type">T</span>&gt; = <span class="type">T</span> <span class="keyword">extends</span> <span class="type">string</span> ? <span class="string">'yes'</span> : <span class="string">'no'</span>;
+<span class="keyword">type</span> <span class="type">A</span> = <span class="type">IsString</span>&lt;<span class="type">string</span>&gt;;  <span class="comment">// 'yes'</span>
+<span class="keyword">type</span> <span class="type">B</span> = <span class="type">IsString</span>&lt;<span class="type">number</span>&gt;;  <span class="comment">// 'no'</span>
+
+<span class="comment">// infer — capture a type out of a pattern</span>
+<span class="keyword">type</span> <span class="type">UnwrapPromise</span>&lt;<span class="type">T</span>&gt; = <span class="type">T</span> <span class="keyword">extends</span> <span class="type">Promise</span>&lt;<span class="keyword">infer</span> <span class="type">U</span>&gt; ? <span class="type">U</span> : <span class="type">T</span>;
+<span class="keyword">type</span> <span class="type">Result</span> = <span class="type">UnwrapPromise</span>&lt;<span class="type">Promise</span>&lt;<span class="type">string</span>&gt;&gt;; <span class="comment">// string</span>
+<span class="keyword">type</span> <span class="type">NotPromise</span> = <span class="type">UnwrapPromise</span>&lt;<span class="type">number</span>&gt;;    <span class="comment">// number (falls through)</span>
+
+<span class="comment">// Recursive conditional — deeply unwrap (TS 4.1+)</span>
+<span class="keyword">type</span> <span class="type">DeepUnwrap</span>&lt;<span class="type">T</span>&gt; =
+  <span class="type">T</span> <span class="keyword">extends</span> <span class="type">Promise</span>&lt;<span class="keyword">infer</span> <span class="type">U</span>&gt; ? <span class="type">DeepUnwrap</span>&lt;<span class="type">U</span>&gt; : <span class="type">T</span>;
+<span class="keyword">type</span> <span class="type">Deep</span> = <span class="type">DeepUnwrap</span>&lt;<span class="type">Promise</span>&lt;<span class="type">Promise</span>&lt;<span class="type">string</span>&gt;&gt;&gt;; <span class="comment">// string</span>
+
+<span class="comment">// React: extract component prop types</span>
+<span class="keyword">type</span> <span class="type">ComponentProps</span>&lt;<span class="type">T</span>&gt; =
+  <span class="type">T</span> <span class="keyword">extends</span> <span class="type">React.ComponentType</span>&lt;<span class="keyword">infer</span> <span class="type">P</span>&gt; ? <span class="type">P</span> : <span class="type">never</span>;
+
+<span class="comment">// React: typed API response unwrapping</span>
+<span class="keyword">interface</span> <span class="type">ApiResponse</span>&lt;<span class="type">T</span>&gt; { data: <span class="type">T</span>; status: <span class="type">number</span>; }
+<span class="keyword">type</span> <span class="type">UnwrapApi</span>&lt;<span class="type">T</span>&gt; = <span class="type">T</span> <span class="keyword">extends</span> <span class="type">ApiResponse</span>&lt;<span class="keyword">infer</span> <span class="type">D</span>&gt; ? <span class="type">D</span> : <span class="type">never</span>;
+
+<span class="comment">// Distribute over unions — conditional types distribute automatically</span>
+<span class="keyword">type</span> <span class="type">StringOrNumber</span>&lt;<span class="type">T</span>&gt; = <span class="type">T</span> <span class="keyword">extends</span> <span class="type">string</span> | <span class="type">number</span> ? <span class="type">T</span> : <span class="type">never</span>;
+<span class="keyword">type</span> <span class="type">Filtered</span> = <span class="type">StringOrNumber</span>&lt;<span class="type">string</span> | <span class="type">boolean</span> | <span class="type">number</span>&gt;; <span class="comment">// string | number</span>
+<span class="comment">// Distribution: (string extends S|N ? ...) | (boolean extends S|N ? ...) | (number extends S|N ? ...)</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>How does conditional type distribution work with union types?</li>
+      <li>What is the <code>infer</code> keyword and how does it relate to <code>extends</code>?</li>
+      <li>Can conditional types be recursive? (Yes, since TS 4.1 — but depth limited)</li>
+      <li>How would you unwrap multiple levels of API response wrapping?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "<code>T extends Pattern ? TrueType : FalseType</code> = type-level if/else. <code>infer U</code> = extract U from the pattern. Distributive = union input becomes individual checks. Recursive conditional = repeat until base case."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><strong>Conditional type:</strong> <code>T extends U ? X : Y</code> — type-level ternary</li>
+      <li><strong>infer:</strong> captures a type variable from a pattern match</li>
+      <li><strong>Distribution:</strong> <code>T extends U</code> distributes over union types automatically</li>
+      <li>Built on this: <code>ReturnType</code>, <code>Parameters</code>, <code>Awaited</code>, <code>Exclude</code>, <code>Extract</code></li>
+      <li>React: unwrap API responses, extract component props, type query hooks</li>
+    </ul>
+  </div>
+</div>
+</div><!-- .container -->
+
+<div class="section-divider">
+  <h2>P2 — Common Questions</h2>
+  <p>8 more questions that round out your TypeScript interview preparation.</p>
+</div>
+
+<div class="container">
+
+<!-- Q11: Readonly -->
+<div class="question-card" id="q11">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Readonly and Immutability in TypeScript</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Readonly&lt;T&gt;</strong> makes all properties of T readonly (shallow). <strong>readonly</strong> modifier on individual properties or array types prevents reassignment. <strong>as const</strong> creates deeply readonly values. For React: <code>Readonly&lt;Props&gt;</code> is standard; <code>useState</code> returns state that should not be mutated directly.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Readonly Patterns</div>
+    <pre><code><span class="comment">// Readonly utility type (shallow)</span>
+<span class="keyword">interface</span> <span class="type">Config</span> { theme: <span class="string">'dark'</span> | <span class="string">'light'</span>; port: <span class="type">number</span>; }
+<span class="keyword">const</span> config: <span class="type">Readonly</span>&lt;<span class="type">Config</span>&gt; = { theme: <span class="string">'dark'</span>, port: <span class="number">3000</span> };
+<span class="comment">// config.theme = 'light'; // Error — read-only at compile time</span>
+
+<span class="comment">// readonly arrays — prevent push/pop/splice</span>
+<span class="keyword">const</span> items: <span class="type">readonly string</span>[] = [<span class="string">'a'</span>, <span class="string">'b'</span>];
+<span class="comment">// items.push('c'); // Error</span>
+
+<span class="comment">// DeepReadonly — recursive mapped type</span>
+<span class="keyword">type</span> <span class="type">DeepReadonly</span>&lt;<span class="type">T</span>&gt; = {
+  <span class="keyword">readonly</span> [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span>]: <span class="type">T</span>[<span class="type">K</span>] <span class="keyword">extends</span> <span class="type">object</span> ? <span class="type">DeepReadonly</span>&lt;<span class="type">T</span>[<span class="type">K</span>]&gt; : <span class="type">T</span>[<span class="type">K</span>];
+};</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li><code>Readonly&lt;T&gt;</code> = shallow readonly utility type</li>
+      <li><code>readonly T[]</code> = prevents array mutations (push, pop, splice)</li>
+      <li><code>as const</code> = deeply readonly + literal type narrowing</li>
+      <li>All readonly is compile-time only — no runtime enforcement</li>
+      <li>React: <code>Readonly&lt;Props&gt;</code> is conventional for component props</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q12: Enums vs Union Types -->
+<div class="question-card" id="q12">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Enums vs Union Types</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>String literal unions</strong> (<code>type Status = 'loading' | 'success' | 'error'</code>) are simpler, lighter, and produce no runtime code. <strong>Enums</strong> generate runtime objects, support reverse mapping, and are familiar from Java/C#. The React/TypeScript community strongly prefers <strong>string literal unions</strong> — they integrate better with the type system and produce smaller bundles.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Enums vs Unions</div>
+    <pre><code><span class="comment">// String literal union — preferred in modern TS/React</span>
+<span class="keyword">type</span> <span class="type">Status</span> = <span class="string">'loading'</span> | <span class="string">'success'</span> | <span class="string">'error'</span>;
+<span class="comment">// Zero runtime cost — pure type</span>
+
+<span class="comment">// Numeric enum (AVOID in most cases)</span>
+<span class="keyword">enum</span> <span class="type">Direction</span> { Up, Down, Left, Right } <span class="comment">// Up=0, Down=1, ...</span>
+<span class="comment">// const enum generates no runtime code but breaks with isolatedModules</span>
+
+<span class="comment">// Union with as const — best of both worlds</span>
+<span class="keyword">const</span> SIZES = [<span class="string">'sm'</span>, <span class="string">'md'</span>, <span class="string">'lg'</span>] <span class="keyword">as const</span>;
+<span class="keyword">type</span> <span class="type">Size</span> = <span class="keyword">typeof</span> SIZES[<span class="type">number</span>]; <span class="comment">// 'sm' | 'md' | 'lg'</span>
+<span class="comment">// SIZES is a runtime array you can iterate over</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li><strong>String unions:</strong> zero runtime cost, better type integration, community preference</li>
+      <li><strong>Enums:</strong> generate runtime code, reverse-mapping, but can bloat bundles</li>
+      <li><strong>const enum:</strong> inlined at compile time, but breaks with isolatedModules/Babel</li>
+      <li>Need runtime iteration? Use <code>as const</code> array + <code>typeof[number]</code> pattern</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q13: Function Overloads -->
+<div class="question-card" id="q13">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Function Overloads in React</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Function overloads</strong> define multiple call signatures for the same function with different parameter/return types. The implementation handles all cases. In React, overloads enable hooks that return different types based on input (<code>useStorage</code> with/without default value) and callback props with varied signatures.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Function Overloads</div>
+    <pre><code><span class="comment">// Overload signatures (public API)</span>
+<span class="keyword">function</span> <span class="function">getValue</span>(key: <span class="type">string</span>, defaultValue: <span class="type">string</span>): <span class="type">string</span>;
+<span class="keyword">function</span> <span class="function">getValue</span>(key: <span class="type">string</span>): <span class="type">string</span> | <span class="type">undefined</span>;
+
+<span class="comment">// Implementation (handles all cases)</span>
+<span class="keyword">function</span> <span class="function">getValue</span>(key: <span class="type">string</span>, defaultValue?: <span class="type">string</span>): <span class="type">string</span> | <span class="type">undefined</span> {
+  <span class="keyword">const</span> val = localStorage.<span class="function">getItem</span>(key);
+  <span class="keyword">return</span> val ?? defaultValue;
+}
+<span class="keyword">const</span> a = <span class="function">getValue</span>(<span class="string">'theme'</span>, <span class="string">'dark'</span>); <span class="comment">// string</span>
+<span class="keyword">const</span> b = <span class="function">getValue</span>(<span class="string">'theme'</span>);        <span class="comment">// string | undefined</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li>Overload signatures = public API; implementation = hidden, handles all cases</li>
+      <li>React: use for hooks returning different types based on input args</li>
+      <li>Implementation signature must be compatible with ALL overload signatures</li>
+      <li>Often avoidable with generics + conditional types — use overloads sparingly</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q14: Type-safe Context -->
+<div class="question-card" id="q14">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">Type-safe React Context API</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A type-safe Context requires: a typed value interface, a provider component, and a <strong>custom hook</strong> wrapping <code>useContext</code> with a null check to enforce provider usage. The custom hook pattern catches the "forgot to wrap in Provider" bug — without it, <code>useContext</code> returns the default value which may be <code>undefined</code>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Type-safe Context</div>
+    <pre><code><span class="keyword">interface</span> <span class="type">AuthContextType</span> {
+  user: <span class="type">User</span> | <span class="type">null</span>;
+  login: (email: <span class="type">string</span>, password: <span class="type">string</span>) =&gt; <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;
+  logout: () =&gt; <span class="type">void</span>;
+}
+
+<span class="comment">// Create context with undefined default — force provider usage</span>
+<span class="keyword">const</span> AuthContext = React.<span class="function">createContext</span>&lt;<span class="type">AuthContextType</span> | <span class="type">undefined</span>&gt;(<span class="type">undefined</span>);
+
+<span class="keyword">export function</span> <span class="function">AuthProvider</span>({ children }: { children: <span class="type">React.ReactNode</span> }) {
+  <span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>&lt;<span class="type">User</span> | <span class="type">null</span>&gt;(<span class="type">null</span>);
+  <span class="keyword">const</span> login = <span class="keyword">async</span> (email: <span class="type">string</span>, password: <span class="type">string</span>) =&gt; { <span class="comment">/* ... */</span> };
+  <span class="keyword">const</span> logout = () =&gt; { setUser(<span class="type">null</span>); };
+  <span class="keyword">return</span> (
+    &lt;<span class="attr">AuthContext.Provider</span> value={{ user, login, logout }}&gt;
+      {children}
+    &lt;/<span class="attr">AuthContext.Provider</span>&gt;
+  );
+}
+
+<span class="comment">// Custom hook — enforces provider usage with a runtime check</span>
+<span class="keyword">export function</span> <span class="function">useAuth</span>(): <span class="type">AuthContextType</span> {
+  <span class="keyword">const</span> context = React.<span class="function">useContext</span>(AuthContext);
+  <span class="keyword">if</span> (context === <span class="number">undefined</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">'useAuth must be used within an AuthProvider'</span>);
+  }
+  <span class="keyword">return</span> context;
+}
+<span class="comment">// Consumer: const { user, login } = useAuth(); — fully typed, never undefined</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li>Use <code>undefined</code> as default context value to catch missing providers</li>
+      <li>Always export a custom hook that checks for undefined and throws</li>
+      <li>Provider component encapsulates state management logic</li>
+      <li>Catches the "forgot to wrap in Provider" bug at runtime with a clear error</li>
+    </ul>
+  </div>
+</div>
+<!-- Q15: Template Literal Types -->
+<div class="question-card" id="q15">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">Template Literal Types — CSS-in-JS type safety</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Template literal types</strong> (TS 4.1+) use template literal syntax at the type level to construct new string literal types from existing ones. Combined with mapped types and <code>Capitalize</code>, <code>Uppercase</code>, they enable type-safe strings for CSS-in-JS, routing, event names, and API endpoints.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Template Literal Types</div>
+    <pre><code><span class="comment">// Basic template literal types</span>
+<span class="keyword">type</span> <span class="type">Color</span> = <span class="string">'red'</span> | <span class="string">'green'</span> | <span class="string">'blue'</span>;
+<span class="keyword">type</span> <span class="type">Shade</span> = <span class="string">'50'</span> | <span class="string">'100'</span> | <span class="string">'500'</span>;
+<span class="keyword">type</span> <span class="type">ColorClass</span> = <span class="string">`text-${Color}-${Shade}`</span>;
+<span class="comment">// 'text-red-50' | 'text-red-100' | 'text-red-500' | ...</span>
+
+<span class="comment">// Intrinsic string manipulation types</span>
+<span class="keyword">type</span> <span class="type">Greeting</span> = <span class="string">'hello'</span>;
+<span class="keyword">type</span> <span class="type">Shout</span> = <span class="type">Uppercase</span>&lt;<span class="type">Greeting</span>&gt;;     <span class="comment">// 'HELLO'</span>
+<span class="keyword">type</span> <span class="type">Proper</span> = <span class="type">Capitalize</span>&lt;<span class="type">Greeting</span>&gt;; <span class="comment">// 'Hello'</span>
+
+<span class="comment">// Event name pattern: onEventName</span>
+<span class="keyword">type</span> <span class="type">Events</span> = { click: <span class="type">void</span>; change: <span class="type">string</span>; focus: <span class="type">void</span> };
+<span class="keyword">type</span> <span class="type">Handlers</span> = {
+  [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">Events</span> <span class="keyword">as</span> <span class="string">`on${Capitalize&lt;string &amp; K&gt;}`</span>]: (e: <span class="type">Events</span>[<span class="type">K</span>]) =&gt; <span class="type">void</span>;
+};
+<span class="comment">// { onClick: () => void; onChange: (e: string) => void; onFocus: () => void }</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li>Construct string literal types using <code>${Type}`</code> at the type level</li>
+      <li>Intrinsic types: <code>Uppercase</code>, <code>Lowercase</code>, <code>Capitalize</code>, <code>Uncapitalize</code></li>
+      <li>CSS-in-JS: typed class names (Tailwind, Styled Components)</li>
+      <li>Route params: <code>`/user/${string}`</code> for typed URL patterns</li>
+      <li>TS 4.1+ required; unions in template positions produce cartesian products</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q16: Declaration Merging -->
+<div class="question-card" id="q16">
+  <div class="q-header">
+    <div class="q-number">16</div>
+    <div>
+      <div class="q-text">Declaration Merging</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Declaration merging</strong> is when TypeScript combines multiple same-named declarations into one. Only <strong>interfaces</strong> and <strong>namespaces</strong> merge — type aliases do not. Used for augmenting third-party types (Window, Express Request), organizing large type definitions, and adding properties to library exports.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Declaration Merging</div>
+    <pre><code><span class="comment">// Interface merging — both declarations combine</span>
+<span class="keyword">interface</span> <span class="type">User</span> { name: <span class="type">string</span>; }
+<span class="keyword">interface</span> <span class="type">User</span> { age: <span class="type">number</span>; }
+<span class="comment">// Final User: { name: string; age: number }</span>
+
+<span class="comment">// Augmenting global Window (common in React)</span>
+<span class="keyword">declare</span> <span class="keyword">global</span> {
+  <span class="keyword">interface</span> <span class="type">Window</span> {
+    __APP_CONFIG__: { apiUrl: <span class="type">string</span>; env: <span class="type">string</span> };
+  }
+}
+<span class="comment">// Now window.__APP_CONFIG__ is typed everywhere</span>
+
+<span class="comment">// Augmenting Express Request (auth middleware)</span>
+<span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="type">Express</span> {
+  <span class="keyword">interface</span> <span class="type">Request</span> {
+    user?: { id: <span class="type">string</span>; role: <span class="type">string</span> };
+  }
+}</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li>Only <strong>interfaces</strong> and <strong>namespaces</strong> merge — type aliases produce an error</li>
+      <li>Common uses: augment Window, Express Request, Redux Dispatch, library types</li>
+      <li>Module augmentation: <code>declare module 'some-lib' { interface SomeType {} }</code></li>
+      <li>Requires <code>declare global</code> for modifying global scope types</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q17: tsconfig.json -->
+<div class="question-card" id="q17">
+  <div class="q-header">
+    <div class="q-number">17</div>
+    <div>
+      <div class="q-text">tsconfig.json — The important options for React projects</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Most impactful <code>tsconfig.json</code> options for React: <strong>strict</strong> (enables all strict checks — non-negotiable), <strong>target</strong> (ES2022+), <strong>module</strong> (ESNext for bundlers), <strong>jsx</strong> (react-jsx for React 17+), <strong>paths</strong> (<code>@/components</code> aliases), <strong>strictNullChecks</strong> (most impactful single flag), and <strong>noUncheckedIndexedAccess</strong>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Essential tsconfig.json for React</div>
+    <pre><code>{
+  <span class="string">"compilerOptions"</span>: {
+    <span class="string">"strict"</span>: <span class="number">true</span>,                     <span class="comment">// All strict checks — non-negotiable</span>
+    <span class="string">"target"</span>: <span class="string">"ES2022"</span>,                <span class="comment">// Modern JS output</span>
+    <span class="string">"module"</span>: <span class="string">"ESNext"</span>,                <span class="comment">// For bundlers (Vite, webpack)</span>
+    <span class="string">"moduleResolution"</span>: <span class="string">"bundler"</span>,   <span class="comment">// For Vite, Turbopack</span>
+    <span class="string">"jsx"</span>: <span class="string">"react-jsx"</span>,              <span class="comment">// React 17+ JSX transform</span>
+    <span class="string">"esModuleInterop"</span>: <span class="number">true</span>,          <span class="comment">// Smooth CJS/ESM interop</span>
+    <span class="string">"skipLibCheck"</span>: <span class="number">true</span>,             <span class="comment">// Skip .d.ts checking (faster)</span>
+    <span class="string">"isolatedModules"</span>: <span class="number">true</span>,         <span class="comment">// Required by Vite/esbuild</span>
+    <span class="string">"noUncheckedIndexedAccess"</span>: <span class="number">true</span>, <span class="comment">// arr[0] might be undefined</span>
+    <span class="string">"paths"</span>: { <span class="string">"@/*"</span>: [<span class="string">"./src/*"</span>] }    <span class="comment">// Import aliases</span>
+  },
+  <span class="string">"include"</span>: [<span class="string">"src"</span>]
+}</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li><strong>strict:</strong> enables strictNullChecks, noImplicitAny, strictFunctionTypes — turn this on</li>
+      <li><strong>strictNullChecks:</strong> forces null/undefined handling — single most important flag</li>
+      <li><strong>noUncheckedIndexedAccess:</strong> array/record access may be undefined</li>
+      <li><strong>jsx:</strong> <code>react-jsx</code> for React 17+ (no more <code>import React</code> needed)</li>
+      <li><strong>moduleResolution:</strong> <code>bundler</code> for Vite; <code>node16/nodenext</code> for Node.js</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q18: Brand Types -->
+<div class="question-card" id="q18">
+  <div class="q-header">
+    <div class="q-number">18</div>
+    <div>
+      <div class="q-text">Brand/Nominal Typing — Making primitives unique</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Brand types</strong> simulate nominal types in TypeScript's structural system by intersecting a base type with a unique brand property. This prevents accidentally using a <code>string</code> where a <code>UserId</code> is expected. Essential for domain modeling: <code>UserId</code> vs <code>PostId</code>, <code>Email</code> vs <code>string</code>, <code>Meters</code> vs <code>Feet</code>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Brand Types</div>
+    <pre><code><span class="comment">// Brand type utility</span>
+<span class="keyword">declare const</span> brand: <span class="keyword">unique symbol</span>;
+<span class="keyword">type</span> <span class="type">Brand</span>&lt;<span class="type">T, TBrand</span>&gt; = <span class="type">T</span> &amp; { [<span class="type">brand</span>]: <span class="type">TBrand</span> };
+
+<span class="comment">// Create branded types</span>
+<span class="keyword">type</span> <span class="type">UserId</span> = <span class="type">Brand</span>&lt;<span class="type">string</span>, <span class="string">'UserId'</span>&gt;;
+<span class="keyword">type</span> <span class="type">PostId</span> = <span class="type">Brand</span>&lt;<span class="type">string</span>, <span class="string">'PostId'</span>&gt;;
+<span class="keyword">type</span> <span class="type">Email</span>  = <span class="type">Brand</span>&lt;<span class="type">string</span>, <span class="string">'Email'</span>&gt;;
+
+<span class="comment">// Factory — only way to create branded values</span>
+<span class="keyword">function</span> <span class="function">createUserId</span>(id: <span class="type">string</span>): <span class="type">UserId</span> { <span class="keyword">return</span> id <span class="keyword">as</span> <span class="type">UserId</span>; }
+<span class="keyword">function</span> <span class="function">createEmail</span>(email: <span class="type">string</span>): <span class="type">Email</span> {
+  <span class="keyword">if</span> (!email.<span class="function">includes</span>(<span class="string">'@'</span>)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">'Invalid email'</span>);
+  <span class="keyword">return</span> email <span class="keyword">as</span> <span class="type">Email</span>;
+}
+
+<span class="comment">// Type system catches these mistakes</span>
+<span class="keyword">const</span> uid = <span class="function">createUserId</span>(<span class="string">'abc'</span>);
+<span class="keyword">function</span> <span class="function">getPost</span>(postId: <span class="type">PostId</span>) {}
+<span class="comment">// getPost(uid);   // Error: UserId is not PostId</span>
+<span class="comment">// getPost('abc'); // Error: string is not PostId</span></code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Key Points</div>
+    <ul class="summary-list">
+      <li>TypeScript is structural — brand types add nominal checking</li>
+      <li>Use <code>unique symbol</code> brand to prevent accidental compatibility</li>
+      <li>Great for IDs, validated strings (<code>Email</code>, <code>URL</code>), units (<code>Meters</code>, <code>Feet</code>)</li>
+      <li>Factory functions with validation ensure only valid branded values exist</li>
+      <li>Brands are compile-time only — use classes for runtime enforcement if needed</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- .container -->
+
+<div class="section-divider">
+  <h2>Most Asked TypeScript Questions — Ranked</h2>
+  <p>Based on analysis of 400+ React/TypeScript interview experiences.</p>
+</div>
+
+<div class="container">
+
+<table class="styled-table">
+  <thead>
+    <tr><th>Rank</th><th>Question</th><th>Frequency</th><th>Difficulty</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Interface vs Type Alias</td><td>95%</td><td>Intermediate</td></tr>
+    <tr><td>2</td><td>Utility Types (Partial, Pick, Omit, Record)</td><td>92%</td><td>Intermediate</td></tr>
+    <tr><td>3</td><td>Typing React Components (Props, useState, Events)</td><td>90%</td><td>Beginner</td></tr>
+    <tr><td>4</td><td>Generics in TypeScript</td><td>85%</td><td>Advanced</td></tr>
+    <tr><td>5</td><td>Discriminated Unions</td><td>80%</td><td>Advanced</td></tr>
+    <tr><td>6</td><td>any vs unknown vs never</td><td>78%</td><td>Intermediate</td></tr>
+    <tr><td>7</td><td>Type Guards and Narrowing</td><td>75%</td><td>Intermediate</td></tr>
+    <tr><td>8</td><td>as const and satisfies</td><td>70%</td><td>Intermediate</td></tr>
+    <tr><td>9</td><td>Enums vs Union Types</td><td>65%</td><td>Beginner</td></tr>
+    <tr><td>10</td><td>Type-safe Context API</td><td>62%</td><td>Intermediate</td></tr>
+    <tr><td>11</td><td>keyof and Mapped Types</td><td>58%</td><td>Advanced</td></tr>
+    <tr><td>12</td><td>Conditional Types and infer</td><td>52%</td><td>Advanced</td></tr>
+    <tr><td>13</td><td>tsconfig.json important options</td><td>48%</td><td>Beginner</td></tr>
+    <tr><td>14</td><td>Readonly and Immutability</td><td>45%</td><td>Beginner</td></tr>
+    <tr><td>15</td><td>Declaration Merging</td><td>38%</td><td>Intermediate</td></tr>
+    <tr><td>16</td><td>Template Literal Types</td><td>32%</td><td>Advanced</td></tr>
+    <tr><td>17</td><td>Function Overloads</td><td>25%</td><td>Advanced</td></tr>
+    <tr><td>18</td><td>Brand/Nominal Typing</td><td>18%</td><td>Advanced</td></tr>
+  </tbody>
+</table>
+
+</div><!-- .container -->
+
+<div class="end-section">
+  <h2>TypeScript-Ready for Your Interview.</h2>
+  <p>TypeScript questions test whether you understand the type system deeply or just add annotations. Master these 18 questions — each one shows you understand <em>why</em> TypeScript works the way it does, not just <em>how</em> to use it. Good luck.</p>
+</div>
+
+</body>
+</html>

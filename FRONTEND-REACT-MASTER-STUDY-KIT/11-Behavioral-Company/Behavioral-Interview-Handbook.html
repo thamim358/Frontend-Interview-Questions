@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behavioral &amp; Company Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(99,102,241,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(14,165,233,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(99,102,241,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #6366F1 50%, #0EA5E9 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #6366F1 0%, #0EA5E9 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-badge">BEHAVIORAL HANDBOOK</div>
+  <h1 class="cover-title">Behavioral &amp; Company Interview Handbook</h1>
+  <p class="cover-subtitle">15 STAR Stories + FAANG-Specific Preparation — master the behavioral interview with real frontend scenarios.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">STAR Stories</span></div>
+    <div class="cover-meta-item"><span class="number">5</span><span class="label">FAANG Companies</span></div>
+    <div class="cover-meta-item"><span class="number">8</span><span class="label">P1 Questions</span></div>
+    <div class="cover-meta-item"><span class="number">4</span><span class="label">Sections</span></div>
+  </div>
+</div>
+
+<!-- ============ SECTION 1: STAR METHOD ============ -->
+<div class="section-divider">
+  <h2>Section 1 — STAR Method Framework</h2>
+  <p>Master the framework that every FAANG interviewer expects you to use.</p>
+</div>
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">S</div>
+    <div>
+      <div class="q-text">Situation — Set the Scene</div>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Interviewers Want</div>
+    <p>Describe a <strong>specific</strong> situation from your past experience. Be concrete: name the product, the team size, the timeline, and the stakes. Avoid hypotheticals — every story must be something you actually did.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Example</div>
+    <p><em>"In Q3 2023, our e-commerce checkout page had a 4.2-second Largest Contentful Paint on mobile. Our conversion rate was 11% below industry benchmark, and the VP of Product flagged this as the #1 priority for the quarter. I was the lead frontend engineer on a 6-person squad."</em></p>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Use <strong>specific numbers</strong> and <strong>real product names</strong>. Generic situations signal that you're making it up. Spend ~20% of your answer time on this section.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">T</div>
+    <div>
+      <div class="q-text">Task — Define Your Responsibility</div>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Interviewers Want</div>
+    <p>Clearly state <strong>what you were personally responsible for</strong>. Use "I" not "we". If you were leading, say you were leading. If you were contributing, say what your specific piece was. Interviewers are evaluating <strong>your</strong> contribution, not your team's.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Example</div>
+    <p><em>"As the performance lead, my task was to get LCP under 2.5 seconds on mobile (down from 4.2s) within 6 weeks. I was also responsible for setting up performance monitoring so the team could catch regressions in CI before they reached production."</em></p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Mistake to Avoid</div>
+    <p>Using "we" throughout: "We identified the issue, we fixed it, we shipped." The interviewer cannot evaluate you. Replace every "we" with "I" and explain <strong>your</strong> actions.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">A</div>
+    <div>
+      <div class="q-text">Action — What You Did, Step by Step</div>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Interviewers Want</div>
+    <p>This is the most important section. Walk through your <strong>specific actions</strong> in chronological order. Show your technical decision-making, collaboration, and ownership. This should be ~50% of your answer. Be granular — mention specific tools, techniques, and tradeoffs.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Example</div>
+    <p><em>"First, I ran Lighthouse audits and identified three bottlenecks: (1) a 2.1MB hero image loaded eagerly, (2) render-blocking CSS from Tailwind's full build, (3) a waterfall of 14 separate API calls for product data. I prioritized by impact: image optimization would save ~1.2s, CSS splitting ~0.7s, API batching ~0.5s. I created a technical proposal doc, got buy-in from the tech lead and PM, then executed: (1) switched to next/image with blurDataURL and WebP/AVIF formats, lazy-loaded below-fold images, (2) configured Tailwind purging with content paths and extracted critical CSS inline, (3) built a BFF (Backend For Frontend) endpoint that aggregated product data server-side. I added Lighthouse CI with budgets in our GitHub Actions pipeline to fail PRs that regressed LCP."</em></p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">R</div>
+    <div>
+      <div class="q-text">Result — Quantified Impact</div>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Interviewers Want</div>
+    <p>Close with <strong>measurable results</strong>. Use numbers. If you can tie it to business impact (revenue, conversion, user engagement), even better. Also mention what you learned and how you shared that knowledge. Spend ~20% of answer time here.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Example</div>
+    <p><em>"Result: LCP dropped from 4.2s to 1.4s on mobile. Mobile conversion rate increased 8.3% within 2 weeks of the deploy. The Lighthouse CI setup caught 4 performance regressions before they merged in the following quarter. I wrote a performance playbook for the team and gave a lunch-and-learn to 40+ engineers. The VP of Product sent a company-wide shoutout. The BFF pattern got adopted by 3 other product teams."</em></p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>The "Result" section is where senior+ candidates differentiate themselves. Juniors say "it worked." Seniors say "it moved a business metric by X%" and show how they <strong>multiplied their impact</strong> by teaching others.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END SECTION 1 ============ -->
+
+<!-- ============ SECTION 2: BEHAVIORAL QUESTIONS ============ -->
+<div class="section-divider">
+  <h2>Section 2 — 8 Behavioral Questions with Full STAR Stories</h2>
+  <p>Real frontend scenarios. Memorize the structure, not the words — make every story your own.</p>
+</div>
+<div class="container">
+
+<!-- Q1: Performance Improvement -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">Tell me about a time you improved performance on a web application.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>At a SaaS analytics platform serving 50K daily users, our dashboard's initial load took 8+ seconds. Users were abandoning the page before the first chart rendered. Our NPS score dropped from 42 to 28, and the VP of Engineering declared this a "tier-1 incident" for the frontend team. I was a senior frontend engineer on a 5-person squad.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>I took ownership of the performance initiative. My target was to get Time to Interactive (TTI) under 3 seconds and reduce the JavaScript bundle by 60%. I also needed to establish ongoing performance monitoring so we'd catch regressions automatically.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I profiled the bundle with Webpack Bundle Analyzer and found three 800KB monsters: moment.js (full locale data), a charting library with all chart types imported, and a monolithic vendor chunk. (2) I replaced moment.js with date-fns (tree-shakable, saved 450KB). For the charting library, I implemented dynamic imports so each chart type loaded on demand. (3) I split the vendor chunk using SplitChunksPlugin with a custom cacheGroups strategy — separating React, the charting lib, and utilities into separate async chunks. (4) I implemented React.lazy + Suspense for 7 heavy dashboard widgets, reducing the initial JS payload by 62%. (5) To prevent regressions, I set up Web Vitals monitoring with web-vitals library sending data to Datadog, and added PerformanceObserver-based Long Task monitoring with threshold alerts. (6) I created a Webpack performance budget of 250KB initial JS — any PR exceeding it would fail CI.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>TTI dropped from 8.1s to 2.3s. Initial JS bundle went from 2.1MB to 795KB (62% reduction). User bounce rate on the dashboard page dropped 34%. NPS recovered to 45 within 6 weeks. The Webpack budget caught 7 potential regressions in the next quarter. I documented the entire approach in our internal wiki, and 2 other teams adopted the same lazy-loading + chunk-splitting strategy.</p>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Angle</div>
+    <p>Amazon's "Dive Deep" principle demands performance stories like this. Meta's "Move Fast" values speed without breaking things — show how you balanced velocity with quality via automated budgets.</p>
+  </div>
+</div>
+
+<!-- Q2: Production Bug -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">Describe a production bug you fixed. What was the root cause and how did you prevent it from happening again?</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>On a financial dashboard at a FinTech startup, we had a React application displaying real-time stock portfolio values. At 9:30 AM EST (market open), our on-call got paged — users were seeing stale portfolio values updated at random. Some users saw their own portfolio total, others saw completely different users' values. This was a P0 incident because it involved potential data leakage between user sessions.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>As the on-call engineer, I had to (1) identify the root cause within 30 minutes, (2) deploy a fix, (3) ensure no data was permanently leaked, and (4) implement safeguards to prevent this class of bug in the future.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I checked Datadog logs and saw the wrong user IDs in API responses — the server was returning correct data, so the bug was client-side. (2) I traced the issue to a <strong>stale closure in a setInterval callback</strong>. Our <code>usePortfolio</code> hook had a <code>useEffect</code> that set up a polling interval every 3 seconds. The interval callback captured the <code>userId</code> from its initial render via a closure. When users switched between portfolio tabs (different <code>portfolioId</code>), the old interval still ran with the <em>initial</em> <code>userId</code> and <code>portfolioId</code>. Multiple intervals accumulated — one per tab switch — all writing to the same global state. (3) I fixed it by using <code>useRef</code> for the portfolioId and reading <code>ref.current</code> inside the interval callback instead of relying on closure values. (4) I also added cleanup: the effect now clears the interval on <code>portfolioId</code> change and returns a cleanup function. (5) To prevent recurrence, I wrote an ESLint rule using <code>eslint-plugin-react-hooks</code> (already had it, but I wrote a custom rule that flagged setInterval inside useEffect as a warning) and added a section to our code review checklist: "Check for stale closures in async callbacks."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>Fix deployed within 45 minutes. Zero data leakage confirmed (the stale values were from the same session's previous portfolio, not cross-user). I gave a tech talk titled "Closures Are Not Your Friend in React Hooks" to our 25-person engineering team. The ESLint rule caught 4 similar patterns in other parts of the codebase during the following sprint. Incident post-mortem led to a new policy: any <code>setInterval</code> or <code>setTimeout</code> inside hooks requires explicit ref-based stale closure mitigation.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">The Bug &amp; Fix</div>
+    <pre><code><span class="comment">// BUG: Stale closure captures initial portfolioId</span>
+<span class="keyword">function</span> <span class="function">usePortfolio</span>(<span class="attr">portfolioId</span>) {
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="attr">interval</span> = <span class="function">setInterval</span>(() => {
+      <span class="comment">// portfolioId here is STALE — always the first value</span>
+      <span class="function">fetchPortfolio</span>(<span class="attr">portfolioId</span>);
+    }, <span class="number">3000</span>);
+    <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attr">interval</span>);
+  }, []);  <span class="comment">// Missing dependency!</span>
+}
+
+<span class="comment">// FIX: useRef to always read the latest value</span>
+<span class="keyword">function</span> <span class="function">usePortfolio</span>(<span class="attr">portfolioId</span>) {
+  <span class="keyword">const</span> <span class="attr">idRef</span> = <span class="function">useRef</span>(<span class="attr">portfolioId</span>);
+  <span class="attr">idRef</span>.<span class="attr">current</span> = <span class="attr">portfolioId</span>;
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="attr">interval</span> = <span class="function">setInterval</span>(() => {
+      <span class="function">fetchPortfolio</span>(<span class="attr">idRef</span>.<span class="attr">current</span>);  <span class="comment">// Always fresh</span>
+    }, <span class="number">3000</span>);
+    <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attr">interval</span>);
+  }, []);  <span class="comment">// Empty deps OK — ref handles staleness</span>
+}</code></pre>
+  </div>
+</div>
+
+<!-- Q3: Conflict with PM/Designer -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Tell me about a conflict you had with a PM or Designer. How did you resolve it?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>Our PM wanted to ship a new "AI-powered search" feature in 3 weeks for an upcoming investor demo. The design called for a real-time autocomplete with animated results, fuzzy matching, and voice input — all built from scratch. I estimated 8 weeks minimum for the frontend alone. The PM pushed back hard, saying the demo was non-negotiable. The designer had already created high-fidelity Figma mocks with complex micro-interactions.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>I needed to (1) deliver something impressive for the demo without compromising long-term code quality, (2) negotiate scope with the PM without burning the relationship, and (3) help the designer understand technical constraints without dismissing their vision.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) Instead of saying "no," I proposed a <strong>phased approach</strong>: Phase 1 (3 weeks) — a polished MVP with typeahead using an existing library (Downshift), static mock data that looked real, and keyboard navigation. Phase 2 (post-demo) — real API integration, fuzzy search, voice input. (2) I created a <strong>comparison doc</strong> showing two columns: "Demo-Only (3 weeks)" vs "Production-Ready (8 weeks)" with a middle ground: "MVP + Incremental Polish." This made the tradeoffs visual and collaborative, not adversarial. (3) I sat with the designer for 30 minutes and walked through which micro-interactions would cost days vs hours. Together we identified 3 "high-impact, low-effort" animations that preserved 80% of the visual wow factor at 20% of the engineering cost. (4) I offered to personally polish the remaining interactions post-demo, which showed I valued their work.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>We shipped the MVP in 2.5 weeks — ahead of schedule. The investor demo went great; the search felt fast and polished. The PM publicly credited the engineering team for being "solution-oriented." The designer said it was the first time an engineer treated their work as a collaboration rather than a blocker. Post-demo, we shipped the full version in 5 additional weeks. The phased approach became our team's standard for all large features.</p>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Key Lesson</div>
+    <p>Never say "no" to a PM. Say "yes, and here's how we can phase it." Frame constraints as tradeoffs, not roadblocks. When you bring solutions instead of problems, PMs become your biggest allies.</p>
+  </div>
+</div>
+
+<!-- Q4: Mentoring Junior -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">Describe a time you mentored a junior developer.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>A new grad joined our team — bright, eager, but overwhelmed by React hooks, TypeScript generics, and our complex monorepo. She was assigned a task to build a form wizard with 5 steps, conditional validation, and file upload. After 2 weeks, her PR had 87 comments and she looked defeated. The sprint was at risk and she was talking about whether frontend was "right for her."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>As the senior engineer, I needed to get the feature shipped while building her confidence and skills — not just fix the code for her. I also wanted to improve our onboarding process so this pattern wouldn't repeat.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I set up <strong>structured pair programming</strong>: 1 hour daily, driver/navigator rotation. First session, I drove while explaining my thought process (why I reach for useReducer over useState for multi-step forms, why zod over Yup for schema validation, why React Hook Form over manual state management). By session 3, she was driving and I was asking questions to guide her reasoning. (2) I broke the task into <strong>5 micro-PRs</strong> — each one < 200 lines. First PR: just the step navigation with a type-safe enum. Second: one form field with validation. By PR 4, she was submitting independently. (3) I gave feedback in <strong>sandwich format</strong>: praise, specific improvement, encouragement. Never "this is wrong" — always "what if we considered this edge case?" (4) I created a <strong>"First Month Roadmap"</strong> doc for future hires: 10 small wins (fix a typo, add a test, ship a small component) designed to build momentum.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>The form wizard shipped on time with 0 bugs. Within 3 months, she was independently shipping features and reviewing other juniors' code. She became the team's "forms expert" and wrote our internal form patterns guide. The onboarding roadmap I created reduced time-to-first-PR for the next 3 hires from 3 weeks to 4 days. She later told me that the structured pairing sessions were the moment she "fell in love with frontend."</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Mentoring isn't charity — it's a leadership signal. Amazon's "Hire and Develop the Best" principle explicitly evaluates this. The best mentors don't give answers; they ask questions that lead juniors to discover the answers themselves.</p>
+  </div>
+</div>
+
+<!-- Q5: Wrong Technical Decision -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">Tell me about a time you made a wrong technical decision. What did you learn?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>At a Series B startup, I was the first frontend hire building our B2B admin dashboard. I chose Redux for state management because "every serious app uses Redux" — this was 2021, pre-React Query mainstream adoption. We had pages that did nothing but fetch data, show a table, and let admins filter. Every feature required: action types, action creators, reducers, selectors, thunks — sometimes 5 files for a single API call.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>6 months in, we had 40+ Redux files, a 200KB Redux store, and every new feature took 3x longer than it should. The team had grown to 4 engineers, and all of them struggled with the Redux boilerplate. I needed to (1) acknowledge my mistake, (2) propose a migration path, and (3) ensure we didn't lose velocity during the transition.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I wrote an <strong>honest post-mortem doc</strong>: "We chose Redux for all state when 80% of our state is server cache." I admitted my mistake openly in a team meeting — no defensiveness, just data. This built trust. (2) I proposed <strong>React Query</strong> for server state and <strong>Zustand</strong> for the remaining client state (theme, filters, UI toggles). (3) I did not propose a big-bang migration. Instead: all <strong>new features use the new stack</strong>. Existing Redux code stays until it needs changes, then we migrate that slice opportunistically. (4) I paired with each team member on their first React Query feature so nobody felt left behind.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>New feature velocity increased ~2.5x. The codebase shrank by 12K lines (deleted Redux boilerplate) over 4 months. Team morale improved — engineers stopped dreading state management tasks. I learned that <strong>choosing a tool because it's popular is a trap</strong>; choose the tool that solves your specific problem. React Query for server cache, Zustand for client state, nothing for local component state — that's the heuristic I now teach every new team member.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">The Real Mistake</div>
+    <p>Not choosing Redux — choosing it <strong>without questioning whether it fit the problem</strong>. The lesson: always ask "what kind of state is this?" before choosing a state management tool. Server cache ≠ client state ≠ UI state.</p>
+  </div>
+</div>
+
+<!-- Q6: Architected from Scratch -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">Describe a project you architected from scratch. Walk me through your decisions.</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>Our company decided to rebuild the customer-facing dashboard as a greenfield project — migrating from a legacy AngularJS monolith to a modern React + Next.js stack. I was the tech lead tasked with the architecture. The requirements: serve 200K daily active users, support i18n for 12 languages, real-time data updates via WebSocket, role-based access control (RBAC) across 5 user roles, and a component library shared with 3 other products.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>I needed to design the project structure, choose the tech stack, establish conventions, and ensure the architecture could scale to 10+ developers contributing simultaneously without merge conflicts.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p><strong>Tech Stack Decision:</strong> Next.js 14 (App Router) for SSR/SSG hybrid rendering, TypeScript (strict mode), Tailwind CSS + Radix UI for the component library (accessibility-first), React Query for server state, Zustand for client state, and a shared Turborepo monorepo for the component library across products.</p>
+    <p><strong>Folder Structure:</strong></p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Project Architecture</div>
+    <pre><code><span class="attr">src/</span>
+<span class="attr">├── app/</span>                    <span class="comment">// Next.js App Router (routing only)</span>
+<span class="attr">│   ├── (auth)/</span>            <span class="comment">// Route group: authenticated routes</span>
+<span class="attr">│   │   ├── dashboard/</span>
+<span class="attr">│   │   └── settings/</span>
+<span class="attr">│   ├── (public)/</span>           <span class="comment">// Route group: public routes</span>
+<span class="attr">│   └── api/</span>               <span class="comment">// Route handlers</span>
+<span class="attr">├── features/</span>              <span class="comment">// Feature-sliced: each feature is self-contained</span>
+<span class="attr">│   ├── auth/</span>
+<span class="attr">│   │   ├── components/</span>
+<span class="attr">│   │   ├── hooks/</span>
+<span class="attr">│   │   ├── api/</span>           <span class="comment">// React Query hooks for this feature</span>
+<span class="attr">│   │   └── types/</span>
+<span class="attr">│   ├── billing/</span>
+<span class="attr">│   └── analytics/</span>
+<span class="attr">├── shared/</span>                <span class="comment">// Shared across features</span>
+<span class="attr">│   ├── components/</span>        <span class="comment">// Button, Modal, Table etc.</span>
+<span class="attr">│   ├── hooks/</span>             <span class="comment">// useDebounce, useMediaQuery etc.</span>
+<span class="attr">│   ├── utils/</span>
+<span class="attr">│   └── lib/</span>              <span class="comment">// Third-party wrappers</span>
+<span class="attr">└── config/</span>                <span class="comment">// App-wide constants, env schema</span></code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Key Architectural Decisions</div>
+    <p><strong>Feature-Sliced Design:</strong> Each feature folder is self-contained — components, hooks, types, and API calls live together. This eliminated the classic "components/components/" deep nesting problem and meant 10 devs could work on 10 features with zero merge conflicts. <strong>Barrel exports:</strong> Every feature exports via <code>index.ts</code> — no deep imports across feature boundaries. <strong>API layer:</strong> All API calls go through React Query hooks with a typed <code>apiClient</code> wrapper. No raw fetch calls in components. <strong>i18n:</strong> Used next-intl with namespaced JSON files per feature — each feature owns its own translations. <strong>RBAC:</strong> A <code>PermissionGuard</code> component wrapping a <code>usePermissions</code> hook — declarative, composable, no imperative role checks scattered across the codebase.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>Shipped MVP in 10 weeks with 4 engineers. The feature-sliced design scaled to 14 engineers without architectural churn. The shared component library saved an estimated 300+ developer-hours across 3 products in the first year. Lighthouse score: 98 performance, 100 accessibility. The architecture got referenced in the company's internal engineering blog as the "blueprint for future greenfield projects."</p>
+  </div>
+</div>
+
+<!-- Q7: Tight Deadlines -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">How do you handle tight deadlines?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>Our CEO committed to a major client that we'd deliver a white-labeled version of our SaaS product in 4 weeks — for a contract worth $2M ARR. The problem: white-labeling required a dynamic theming system, custom domain support, per-client feature flags, and isolated data — none of which existed. The engineering team estimated 12 weeks.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>I volunteered to lead the frontend white-labeling work. I had to (1) negotiate what "white-label" meant for this specific client vs our long-term vision, (2) prioritize ruthlessly, (3) keep the team motivated through a high-pressure sprint, and (4) communicate risks transparently.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I met with the client success manager and clarified: the client only needed CSS token overrides (colors, fonts, logos) and a custom domain for the launch — not full white-labeling. (2) I created a <strong>MoSCoW prioritization matrix</strong>: Must-have (CSS variables theming + custom domain), Should-have (feature flags), Could-have (custom email templates), Won't-have (multi-tenant database isolation — phase 2). (3) I built the MVP approach: CSS custom properties injected via a JSON config fetched at app initialization. Theme tokens: <code>--color-primary</code>, <code>--font-family</code>, <code>--brand-logo</code> — everything in a CSS-in-TS token provider. (4) I ran daily 15-minute standups (not the full scrum ceremony — just blockers and progress), and updated the CEO and client success team every Monday with a "confidence score": Green/Yellow/Red. When we hit a DNS propagation delay in week 3, I flagged it as Red immediately — no sugar-coating.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>Delivered the white-labeled MVP in 3.5 weeks — 3 days early. The client signed the $2M contract. The CSS token system became our permanent theming infrastructure, later used by 15+ white-label clients. My transparent communication approach earned trust with the CEO, who started looping me into pre-sale engineering estimates afterward.</p>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Takeaway</div>
+    <p>Deadlines feel tight when scope isn't negotiated. The skill isn't "working faster" — it's <strong>clarifying what "done" actually means</strong>. MVP scope + transparent communication = trust even when dates slip.</p>
+  </div>
+</div>
+
+<!-- Q8: Influencing Without Authority -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">Tell me about a time you influenced without authority.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Situation</div>
+    <p>Our product had 3 separate frontend teams (Dashboard, Mobile Web, Admin) each building their own button components, modal implementations, and form validation patterns. Accessibility was inconsistent — the Dashboard team had proper ARIA labels, Mobile Web had none, Admin had some but broken on screen readers. There was no mandate from leadership to unify; the CTO considered it "nice to have."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Task</div>
+    <p>I wanted to create a shared component library that all 3 teams would actually use. But I had no authority over the other teams — their tech leads reported to different EMs. I needed to influence without mandate.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Action</div>
+    <p>(1) I didn't start by building. I started by <strong>collecting data</strong>: I ran an accessibility audit (axe-core + Lighthouse) across all 3 products and quantified the gaps: 47 accessibility violations in Mobile Web, 23 in Admin. I turned this into a 1-page doc titled "What our disabled users experience today." (2) I didn't propose a mandatory migration. I built a <strong>single component (Button)</strong> with full accessibility, theming, loading states, and TypeScript autocomplete — then showed it to the Mobile Web tech lead with a demo: "I built this. If your team uses it, you get accessibility for free. Here's a 5-minute migration guide. If not, no pressure." (3) The Mobile Web lead tried it, loved the TypeScript DX, and migrated their buttons in a week. (4) That success created a <strong>pull dynamic</strong> — the Admin team saw Mobile Web ship faster with fewer bugs and <em>asked</em> to use the library. (5) I pitched the CTO with data: "Teams using the shared library ship components 40% faster with 0 accessibility regressions." Got approval for a dedicated "Design Systems" working group with me as the lead.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Result</div>
+    <p>Within 6 months, all 3 teams adopted the component library. Accessibility violations dropped 92% across products. I was promoted to Staff Engineer with "Design Systems" as my charter. The approach became our org's playbook for cross-team initiatives: <strong>prove value with a small win, let success create demand, then ask for resources</strong> — never the reverse.</p>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Angle</div>
+    <p>This directly maps to Amazon's "Have Backbone; Disagree and Commit" and "Deliver Results" principles. Google values "influence without authority" as a core Staff+ competency.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END SECTION 2 ============ -->
+
+<!-- ============ SECTION 3: COMPANY-SPECIFIC ============ -->
+<div class="section-divider">
+  <h2>Section 3 — Company-Specific Preparation</h2>
+  <p>Every FAANG company has a distinct interview culture. Tailor your stories accordingly.</p>
+</div>
+<div class="container">
+
+<!-- Amazon -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">AMZN</div>
+    <div>
+      <div class="q-text">Amazon — Leadership Principles Mapped to Frontend</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Amazon Interviews Work</div>
+    <p>Every Amazon interviewer is assigned 1-2 Leadership Principles (LPs) to evaluate. Your behavioral answers MUST demonstrate LPs. Technical skills are table stakes; LP alignment determines hire/no-hire. You need <strong>2 stories per LP</strong> ready. The "Bar Raiser" interviewer has veto power over the hiring decision.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Customer Obsession — Frontend Examples</div>
+    <p><strong>Story angle:</strong> A feature you built specifically because of user feedback or data showing user pain. <strong>Frontend example:</strong> "Our analytics showed 23% of mobile users dropped off at the checkout because the form required 14 fields. I A/B tested a progressive disclosure approach — only 4 fields shown initially, rest revealed contextually. Conversion increased 17%." <strong>Red flag to avoid:</strong> "I built what the PM told me to build" — Amazon wants you to advocate for the customer, not just execute.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Dive Deep — Frontend Examples</div>
+    <p><strong>Story angle:</strong> A bug or performance issue where you went beyond surface symptoms to root cause. <strong>Frontend example:</strong> "Memory leak causing OOM crashes after 30 minutes of usage — I used Chrome DevTools heap snapshots, identified a detached DOM tree from a charting library that wasn't cleaning up ResizeObserver on unmount. Fixed the cleanup in the library's wrapper, contributed the fix upstream."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Deliver Results — Frontend Examples</div>
+    <p><strong>Story angle:</strong> A project where you shipped despite obstacles. <strong>Frontend example:</strong> "Black Friday deadline — our payment provider's SDK was incompatible with our SSR setup. I reverse-engineered the SDK's API calls, built a thin client wrapper that worked with both server-side render and client-side hydration. Shipped 2 days before Black Friday. Zero payment failures during peak traffic."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Have Backbone; Disagree and Commit — Frontend Examples</div>
+    <p><strong>Story angle:</strong> A time you disagreed with a technical decision, respectfully pushed back, then committed fully once the decision was made. <strong>Frontend example:</strong> "Our architect wanted to use GraphQL for a dashboard that had 3 REST endpoints. I argued the added complexity (Apollo Client cache, fragment matching, query batching) wasn't justified for 3 endpoints. Presented data on bundle size impact (+45KB) and developer onboarding time (+2 weeks). We disagreed, architect made the final call to use REST. I committed fully — built the REST client with React Query, shipped on time, the dashboard performs great."</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> Prepare 16 stories total — 2 per LP. Amazon typically tests 6-8 LPs per loop. The most frequently tested LPs for frontend roles: Customer Obsession, Dive Deep, Deliver Results, Have Backbone, Learn and Be Curious, Bias for Action, Insist on the Highest Standards.
+  </div>
+</div>
+
+<!-- Google -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">GOOG</div>
+    <div>
+      <div class="q-text">Google — Googleyness, Product Sense &amp; Ambiguity</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Google Interviews Work</div>
+    <p>Google evaluates 4 attributes: (1) General Cognitive Ability (problem-solving, not just memorization), (2) Role-Related Knowledge (frontend specifics), (3) Leadership (influence, mentorship, cross-team impact), (4) Googleyness (comfort with ambiguity, collaboration, user-first thinking). The "Googleyness" round is behavioral-first but expects product thinking.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Googleyness — Frontend Angle</div>
+    <p>Google wants to see: (a) You thrive in <strong>ambiguity</strong> — given a vague product spec, you can define the problem, propose solutions, and iterate. (b) You think <strong>user-first</strong> — not "what's the coolest tech" but "what solves the user's actual problem." (c) You <strong>collaborate across functions</strong> — UX researchers, PMs, backend engineers, SREs. <strong>Story angle:</strong> "The PM said 'build a notification center' with zero details. I interviewed 5 power users, identified that the real pain point was notification overload (40+ per day), and built a smart grouping system that collapsed similar notifications. User satisfaction score went from 3.2 to 4.6."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Product Sense Questions</div>
+    <p>Google often asks frontend candidates product design questions: "How would you design a new Gmail compose experience? Walk me through your thought process." <strong>Framework:</strong> (1) Clarify: Who's the user? What's the problem? What constraints exist? (2) User journey: What does the user need to accomplish? Map the flow. (3) Prioritize: What's the MVP? What can wait? (4) Technical feasibility: Frontend constraints — latency, offline support, accessibility. (5) Metrics: How would you measure success? (6) Edge cases: Error states, empty states, loading states, accessibility.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Scalable Systems Thinking</div>
+    <p>Google expects frontend engineers to think about scale: "How would you build a chat feature that works for 100M users across 150 countries?" Cover: (a) Performance — code splitting, lazy loading, CDN edge caching, (b) i18n/l10n — RTL support, locale-aware formatting, translation pipeline, (c) Accessibility — WCAG 2.1 AA minimum, screen reader testing, keyboard navigation, (d) Offline — Service Worker caching, optimistic UI, conflict resolution, (e) Observability — error boundaries, performance monitoring, user analytics.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Google's L5+ (Senior) bar for frontend requires demonstrating <strong>technical leadership beyond your team</strong>. Prepare stories about: (a) cross-team architecture decisions you drove, (b) how you improved engineering quality org-wide, (c) mentoring that scaled beyond 1:1 (internal talks, documentation, tools).</p>
+  </div>
+</div>
+
+<!-- Meta -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">META</div>
+    <div>
+      <div class="q-text">Meta — Move Fast, Impact at Scale, Product Design</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Meta Interviews Work</div>
+    <p>Meta has a structured behavioral round (often with a hiring manager) focused on: (1) Impact at scale — your work affected millions of users or materially moved metrics, (2) Move Fast — you ship fast, iterate, learn from data, (3) Product design — you can design features for Facebook/Instagram/WhatsApp scale, (4) Conflict resolution — you handle disagreements constructively. Meta interviewers use a rubric — every answer is scored against predefined criteria.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">"Design a Facebook Feature" Questions</div>
+    <p>Classic Meta questions: "Design Facebook Stories" / "Design Instagram Reels" / "Design WhatsApp Voice Messages." Your answer must show <strong>product thinking</strong> not just frontend implementation:</p>
+    <ul class="summary-list">
+      <li><strong>User problem:</strong> What job does this feature do for the user?</li>
+      <li><strong>UX flow:</strong> Tap by tap — what does the user see and do?</li>
+      <li><strong>Technical architecture:</strong> Component tree, data flow, API layer</li>
+      <li><strong>Performance at scale:</strong> Optimistic UI, lazy loading, CDN strategy</li>
+      <li><strong>Offline support:</strong> What happens with spotty connection?</li>
+      <li><strong>A11y:</strong> Screen reader, keyboard nav, reduced motion</li>
+      <li><strong>Metrics:</strong> What defines success? Engagement? Creation rate? Time spent?</li>
+      <li><strong>Edge cases:</strong> Very long content, very short content, zero content, RTL languages</li>
+    </ul>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Impact at Scale Stories</div>
+    <p>Meta cares about <strong>magnitude of impact</strong> — millions of users, measurable metric improvements. <strong>Story angle:</strong> "I rebuilt the search autocomplete from a debounced input to a client-side trie-based index with Web Worker processing. This reduced search latency from 400ms to 8ms for 90th percentile queries. A/B test showed 12% more searches completed, driving 3M additional monthly queries across 50M MAU."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Move Fast Stories</div>
+    <p>Meta values speed of execution. <strong>Story angle:</strong> "We needed an MVP of the onboarding flow for a new market launch in 1 week. I used an existing design system, hard-coded 3 screens instead of building a CMS (fast follow later), and shipped a working flow in 4 days. We learned from real user data that 2 of the 3 screens were unnecessary — saving us from building a complex feature nobody needed."</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Meta-Specific Mistake</div>
+    <p>Don't say "we built it perfectly the first time." Meta values iteration and learning from data. A story where you shipped fast, learned, and iterated is 10x better than one where you took 6 months to build the "right" thing.</p>
+  </div>
+</div>
+
+<!-- Microsoft -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">MSFT</div>
+    <div>
+      <div class="q-text">Microsoft — Growth Mindset, Enterprise Design &amp; Accessibility</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Microsoft Interviews Work</div>
+    <p>Microsoft evaluates: (1) Technical excellence, (2) Growth Mindset (can you learn and adapt?), (3) Collaboration (do you make others better?), (4) Customer focus (enterprise customers have complex needs). The "as appropriate" interviewer (similar to Amazon's Bar Raiser) ensures hiring bar consistency.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Growth Mindset Stories</div>
+    <p>Microsoft's CEO Satya Nadella made Growth Mindset the cultural cornerstone. <strong>Story angle:</strong> "I was a React specialist; our team adopted Angular for an enterprise client requirement. Instead of resisting, I spent 2 weekends learning Angular, became the team's Angular resource, and later gave a company talk comparing React and Angular decision frameworks. The learning made me a better React engineer because I understood <em>why</em> React's model works for certain problems."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Enterprise Design Stories</div>
+    <p>Microsoft products serve enterprise customers: Office 365, Azure, Teams, Dynamics. <strong>Expect questions like:</strong> "How do you design for enterprise vs consumer?" Cover: (a) RBAC — granular permissions per component, (b) Audit logs — every action traceable, (c) Configurability — enterprise needs custom workflows, (d) Compliance — SOC2, GDPR, HIPAA considerations in UI, (e) Scale — thousands of users per tenant, pagination, virtualization.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Accessibility at Scale</div>
+    <p>Microsoft invests heavily in accessibility (Seeing AI, Xbox Adaptive Controller). <strong>Story angle:</strong> "I led an initiative to achieve WCAG 2.1 AA across our dashboard. Implemented: proper heading hierarchy, focus management for SPA route transitions, aria-live regions for dynamic content updates, keyboard navigation for drag-and-drop interactions. Tested with actual screen reader users. Reduced accessibility bugs from 157 to 12. The audit became our team's pre-release checklist."</p>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Microsoft-Specific Tip</div>
+    <p>Use the phrase "Growth Mindset" explicitly in at least one story. Mention how you learned from failure. MSFT interviewers are trained to score for this — make it easy for them to give you points.</p>
+  </div>
+</div>
+
+<!-- Netflix -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">NFLX</div>
+    <div>
+      <div class="q-text">Netflix — Freedom &amp; Responsibility, High Performance, A/B Testing</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Netflix Interviews Work</div>
+    <p>Netflix famously values (1) Freedom & Responsibility — no micromanagement, high autonomy, expect you to own outcomes, (2) High Performance — "adequate performance gets a generous severance," (3) Judgment — you make good decisions with limited information, (4) Curiosity — you constantly learn. The culture deck is publicly available — read it before the interview.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Freedom & Responsibility Stories</div>
+    <p><strong>Story angle:</strong> "I noticed our CI pipeline took 18 minutes on average, slowing down the entire team. Nobody asked me to fix it. I analyzed the pipeline, migrated from Docker-in-Docker to layer caching, parallelized test suites, and reduced build time to 4 minutes. I didn't wait for permission — I saw a problem, estimated ROI, and fixed it. The entire engineering org (200+ engineers) benefited."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">A/B Testing Culture</div>
+    <p>Netflix A/B tests almost everything. <strong>Frontend angle:</strong> "How would you A/B test a new homepage layout?" Cover: (a) Feature flags — LaunchDarkly/in-house, (b) Metrics — engagement (% who start watching), discovery (browse depth), satisfaction (thumbs up rate), (c) Statistical significance — sample size, duration, confidence level, (d) No flicker — assign variant server-side, hydrate without layout shift, (e) Ramp-up strategy — 1% → 10% → 50% → 100%, monitor metrics at each stage.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">High Performance Culture Questions</div>
+    <p>Netflix asks behavioral questions to assess if you raise the team's bar. <strong>Story angle:</strong> "I noticed code reviews were rubber-stamp approvals. I introduced a review template with specific checkpoints (accessibility, error states, loading states, mobile responsiveness, bundle size impact). Review quality improved — we caught 2 potential production bugs in the first week. The template became standard across 4 teams."</p>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">Netflix-Specific Tip</div>
+    <p>Show <strong>proactivity without being asked</strong>. Netflix hates the phrase "that's not my job." Stories where you identified a problem nobody owned and fixed it resonate deeply. Also: be direct. Netflix values candor over politeness — give honest assessments in your answers.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END SECTION 3 ============ -->
+
+<!-- ============ SECTION 4: SENIOR/STAFF ============ -->
+<div class="section-divider">
+  <h2>Section 4 — Senior/Staff Level Questions</h2>
+  <p>Questions that separate Senior from Staff engineers — leadership, quality, and strategic thinking.</p>
+</div>
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">S1</div>
+    <div>
+      <div class="q-text">How do you drive technical decisions across teams?</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Interviewer Is Evaluating</div>
+    <p>Your ability to (a) identify when a decision needs cross-team alignment vs when a team can decide autonomously, (b) facilitate decision-making without becoming a bottleneck, (c) build consensus without authority, (d) document and communicate decisions so they stick.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Model Answer</div>
+    <p><strong>When we needed to standardize our API client across 4 frontend teams:</strong> (1) I wrote an RFC (Request for Comments) document outlining the problem (4 different HTTP clients — axios, fetch, ky, got), the proposed solution (a shared <code>@acme/api-client</code> package), alternatives considered, and migration path. (2) I shared it with all tech leads, gave them 1 week to comment, and incorporated feedback (some teams needed React Native support — I added it). (3) Instead of mandating adoption, I built the client with a migration guide showing "before/after" for 3 common patterns (GET, POST, error handling). (4) I personally helped each team migrate their first endpoint — removing friction. (5) I set up a bi-weekly "Frontend Guild" meeting where tech leads discuss cross-cutting decisions — the API client was just the first topic.</p>
+    <p><strong>Key principle:</strong> Write it down (RFC), ask for feedback, make it easy to adopt, don't mandate — demonstrate value.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Staff+ Differentiator</div>
+    <p>Juniors make decisions alone. Seniors make decisions with their team. Staff engineers create <strong>decision-making frameworks</strong> that scale beyond themselves. The RFC process IS the framework.</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">S2</div>
+    <div>
+      <div class="q-text">How do you build a quality-first culture?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Model Answer</div>
+    <p>Culture is what the team does when nobody is watching. I build quality culture through:</p>
+    <p><strong>(1) Automation over discipline:</strong> People forget things. Linters, type-checkers, and CI checks never forget. I set up ESLint (strict config), TypeScript strict mode, and pre-commit hooks that run lint + typecheck. The CI fails if coverage drops below 80%. This removes the "should I write tests?" decision — the pipeline decides.</p>
+    <p><strong>(2) Developer Experience as quality:</strong> Slow CI or flaky tests erode quality culture. I optimized our CI from 18 min to 4 min (parallel jobs, caching). When tests caught a real bug, I celebrated it publicly in Slack — reinforcing that quality is valued.</p>
+    <p><strong>(3) Code review as learning, not policing:</strong> I wrote a code review guide with specific patterns to check (error states, loading states, edge cases) instead of style nitpicks. Style is automated by Prettier. Reviews focus on logic, accessibility, and performance.</p>
+    <p><strong>(4) Blameless post-mortems:</strong> When bugs reach production, the response is "how did our process allow this?" not "who wrote this?" I led 3 post-mortems that turned into process improvements (new ESLint rules, better error boundary coverage, canary deploys).</p>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">S3</div>
+    <div>
+      <div class="q-text">How do you balance innovation vs stability?</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Model Answer</div>
+    <p>This is a false dichotomy if you architect for both. My approach:</p>
+    <p><strong>(1) Separate the stable from the experimental:</strong> Core infrastructure (auth, routing, API client) follows strict change management — RFCs, gradual rollout, feature flags with kill switches. Experimental features (new UI patterns, new libraries) are evaluated in isolation with feature flags and A/B testing. Facebook's "Gatekeeper" system is the model: ship code dark, enable for 1% of users, monitor, ramp up.</p>
+    <p><strong>(2) Strangler Fig pattern for migrations:</strong> Don't rewrite, replace incrementally. When migrating AngularJS to React, we ran both frameworks side by side via a bridge component. New features in React, old code untouched until it needed changes. Zero downtime, zero lost velocity.</p>
+    <p><strong>(3) Innovation time:</strong> I advocated for "Hack Days" every 6 weeks — 1 day where the team explores new tech, prototypes ideas, or fixes tech debt. Multiple production features (our dark mode, our virtualized table component) started as Hack Day projects. This channels innovation into a safe, time-boxed container.</p>
+    <p><strong>(4) Measure both:</strong> Track innovation metrics (new features shipped, experiments run, time-to-prototype) AND stability metrics (error rate, P99 latency, uptime). Present both in sprint reviews. Teams optimize what gets measured.</p>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Key Principle</div>
+    <p>Innovation without stability is chaos. Stability without innovation is stagnation. The answer is <strong>architectural isolation</strong>: make it safe to experiment by ensuring experiments can't break the stable core.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END SECTION 4 ============ -->
+
+<!-- ============ TELL ME ABOUT YOURSELF ============ -->
+<div class="section-divider">
+  <h2>Bonus — "Tell Me About Yourself" for Frontend Developers</h2>
+  <p>The 60-second answer that sets the tone for the entire interview.</p>
+</div>
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">TMAY</div>
+    <div>
+      <div class="q-text">The Present / Past / Future Formula</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Present (20 seconds)</div>
+    <p>"I'm a Senior Frontend Engineer at [Company], where I lead the dashboard team building data visualization tools for 50K daily active users. My focus is React, TypeScript, and performance optimization." — <strong>Role + Scope + Tech stack.</strong></p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Past (25 seconds)</div>
+    <p>"Before that, I spent 2 years at [Previous Company] building their consumer-facing React Native app, which grew from 0 to 500K downloads. I started my career at [First Company] as a full-stack engineer working with Node.js and Angular." — <strong>2 past roles, growth trajectory, impact.</strong></p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Future (15 seconds)</div>
+    <p>"I'm looking for a role where I can work on frontend at massive scale — millions of users, complex UI challenges — and grow into a Staff Engineer who shapes architecture across teams. That's why I'm excited about [Company]." — <strong>Why this role + why this company + career goal.</strong></p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">"Why Our Company?" Template</div>
+    <p><strong>Research-based structure:</strong> (1) What you admire about their product — be specific: "I love how Notion handles real-time collaboration without conflicts — I've read your engineering blog about CRDT implementation." (2) What problem they solve that excites you: "I'm passionate about developer tools because I've felt the pain of slow CI pipelines." (3) Why your skills match their current challenges: "I noticed your team is hiring for WebSocket expertise — I recently built a real-time notification system handling 10K concurrent connections."</p>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Don't recite your resume chronologically. The interviewer has your resume. Your answer should connect the dots: "I started doing X, which led to Y, which is why I'm here today pursuing Z." Make it a story, not a list.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="end-section">
+  <h2>You're Ready — Go Nail It</h2>
+  <p class="cover-subtitle" style="margin:0 auto;text-align:center;">15 STAR stories. 5 companies decoded. One clear framework. Now go tell your story with confidence.</p>
+</div>
+
+</body>
+</html>

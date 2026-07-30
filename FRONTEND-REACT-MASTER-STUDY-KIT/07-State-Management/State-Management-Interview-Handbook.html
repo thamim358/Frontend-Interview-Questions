@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State Management Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(96,165,250,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(56,189,248,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(96,165,250,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #60A5FA 50%, #38BDF8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #60A5FA 0%, #38BDF8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">INTERVIEW HANDBOOK</div>
+  <h1 class="cover-title">State Management Interview Handbook</h1>
+  <p class="cover-subtitle">18 Essential Questions on React State Management — from Context API to Redux Toolkit, Zustand, and React Query. Taught by a senior engineer, not a textbook.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P1 — Full Format</span></div>
+    <div class="cover-meta-item"><span class="number">8</span><span class="label">P2 — Concise</span></div>
+    <div class="cover-meta-item"><span class="number">18</span><span class="label">Total Questions</span></div>
+    <div class="cover-meta-item"><span class="number">50+</span><span class="label">Code Snippets</span></div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>P1 — Must Know Questions</h2>
+  <p>If you only study 10 things, make it these. State management questions dominate mid-to-senior React interviews.</p>
+</div>
+
+<div class="container">
+
+<!-- Q1: Types of State -->
+<div class="question-card" id="q1">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">What are the different types of state in a React application, and which tool should you use for each?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>There are <strong>six categories</strong> of state in a modern React app: <strong>Local UI state</strong> (useState/useReducer), <strong>Global/Shared state</strong> (Context/Redux/Zustand), <strong>Server state</strong> (React Query/SWR), <strong>URL state</strong> (useSearchParams/router), <strong>Form state</strong> (React Hook Form/Formik), and <strong>Persisted state</strong> (localStorage/Zustand persist/redux-persist). Knowing <em>which bucket</em> each piece of state belongs in is the most important state management skill.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of state like clothes in your house. Some clothes you wear right now (local state — on your body), some are shared with your partner (global state — the closet), some come from Amazon deliveries (server state — fetched from outside), and some are permanently stored in the attic (persisted state). You wouldn't keep your socks in the attic or your winter coat on your body in summer. Same logic applies to React state.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Six Categories</div>
+    <table class="styled-table">
+      <thead><tr><th>Type</th><th>What It Is</th><th>Tool</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Local UI</strong></td><td>Temporary, component-scoped</td><td><code>useState</code>, <code>useReducer</code></td><td>Modal open/close, toggle, input value</td></tr>
+        <tr><td><strong>Global/Shared</strong></td><td>Needed by many components</td><td>Context, Redux, Zustand</td><td>Auth user, theme, cart items</td></tr>
+        <tr><td><strong>Server</strong></td><td>Fetched from API, cached</td><td>React Query, SWR</td><td>User list, product catalog</td></tr>
+        <tr><td><strong>URL</strong></td><td>In the browser address bar</td><td>useSearchParams, router</td><td>Search query, page number, filter</td></tr>
+        <tr><td><strong>Form</strong></td><td>Multi-field, validated</td><td>React Hook Form + Zod</td><td>Signup form, checkout flow</td></tr>
+        <tr><td><strong>Persisted</strong></td><td>Survives page refresh</td><td>localStorage, IndexedDB</td><td>Theme preference, draft post</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>The #1 mistake I see in production React codebases is treating <em>everything</em> as global state. Developers shove server data into Redux, put form state in Context, and wonder why the app is slow and buggy. If the state doesn't survive a remount, <code>useState</code> is probably fine. If it comes from a server, use React Query. If you need it everywhere, only then reach for global state.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Putting server data in Redux and writing your own loading/error/caching logic (React Query does this 10x better). Storing ephemeral UI state (dropdown open, hover state) in a global store. Mixing form state with persisted state and accidentally overwriting user input on re-render.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — State categorization heuristic</div>
+    <pre><code><span class="comment">// Ask these questions to categorize state:</span>
+
+<span class="comment">// Q1: Does it come from an API?</span>
+<span class="comment">// Yes → Server State → React Query / SWR</span>
+<span class="comment">// No  → Go to Q2</span>
+
+<span class="comment">// Q2: Does it need to survive browser refresh?</span>
+<span class="comment">// Yes → Persisted State → localStorage + hydration</span>
+<span class="comment">// No  → Go to Q3</span>
+
+<span class="comment">// Q3: Is it needed by many unrelated components?</span>
+<span class="comment">// Yes → Global State → Zustand / Redux / Context</span>
+<span class="comment">// No  → Go to Q4</span>
+
+<span class="comment">// Q4: Is it in the URL or should it be shareable?</span>
+<span class="comment">// Yes → URL State → useSearchParams</span>
+<span class="comment">// No  → Local State → useState / useReducer</span></code></pre>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Is it mine, ours, from outside, or forever?" — Local, Global, Server, or Persisted. Four buckets, always start local.
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>When would you <em>not</em> use React Query for server state?</li>
+      <li>How do you decide between useState and useReducer for local state?</li>
+      <li>What are the tradeoffs of putting state in the URL vs global store?</li>
+    </ol>
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Six state categories: Local, Global, Server, URL, Form, Persisted</li>
+      <li>Match the tool to the state type — don't use one hammer for everything</li>
+      <li>Start local, lift only when needed, cache server data separately</li>
+      <li>React Query handles loading/error/caching/refetching for server state automatically</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q2: Redux Toolkit Deep Dive -->
+<div class="question-card" id="q2">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">Redux Toolkit Deep Dive — createSlice, configureStore, createAsyncThunk, RTK Query, and how Immer works under the hood.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Redux Toolkit (RTK)</strong> is the official, opinionated way to write Redux. It eliminates boilerplate by combining <code>createSlice</code> (actions + reducers together), <code>configureStore</code> (store setup with DevTools + middleware), <code>createAsyncThunk</code> (async actions with lifecycle), and <strong>RTK Query</strong> (data fetching and caching). <strong>Immer</strong> is baked in — you write "mutating" syntax inside reducers and Immer produces immutable updates.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Old vs New Redux</div>
+    <p>Old Redux required: action type constants, action creators, switch-case reducers, combineReducers, applyMiddleware, and composing enhancers — all spread across separate files. Redux Toolkit collapses everything into a single <code>createSlice</code> call. A typical RTK slice is 20 lines versus 80+ in vanilla Redux.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Redux Toolkit slice with async thunk</div>
+    <pre><code><span class="keyword">import</span> { createSlice, createAsyncThunk, configureStore } <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit'</span>;
+
+<span class="comment">// 1. Async thunk — fetch users from API</span>
+<span class="keyword">export const</span> <span class="function">fetchUsers</span> = <span class="function">createAsyncThunk</span>&lt;
+  <span class="type">User</span>[], <span class="keyword">void</span>, { rejectValue: <span class="type">string</span> }
+&gt;(
+  <span class="string">'users/fetchUsers'</span>,
+  <span class="keyword">async</span> (_, { rejectWithValue }) =&gt; {
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/users'</span>);
+      <span class="keyword">if</span> (!res.ok) <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Failed'</span>);
+      <span class="keyword">return await</span> res.<span class="function">json</span>();
+    } <span class="keyword">catch</span> (err) {
+      <span class="keyword">return</span> <span class="function">rejectWithValue</span>((err <span class="keyword">as</span> <span class="type">Error</span>).message);
+    }
+  }
+);
+
+<span class="comment">// 2. Slice — mutating syntax thanks to Immer</span>
+<span class="keyword">const</span> usersSlice = <span class="function">createSlice</span>({
+  name: <span class="string">'users'</span>,
+  initialState: {
+    items: [] <span class="keyword">as</span> <span class="type">User</span>[],
+    status: <span class="string">'idle'</span> <span class="keyword">as</span> <span class="string">'idle'</span> | <span class="string">'loading'</span> | <span class="string">'succeeded'</span> | <span class="string">'failed'</span>,
+    error: <span class="keyword">null as</span> <span class="type">string</span> | <span class="keyword">null</span>,
+  },
+  reducers: {
+    <span class="function">addUser</span>(state, action: PayloadAction&lt;<span class="type">User</span>&gt;) {
+      state.items.<span class="function">push</span>(action.payload); <span class="comment">// Immer — looks mutable, is immutable</span>
+    },
+    <span class="function">removeUser</span>(state, action: PayloadAction&lt;<span class="type">string</span>&gt;) {
+      state.items = state.items.<span class="function">filter</span>(<span class="function">u</span> =&gt; u.id !== action.payload);
+    },
+  },
+  extraReducers: (<span class="function">builder</span>) =&gt; {
+    builder
+      .<span class="function">addCase</span>(fetchUsers.pending, (<span class="function">state</span>) =&gt; {
+        state.status = <span class="string">'loading'</span>;
+      })
+      .<span class="function">addCase</span>(fetchUsers.fulfilled, (<span class="function">state</span>, action) =&gt; {
+        state.status = <span class="string">'succeeded'</span>;
+        state.items = action.payload;
+      })
+      .<span class="function">addCase</span>(fetchUsers.rejected, (<span class="function">state</span>, action) =&gt; {
+        state.status = <span class="string">'failed'</span>;
+        state.error = action.payload ?? <span class="string">'Unknown error'</span>;
+      });
+  },
+});
+
+<span class="comment">// 3. Store — one-liner setup</span>
+<span class="keyword">export const</span> store = <span class="function">configureStore</span>({
+  reducer: { users: usersSlice.reducer },
+  <span class="comment">// Thunk middleware + DevTools auto-enabled in dev</span>
+});
+
+<span class="keyword">export const</span> { addUser, removeUser } = usersSlice.actions;
+<span class="keyword">export type</span> <span class="type">RootState</span> = <span class="type">ReturnType</span>&lt;<span class="keyword">typeof</span> store.getState&gt;;
+<span class="keyword">export type</span> <span class="type">AppDispatch</span> = <span class="keyword">typeof</span> store.dispatch;</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip — RTK Query</div>
+    <p>RTK Query is built into Redux Toolkit. It eliminates the need for createAsyncThunk for data fetching. You define an API slice with endpoints, and RTK Query auto-generates hooks, manages caching, and handles loading/error states. If you're fetching data with Redux, you should be using RTK Query, not hand-rolled async thunks.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — RTK Query vs manual async thunks</div>
+    <pre><code><span class="keyword">import</span> { createApi, fetchBaseQuery } <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit/query/react'</span>;
+
+<span class="comment">// RTK Query: Define API once, get hooks + caching for free</span>
+<span class="keyword">export const</span> api = <span class="function">createApi</span>({
+  reducerPath: <span class="string">'api'</span>,
+  baseQuery: <span class="function">fetchBaseQuery</span>({ baseUrl: <span class="string">'/api'</span> }),
+  tagTypes: [<span class="string">'User'</span>, <span class="string">'Post'</span>],
+  endpoints: (<span class="function">builder</span>) =&gt; ({
+    <span class="function">getUsers</span>: builder.query&lt;<span class="type">User</span>[], <span class="keyword">void</span>&gt;({
+      query: () =&gt; <span class="string">'users'</span>,
+      providesTags: [<span class="string">'User'</span>],
+    }),
+    <span class="function">addUser</span>: builder.mutation&lt;<span class="type">User</span>, <span class="type">Partial</span>&lt;<span class="type">User</span>&gt;&gt;({
+      query: (<span class="function">body</span>) =&gt; ({ url: <span class="string">'users'</span>, method: <span class="string">'POST'</span>, body }),
+      invalidatesTags: [<span class="string">'User'</span>], <span class="comment">// Auto refetch getUsers</span>
+    }),
+  }),
+});
+
+<span class="comment">// Auto-generated hooks:</span>
+<span class="keyword">export const</span> { useGetUsersQuery, useAddUserMutation } = api;</code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Insight</div>
+    <p>At scale, Redux's single global store becomes a bottleneck — every action goes through every reducer. Large apps often split into domain-specific stores or migrate to Zustand (simpler API, no Provider, same performance). Meta uses a custom Redux-like store internally. Airbnb uses Zustand. Netflix and Twitch use React Query + Context. The pattern matters more than the library.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Slice defines state + changes, Thunk handles async, RTK Query handles API, Immer makes mutations safe." — Four pillars of Redux Toolkit.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><code>createSlice</code> merges actions + reducers, <code>configureStore</code> replaces createStore</li>
+      <li><code>createAsyncThunk</code> provides pending/fulfilled/rejected lifecycle for async ops</li>
+      <li>RTK Query is the modern replacement for hand-rolled data fetching in Redux</li>
+      <li>Immer lets you write mutable-looking code; Redux Toolkit Immer is enabled by default</li>
+      <li>Consider whether you even need Redux — Zustand or Context + React Query often suffice</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q3: Zustand Deep Dive -->
+<div class="question-card" id="q3">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Zustand Deep Dive — how does it work, and why do developers love the "no Provider" pattern?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Zustand</strong> is a tiny (1.1 KB), unopinionated state management library. Unlike Redux and Context, it doesn't require a Provider to wrap your component tree. You create a store with <code>create()</code>, which returns a hook — call that hook in any component to read/write state. Zustand uses React 18's <code>useSyncExternalStore</code> under the hood for rendering, has excellent selector support, and supports middleware (persist, immer, devtools) as simple wrapper functions.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why "No Provider" Matters</div>
+    <p>Provider-based stores (Context, Redux) wrap your entire app, causing every consumer to potentially re-render. Zustand stores are external to React — they're plain JavaScript objects. React components subscribe via hooks, and Zustand compares values itself. This means zero extra wrapper components, no provider drilling, and fine-grained re-renders controlled by selectors.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Zustand store with multiple middlewares</div>
+    <pre><code><span class="keyword">import</span> { create } <span class="keyword">from</span> <span class="string">'zustand'</span>;
+<span class="keyword">import</span> { persist, devtools } <span class="keyword">from</span> <span class="string">'zustand/middleware'</span>;
+<span class="keyword">import</span> { immer } <span class="keyword">from</span> <span class="string">'zustand/middleware/immer'</span>;
+
+<span class="keyword">interface</span> <span class="type">CartStore</span> {
+  items: <span class="type">CartItem</span>[];
+  total: <span class="type">number</span>;
+  addItem: (<span class="function">item</span>: <span class="type">CartItem</span>) =&gt; <span class="keyword">void</span>;
+  removeItem: (<span class="function">id</span>: <span class="type">string</span>) =&gt; <span class="keyword">void</span>;
+  clearCart: () =&gt; <span class="keyword">void</span>;
+}
+
+<span class="keyword">export const</span> <span class="function">useCartStore</span> = create&lt;<span class="type">CartStore</span>&gt;()(
+  <span class="function">devtools</span>(
+    <span class="function">persist</span>(
+      <span class="function">immer</span>((<span class="function">set</span>) =&gt; ({
+        items: [],
+        total: <span class="number">0</span>,
+        <span class="function">addItem</span>: (item) =&gt;
+          <span class="function">set</span>((<span class="function">state</span>) =&gt; {
+            state.items.<span class="function">push</span>(item);
+            state.total += item.price;
+          }),
+        <span class="function">removeItem</span>: (id) =&gt;
+          <span class="function">set</span>((<span class="function">state</span>) =&gt; {
+            <span class="keyword">const</span> idx = state.items.<span class="function">findIndex</span>(<span class="function">i</span> =&gt; i.id === id);
+            <span class="keyword">if</span> (idx !== <span class="number">-1</span>) {
+              state.total -= state.items[idx].price;
+              state.items.<span class="function">splice</span>(idx, <span class="number">1</span>);
+            }
+          }),
+        <span class="function">clearCart</span>: () =&gt; <span class="function">set</span>({ items: [], total: <span class="number">0</span> }),
+      })),
+      { name: <span class="string">'cart-storage'</span> } <span class="comment">// Auto-persist to localStorage</span>
+    ),
+    { name: <span class="string">'CartStore'</span> } <span class="comment">// Redux DevTools label</span>
+  )
+);
+
+<span class="comment">// Usage — no Provider needed!</span>
+<span class="keyword">function</span> <span class="function">CartButton</span>() {
+  <span class="comment">// Fine-grained selector: only re-renders when count changes</span>
+  <span class="keyword">const</span> itemCount = <span class="function">useCartStore</span>(<span class="function">s</span> =&gt; s.items.length);
+  <span class="keyword">return</span> &lt;button&gt;Cart ({itemCount})&lt;/button&gt;;
+}
+
+<span class="keyword">function</span> <span class="function">CartTotal</span>() {
+  <span class="comment">// Only re-renders when total changes — not when items change</span>
+  <span class="keyword">const</span> total = <span class="function">useCartStore</span>(<span class="function">s</span> =&gt; s.total);
+  <span class="keyword">return</span> &lt;span&gt;${total.toFixed(<span class="number">2</span>)}&lt;/span&gt;;
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Selector Performance</div>
+    <p>Zustand uses <code>Object.is</code> for shallow comparison by default. If your selector returns a new object/reference every time, it'll cause unnecessary re-renders. Use <code>useShallow()</code> when selecting multiple values: <code>useCartStore(useShallow(s => ({ count: s.items.length, total: s.total })))</code>.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — Zustand's Secret Sauce</div>
+    <p>Zustand leverages React 18's <code>useSyncExternalStore</code> — the same API used by Redux and React Query. This ensures correct behavior with concurrent rendering. But the real magic is how simple it is: the store is literally a module-level variable. You can read/write from <strong>outside React</strong> (e.g., WebSocket handlers, service workers, tests). This makes Zustand far more flexible than Context or even Redux.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Zustand = global variable + React hook subscription." No Provider, no boilerplate, just a hook you call anywhere.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Zustand stores live outside React — no Provider needed</li>
+      <li>Uses <code>useSyncExternalStore</code> for concurrent safety</li>
+      <li>Selectors give fine-grained re-render control</li>
+      <li>Middleware (persist, immer, devtools) compose as wrapper functions</li>
+      <li>Can be accessed outside React — perfect for non-React code paths</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q4: React Query Deep Dive -->
+<div class="question-card" id="q4">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">React Query (TanStack Query) — useQuery, useMutation, staleTime vs gcTime, and cache invalidation.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>TanStack Query</strong> (previously React Query) is a server-state management library. It handles <strong>fetching, caching, synchronizing, and updating server state</strong> in React apps. The core primitives are <code>useQuery</code> (fetch and cache data), <code>useMutation</code> (create/update/delete and invalidate), <code>staleTime</code> (how long data is "fresh" before background refetch), <code>gcTime</code> (how long inactive cache data lives before garbage collection), and <code>invalidateQueries</code> (mark queries as stale for refetch).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">staleTime vs gcTime — The Most Confused Concepts</div>
+    <p><strong>staleTime</strong> (default 0ms): Duration after which data is considered "stale" and eligible for background refetch. While fresh, React Query returns cache data without refetching. Think of it as the "freshness guarantee."<br><strong>gcTime</strong> (default 5min): How long React Query keeps inactive/unused cache data before removing it from memory (garbage collection). Think of it as the "retention period." If a component re-mounts within gcTime, cached data is served instantly.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — React Query comprehensive example</div>
+    <pre><code><span class="keyword">import</span> {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} <span class="keyword">from</span> <span class="string">'@tanstack/react-query'</span>;
+<span class="keyword">import</span> { fetchPosts, deletePost, createPost } <span class="keyword">from</span> <span class="string">'./api'</span>;
+
+<span class="keyword">function</span> <span class="function">PostList</span>() {
+  <span class="keyword">const</span> queryClient = <span class="function">useQueryClient</span>();
+
+  <span class="comment">// staleTime: 30s — data is "fresh" and won't refetch</span>
+  <span class="comment">// gcTime: 10min — cache survives unmount for 10min</span>
+  <span class="keyword">const</span> { data, isLoading, error, refetch } = <span class="function">useQuery</span>({
+    queryKey: [<span class="string">'posts'</span>],
+    queryFn: fetchPosts,
+    staleTime: <span class="number">30</span> * <span class="number">1000</span>,
+    gcTime: <span class="number">10</span> * <span class="number">60</span> * <span class="number">1000</span>,
+    retry: <span class="number">3</span>, <span class="comment">// Retry 3 times on failure</span>
+    enabled: <span class="keyword">true</span>, <span class="comment">// Conditional fetching</span>
+  });
+
+  <span class="comment">// Mutation: create a post, then invalidate the list</span>
+  <span class="keyword">const</span> createMutation = <span class="function">useMutation</span>({
+    mutationFn: createPost,
+    onSuccess: () =&gt; {
+      <span class="comment">// Invalidate = mark stale = trigger refetch</span>
+      queryClient.<span class="function">invalidateQueries</span>({ queryKey: [<span class="string">'posts'</span>] });
+    },
+    onSettled: () =&gt; {
+      <span class="comment">// Always runs after success or error — cleanup, analytics, etc.</span>
+    },
+  });
+
+  <span class="keyword">const</span> deleteMutation = <span class="function">useMutation</span>({
+    mutationFn: deletePost,
+    onMutate: <span class="keyword">async</span> (<span class="function">id</span>) =&gt; {
+      <span class="comment">// Cancel outgoing refetches to avoid overwriting optimistic update</span>
+      <span class="keyword">await</span> queryClient.<span class="function">cancelQueries</span>({ queryKey: [<span class="string">'posts'</span>] });
+      <span class="comment">// Snapshot previous value for rollback</span>
+      <span class="keyword">const</span> previous = queryClient.<span class="function">getQueryData</span>([<span class="string">'posts'</span>]);
+      <span class="comment">// Optimistically remove the post</span>
+      queryClient.<span class="function">setQueryData</span>([<span class="string">'posts'</span>], (<span class="function">old</span>) =&gt;
+        old?.<span class="function">filter</span>(<span class="function">p</span> =&gt; p.id !== id)
+      );
+      <span class="keyword">return</span> { previous }; <span class="comment">// Context for onError rollback</span>
+    },
+    onError: (<span class="function">err</span>, id, context) =&gt; {
+      <span class="comment">// Rollback on failure</span>
+      <span class="keyword">if</span> (context?.previous) {
+        queryClient.<span class="function">setQueryData</span>([<span class="string">'posts'</span>], context.previous);
+      }
+    },
+  });
+
+  <span class="keyword">if</span> (isLoading) <span class="keyword">return</span> &lt;Skeleton /&gt;;
+  <span class="keyword">if</span> (error) <span class="keyword">return</span> &lt;Error message={error.message} /&gt;;
+
+  <span class="keyword">return</span> (
+    &lt;div&gt;
+      {data?.<span class="function">map</span>(<span class="function">post</span> =&gt; (
+        &lt;PostItem
+          key={post.id}
+          post={post}
+          onDelete={() =&gt; deleteMutation.<span class="function">mutate</span>(post.id)}
+        /&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Remember This</div>
+    <p>React Query manages <strong>server state</strong> — it is NOT a replacement for global state (Zustand/Redux). It's a cache, not a store. Don't put local UI state in React Query. If you find yourself calling <code>setQueryData</code> for non-server data, you're abusing it.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "staleTime = freshness guarantee. gcTime = memory retention." stale controls <em>when</em> to refetch, gcTime controls <em>when</em> to delete from memory.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li><code>useQuery</code> for reads, <code>useMutation</code> for writes, <code>invalidateQueries</code> to refresh</li>
+      <li>staleTime: data stays "fresh" and skips refetch; gcTime: keeps cache in memory</li>
+      <li>React Query is a server cache, not a general-purpose state manager</li>
+      <li>Optimistic updates via onMutate/onError/onSettled for instant-feel UI</li>
+      <li>Default staleTime is 0 — every mount triggers a refetch unless you set it</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q5: Context API — When It's Enough -->
+<div class="question-card" id="q5">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">Context API — When is it enough and when is it NOT? What's the performance problem?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Context API</strong> is ideal for <strong>low-frequency, static-ish global data</strong> — themes, locale, auth user, feature flags. It fails for <strong>high-frequency, frequently-updating state</strong> (form values, animation frames, real-time feeds) because <strong>every consumer of a Context re-renders when its value changes</strong>, even if it only uses a subset of that value. There's no built-in way to subscribe to a slice of context — you get all-or-nothing re-renders.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Performance Problem Explained</div>
+    <p>When you do <code>&lt;MyContext.Provider value={{ counter, user, theme }}&gt;</code>, that object is recreated every render of the parent. Every child that calls <code>useContext(MyContext)</code> re-renders when the parent renders — even if it only reads <code>theme</code> and <code>counter</code>/<code>user</code> haven't changed. The fix is to split into multiple contexts (one for theme, one for user, one for counter) so components only subscribe to the data they actually use.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Splitting context to avoid unnecessary re-renders</div>
+    <pre><code><span class="comment">// BAD: One big context — EVERYTHING re-renders when ANYTHING changes</span>
+<span class="keyword">const</span> AppContext = <span class="function">createContext</span>&lt;<span class="type">AppState</span>&gt;(<span class="keyword">null</span>!);
+<span class="comment">// Header only uses theme, but re-renders when user/cart change</span>
+<span class="comment">// Sidebar only uses user, but re-renders when theme/cart change</span>
+
+<span class="comment">// GOOD: Split by update frequency</span>
+<span class="keyword">const</span> ThemeContext = <span class="function">createContext</span>&lt;<span class="type">Theme</span>&gt;(<span class="string">'light'</span>);     <span class="comment">// Changes rarely</span>
+<span class="keyword">const</span> AuthContext = <span class="function">createContext</span>&lt;<span class="type">Auth</span>&gt;(<span class="keyword">null</span>!);       <span class="comment">// Changes on login/logout</span>
+<span class="keyword">const</span> CartContext = <span class="function">createContext</span>&lt;<span class="type">CartControls</span>&gt;(<span class="keyword">null</span>!); <span class="comment">// Changes frequently</span>
+
+<span class="keyword">function</span> <span class="function">AppProvider</span>({ children }: { children: <span class="type">ReactNode</span> }) {
+  <span class="keyword">const</span> [theme, setTheme] = <span class="function">useState</span>&lt;<span class="type">Theme</span>&gt;(<span class="string">'light'</span>);
+  <span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>&lt;<span class="type">User</span> | <span class="keyword">null</span>&gt;(<span class="keyword">null</span>);
+  <span class="keyword">const</span> [cart, setCart] = <span class="function">useState</span>&lt;<span class="type">Item</span>[]&gt;([]);
+
+  <span class="keyword">const</span> themeValue = <span class="function">useMemo</span>(() =&gt; ({ theme, setTheme }), [theme]);
+  <span class="keyword">const</span> authValue = <span class="function">useMemo</span>(() =&gt; ({ user, setUser }), [user]);
+  <span class="keyword">const</span> cartValue = <span class="function">useMemo</span>(() =&gt; ({ cart, setCart }), [cart]);
+
+  <span class="keyword">return</span> (
+    &lt;ThemeContext.Provider value={themeValue}&gt;
+      &lt;AuthContext.Provider value={authValue}&gt;
+        &lt;CartContext.Provider value={cartValue}&gt;
+          {children}
+        &lt;/CartContext.Provider&gt;
+      &lt;/AuthContext.Provider&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Using Context for <strong>everything</strong> just to avoid prop drilling. Context IS NOT a state management tool — it's a dependency injection mechanism. It has no selectors, no memoization, no middleware. If you need any of those, reach for Zustand. Also: forgetting <code>useMemo</code> on context values — without it, you're creating a new object every render and defeating the purpose.</p>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">What Big Companies Do</div>
+    <p>Airbnb uses a combination of Context + Zustand. Vercel uses Context for theme + React Query for server state. Spotify uses Redux but keeps slices small. The pattern at scale: Context for static globals (theme, locale), specialized libraries for high-frequency or server state.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Context is a pipe, not a tank." It transports data down the tree. If you need a tool that manages, selects, and optimizes that data, use a state library.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Context is perfect for theme, auth, locale — infrequently changing data</li>
+      <li>Every consumer re-renders when context value changes — no selective subscription</li>
+      <li>Split contexts by update frequency to avoid unnecessary re-renders</li>
+      <li>For high-frequency state, use Zustand/Redux with selectors instead</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q6: Server State vs Client State -->
+<div class="question-card" id="q6">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">Server State vs Client State — Why server data doesn't belong in Redux, and the right caching patterns.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Client state</strong> is data you own and control locally (UI toggles, form inputs, current user selection). <strong>Server state</strong> is data you fetched from an API — it's a <strong>snapshot of truth owned by the server</strong>, not by your app. Putting server state in Redux is problematic because: (1) it goes stale the moment you fetch it, (2) you end up writing boilerplate for loading/error/caching/refetching/retry/optimistic updates, and (3) you're duplicating data that the backend owns. React Query handles all of this out of the box.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Architecture Shift</div>
+    <p>In 2020, Redux was the default for everything. In 2025, the pattern is: React Query (or SWR) for ALL server data, Zustand (or Context) for the little remaining client state. Your global store shrinks from hundreds of kilobytes to maybe 5-10 fields. This is called the "thin store" pattern.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Before vs After: Removing server state from Redux</div>
+    <pre><code><span class="comment">// BEFORE: Redux holds everything (bad)</span>
+<span class="keyword">interface</span> <span class="type">OldStore</span> {
+  <span class="comment">// Server state — gets stale</span>
+  posts: { data: <span class="type">Post</span>[]; loading: <span class="type">boolean</span>; error: <span class="type">string</span> | <span class="keyword">null</span> };
+  users: { data: <span class="type">User</span>[]; loading: <span class="type">boolean</span>; error: <span class="type">string</span> | <span class="keyword">null</span> };
+  comments: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">Comment</span>[]&gt;;
+  <span class="comment">// Client state — tiny</span>
+  theme: <span class="type">Theme</span>;
+  sidebarOpen: <span class="type">boolean</span>;
+  currentView: <span class="type">View</span>;
+}
+
+<span class="comment">// AFTER: Redux/Zustand holds ONLY client state</span>
+<span class="keyword">interface</span> <span class="type">NewStore</span> {
+  <span class="comment">// Client state only — no server data</span>
+  theme: <span class="type">Theme</span>;
+  sidebarOpen: <span class="type">boolean</span>;
+  currentView: <span class="type">View</span>;
+}
+<span class="comment">// Server state lives in React Query cache — auto-managed</span></code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">When CAN server state go in Redux?</div>
+    <p>Rarely: when your app is fully offline-first and you need a local source of truth that syncs to the server. Even then, consider using RTK Query (which IS Redux) or pairing Redux with a persistence layer. But for 95% of apps, the thin store pattern is correct.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "If it lives on a server, it lives in React Query. If you made it up, it lives in Redux/Zustand." Server = React Query. Client = your choice of store.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Server state is a cache, not a database — it's stale by definition</li>
+      <li>React Query handles loading/error/caching/refetching/mutations — you don't write this code</li>
+      <li>Thin store pattern: global store shrinks to 5-10 fields of pure client state</li>
+      <li>RTK Query bridges the gap if you're committed to Redux</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q7: Optimistic Updates -->
+<div class="question-card" id="q7">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">Optimistic Updates — How to implement them with React Query and why they matter for UX.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>An <strong>optimistic update</strong> updates the UI <em>immediately</em> before the server confirms the change, then rolls back if the server returns an error. React Query supports this through the <code>onMutate</code> (update cache immediately), <code>onError</code> (rollback from snapshot), and <code>onSettled</code> (invalidate to sync with server) callbacks in useMutation. The UX difference is dramatic — Amazon's "add to cart," WhatsApp's "message sent" checkmarks, and Twitter's "like" are all optimistic.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Pattern</div>
+    <p>1. <strong>onMutate</strong>: Cancel outgoing queries (avoid race conditions), snapshot the current cache, optimistically update the cache.<br>2. <strong>onError</strong>: Roll back to the snapshot.<br>3. <strong>onSettled</strong>: Invalidate queries so the server is the final source of truth.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Optimistic update for a todo app</div>
+    <pre><code><span class="keyword">const</span> toggleTodo = <span class="function">useMutation</span>({
+  mutationFn: <span class="function">async</span> (<span class="function">todoId</span>: <span class="type">string</span>) =&gt; {
+    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">`/api/todos/${todoId}/toggle`</span>, { method: <span class="string">'PATCH'</span> });
+    <span class="keyword">if</span> (!res.ok) <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Network error'</span>);
+    <span class="keyword">return</span> res.<span class="function">json</span>();
+  },
+
+  <span class="function">onMutate</span>: <span class="keyword">async</span> (<span class="function">todoId</span>) =&gt; {
+    <span class="comment">// 1. Cancel in-flight refetches (race condition guard)</span>
+    <span class="keyword">await</span> queryClient.<span class="function">cancelQueries</span>({ queryKey: [<span class="string">'todos'</span>] });
+
+    <span class="comment">// 2. Snapshot previous todos for rollback</span>
+    <span class="keyword">const</span> previousTodos = queryClient.<span class="function">getQueryData</span>([<span class="string">'todos'</span>]);
+
+    <span class="comment">// 3. Optimistically toggle the todo</span>
+    queryClient.<span class="function">setQueryData</span>([<span class="string">'todos'</span>], (<span class="function">old</span>: <span class="type">Todo</span>[] | <span class="keyword">undefined</span>) =&gt;
+      old?.<span class="function">map</span>(<span class="function">t</span> =&gt;
+        t.id === todoId ? { ...t, completed: !t.completed } : t
+      ) ?? []
+    );
+
+    <span class="comment">// 4. Return snapshot — received as `context` in onError / onSettled</span>
+    <span class="keyword">return</span> { previousTodos };
+  },
+
+  <span class="function">onError</span>: (<span class="function">err</span>, todoId, context) =&gt; {
+    <span class="comment">// Rollback: restore the snapshot</span>
+    <span class="keyword">if</span> (context?.previousTodos) {
+      queryClient.<span class="function">setQueryData</span>([<span class="string">'todos'</span>], context.previousTodos);
+    }
+    <span class="function">toast</span>(<span class="string">'Failed to update todo'</span>);
+  },
+
+  <span class="function">onSettled</span>: () =&gt; {
+    <span class="comment">// Always refetch to sync with server truth</span>
+    queryClient.<span class="function">invalidateQueries</span>({ queryKey: [<span class="string">'todos'</span>] });
+  },
+});</code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">Real-World Example</div>
+    <p><strong>WhatsApp messages</strong>: The message appears instantly in the chat. The single checkmark means "sent to server." Double checkmark means "delivered to recipient." If sending fails, the message gets a red warning icon. This is optimistic update + status indicators. Same logic with <strong>Twitter likes</strong> — the heart turns red instantly, and if the API call fails, it toggles back.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Forgetting to cancel outgoing queries — if you don't, a stale query refetch might overwrite your optimistic update before the mutation completes. Also: not returning the snapshot from onMutate — without it, onError has nothing to roll back to.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Show first, ask later. If it fails, take it back." Optimistic = instant UI + rollback safety net.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Optimistic updates make apps feel instant by updating UI before server response</li>
+      <li>onMutate: cancel queries, snapshot, update cache — return snapshot as context</li>
+      <li>onError: rollback to snapshot</li>
+      <li>onSettled: invalidate to resync with server</li>
+      <li>Used by WhatsApp, Twitter, Amazon, GitHub — every great app does this</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q8: useReducer -->
+<div class="question-card" id="q8">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">useReducer Pattern — When to use it over useState, and how it gives you Redux-like power without Redux.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><code>useReducer</code> is React's built-in state management for <strong>complex state logic</strong>. Instead of setting values directly (like useState), you <strong>dispatch actions</strong> that a <strong>reducer function</strong> processes to produce the next state: <code>(state, action) => newState</code>. Use it when: (1) the next state depends on the previous state in a non-trivial way, (2) multiple state values change together, or (3) you want to colocate update logic. It's Redux without the library — same mental model, no dependencies.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">useState vs useReducer — Decision Framework</div>
+    <table class="styled-table">
+      <thead><tr><th>useState</th><th>useReducer</th></tr></thead>
+      <tbody>
+        <tr><td>Simple value: string, number, boolean</td><td>Complex object/array that changes atomically</td></tr>
+        <tr><td>Independent state values</td><td>Values that change together (e.g., form)</td></tr>
+        <tr><td>Update logic is trivial</td><td>Update logic has multiple branches (if/switch)</td></tr>
+        <tr><td>Single setter call covers the logic</td><td>Multiple actions modify the same state</td></tr>
+        <tr><td>Toggle, input value, modal open</td><td>Multi-step form, undo/redo, game state</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — useReducer for a multi-step checkout form</div>
+    <pre><code><span class="keyword">type</span> <span class="type">CheckoutState</span> = {
+  step: <span class="string">'shipping'</span> | <span class="string">'payment'</span> | <span class="string">'review'</span> | <span class="string">'confirmed'</span>;
+  shipping: <span class="type">Address</span> | <span class="keyword">null</span>;
+  payment: <span class="type">CardInfo</span> | <span class="keyword">null</span>;
+  coupon: <span class="type">string</span>;
+  discount: <span class="type">number</span>;
+  errors: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">string</span>&gt;;
+};
+
+<span class="keyword">type</span> <span class="type">CheckoutAction</span> =
+  | { type: <span class="string">'SET_SHIPPING'</span>; address: <span class="type">Address</span> }
+  | { type: <span class="string">'SET_PAYMENT'</span>; card: <span class="type">CardInfo</span> }
+  | { type: <span class="string">'NEXT_STEP'</span> }
+  | { type: <span class="string">'PREV_STEP'</span> }
+  | { type: <span class="string">'APPLY_COUPON'</span>; code: <span class="type">string</span>; discount: <span class="type">number</span> }
+  | { type: <span class="string">'SET_ERROR'</span>; field: <span class="type">string</span>; message: <span class="type">string</span> }
+  | { type: <span class="string">'RESET'</span> };
+
+<span class="keyword">const</span> steps: <span class="type">CheckoutState</span>[<span class="string">'step'</span>][] = [<span class="string">'shipping'</span>, <span class="string">'payment'</span>, <span class="string">'review'</span>, <span class="string">'confirmed'</span>];
+
+<span class="keyword">function</span> <span class="function">checkoutReducer</span>(<span class="function">state</span>: <span class="type">CheckoutState</span>, action: <span class="type">CheckoutAction</span>): <span class="type">CheckoutState</span> {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'SET_SHIPPING'</span>:
+      <span class="keyword">return</span> { ...state, shipping: action.address, errors: {} };
+    <span class="keyword">case</span> <span class="string">'SET_PAYMENT'</span>:
+      <span class="keyword">return</span> { ...state, payment: action.card, errors: {} };
+    <span class="keyword">case</span> <span class="string">'NEXT_STEP'</span>: {
+      <span class="keyword">const</span> idx = steps.<span class="function">indexOf</span>(state.step);
+      <span class="keyword">return</span> { ...state, step: steps[idx + <span class="number">1</span>], errors: {} };
+    }
+    <span class="keyword">case</span> <span class="string">'PREV_STEP'</span>: {
+      <span class="keyword">const</span> idx = steps.<span class="function">indexOf</span>(state.step);
+      <span class="keyword">return</span> { ...state, step: steps[idx - <span class="number">1</span>], errors: {} };
+    }
+    <span class="keyword">case</span> <span class="string">'APPLY_COUPON'</span>:
+      <span class="keyword">return</span> { ...state, coupon: action.code, discount: action.discount };
+    <span class="keyword">case</span> <span class="string">'SET_ERROR'</span>:
+      <span class="keyword">return</span> { ...state, errors: { ...state.errors, [action.field]: action.message } };
+    <span class="keyword">case</span> <span class="string">'RESET'</span>:
+      <span class="keyword">return</span> <span class="function">initialCheckoutState</span>();
+    <span class="keyword">default</span>:
+      <span class="keyword">return</span> state;
+  }
+}
+
+<span class="keyword">function</span> <span class="function">CheckoutFlow</span>() {
+  <span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(checkoutReducer, <span class="keyword">null</span>, initialCheckoutState);
+
+  <span class="comment">// Easy testing: dispatch actions, assert state</span>
+  <span class="comment">// Clean separation: UI components only dispatch — never compute state</span>
+  <span class="comment">// Predictable: given same state + action, always same result</span>
+
+  <span class="keyword">if</span> (state.step === <span class="string">'confirmed'</span>) <span class="keyword">return</span> &lt;Confirmation state={state} /&gt;;
+  <span class="keyword">return</span> (
+    &lt;div&gt;
+      {state.step === <span class="string">'shipping'</span> &amp;&amp;
+        &lt;ShippingForm onSubmit={<span class="function">a</span> =&gt; <span class="function">dispatch</span>({ type: <span class="string">'SET_SHIPPING'</span>, address: a })} /&gt;}
+      {state.step === <span class="string">'payment'</span> &amp;&amp;
+        &lt;PaymentForm onSubmit={<span class="function">c</span> =&gt; <span class="function">dispatch</span>({ type: <span class="string">'SET_PAYMENT'</span>, card: c })} /&gt;}
+    &lt;/div&gt;
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">useReducer + Context = Redux Lite</div>
+    <p>Combine useReducer with Context to share state across components without Redux: put the <code>[state, dispatch]</code> in a context, and any child can read state and dispatch actions. This is a valid pattern for medium-complexity apps. Just remember: as your app grows, you'll eventually want selectors (less re-rendering) and middleware — that's when you graduate to Zustand.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "useState for simple. useReducer when next state depends on previous in a branching way." If your state update has an if/switch, use useReducer.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>useReducer = dispatch actions → reducer produces new state (Redux pattern, no library)</li>
+      <li>Best for: multi-step flows, form wizards, game logic, undo/redo</li>
+      <li>Pair with Context for shared state (Redux-lite pattern)</li>
+      <li>Testable: reducer is a pure function — easy to unit test</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q9: State Normalization -->
+<div class="question-card" id="q9">
+  <div class="q-header">
+    <div class="q-number">09</div>
+    <div>
+      <div class="q-text">State Normalization — Flat entities, entity adapters, and why nested data structures are a performance trap.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>State normalization</strong> means storing data as flat key-value maps instead of nested trees, similar to database tables. Each entity type gets its own "table" with an <code>ids</code> array and an <code>entities</code> map. This avoids: (1) deeply nested state that's hard to update immutably, (2) duplicate data across different parts of the tree, and (3) re-rendering entire subtrees when one item changes. Redux Toolkit provides <code>createEntityAdapter</code> to manage this pattern automatically.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Nested vs Normalized</div>
+    <div class="code-block">
+      <div class="code-block-header">Before vs After: Normalized state shape</div>
+      <pre><code><span class="comment">// BAD: Nested — updating a comment requires deep path traversal</span>
+{
+  <span class="attr">posts</span>: [
+    {
+      <span class="attr">id</span>: <span class="number">1</span>,
+      <span class="attr">title</span>: <span class="string">'Hello'</span>,
+      <span class="attr">comments</span>: [
+        { <span class="attr">id</span>: <span class="number">100</span>, <span class="attr">text</span>: <span class="string">'Nice!'</span>, <span class="attr">author</span>: { <span class="attr">id</span>: <span class="number">5</span>, <span class="attr">name</span>: <span class="string">'Alice'</span> } },
+        { <span class="attr">id</span>: <span class="number">101</span>, <span class="attr">text</span>: <span class="string">'Great!'</span>, <span class="attr">author</span>: { <span class="attr">id</span>: <span class="number">5</span>, <span class="attr">name</span>: <span class="string">'Alice'</span> } }, <span class="comment">// Duplicate author!</span>
+      ],
+    }
+  ]
+}
+
+<span class="comment">// GOOD: Normalized — flat, no duplication, O(1) access</span>
+{
+  <span class="attr">posts</span>: {
+    <span class="attr">ids</span>: [<span class="number">1</span>],
+    <span class="attr">entities</span>: { <span class="string">'1'</span>: { <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">'Hello'</span>, <span class="attr">comments</span>: [<span class="number">100</span>, <span class="number">101</span>] } }
+  },
+  <span class="attr">comments</span>: {
+    <span class="attr">ids</span>: [<span class="number">100</span>, <span class="number">101</span>],
+    <span class="attr">entities</span>: {
+      <span class="string">'100'</span>: { <span class="attr">id</span>: <span class="number">100</span>, <span class="attr">text</span>: <span class="string">'Nice!'</span>, <span class="attr">authorId</span>: <span class="number">5</span> },
+      <span class="string">'101'</span>: { <span class="attr">id</span>: <span class="number">101</span>, <span class="attr">text</span>: <span class="string">'Great!'</span>, <span class="attr">authorId</span>: <span class="number">5</span> }
+    }
+  },
+  <span class="attr">users</span>: {
+    <span class="attr">ids</span>: [<span class="number">5</span>],
+    <span class="attr">entities</span>: { <span class="string">'5'</span>: { <span class="attr">id</span>: <span class="number">5</span>, <span class="attr">name</span>: <span class="string">'Alice'</span> } } <span class="comment">// Single source of truth</span>
+  }
+}</code></pre>
+    </div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — createEntityAdapter</div>
+    <pre><code><span class="keyword">import</span> { createEntityAdapter, createSlice } <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit'</span>;
+
+<span class="keyword">interface</span> <span class="type">Book</span> { id: <span class="type">string</span>; title: <span class="type">string</span>; author: <span class="type">string</span>; rating: <span class="type">number</span>; }
+
+<span class="keyword">const</span> booksAdapter = <span class="function">createEntityAdapter</span>&lt;<span class="type">Book</span>&gt;({
+  <span class="comment">// Use 'isbn' as the ID instead of 'id'</span>
+  selectId: <span class="function">b</span> =&gt; b.id,
+  <span class="comment">// Sort by rating descending</span>
+  sortComparer: <span class="function">(a</span>, b) =&gt; b.rating - a.rating,
+});
+
+<span class="keyword">const</span> booksSlice = <span class="function">createSlice</span>({
+  name: <span class="string">'books'</span>,
+  initialState: booksAdapter.<span class="function">getInitialState</span>({
+    loading: <span class="string">'idle'</span>, <span class="comment">// Extra non-entity state</span>
+  }),
+  reducers: {
+    <span class="function">bookAdded</span>: booksAdapter.addOne,
+    <span class="function">booksAdded</span>: booksAdapter.addMany,
+    <span class="function">bookUpdated</span>: booksAdapter.updateOne,   <span class="comment">// Partial update</span>
+    <span class="function">bookRemoved</span>: booksAdapter.removeOne,
+  },
+});
+
+<span class="comment">// Auto-generated selectors — zero boilerplate</span>
+<span class="keyword">export const</span> {
+  selectAll: <span class="function">selectAllBooks</span>,     <span class="comment">// Array, sorted</span>
+  selectById: <span class="function">selectBookById</span>,   <span class="comment">// O(1) lookup</span>
+  selectIds: <span class="function">selectBookIds</span>,     <span class="comment">// ID array only</span>
+  selectTotal: <span class="function">selectBookTotal</span>, <span class="comment">// Count</span>
+} = booksAdapter.<span class="function">getSelectors</span>&lt;<span class="type">RootState</span>&gt;(<span class="function">s</span> =&gt; s.books);</code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Why This Matters at Scale</div>
+    <p>Imagine Reddit with 50,000 comments nested under each other. Updating one deeply nested comment requires deep-cloning the entire tree up to the root — an O(n) operation. With normalized state, it's an O(1) update on a single entity. Same logic applies to React Query's cache when you structure query data as flat references.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Entities as maps, IDs as arrays. No nesting, no duplicates, no deep updates." Your state is a database, not a tree.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Normalization = flat key-value maps like database tables</li>
+      <li>Benefits: no duplicates, O(1) lookups, simple immutable updates</li>
+      <li>createEntityAdapter handles CRUD + sorting + selectors automatically</li>
+      <li>Apply to React Query caches too — structure data as flat references</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q10: Immer -->
+<div class="question-card" id="q10">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Immer — How does "mutable syntax, immutable results" actually work?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Immer</strong> is a library that lets you write mutable-looking code that produces immutable results. It works using JavaScript <strong>Proxy objects</strong>: when you call <code>produce(baseState, recipe)</code>, Immer creates a Proxy that intercepts all mutations (assignments, pushes, deletes), records them in a "draft," and then constructs the new immutable state tree by applying only the changes to the original base. The original is never modified. Redux Toolkit bundles Immer so all <code>createSlice</code> reducers use it automatically.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Immer Works Under the Hood</div>
+    <p>1. Immer creates a Proxy wrapping your base object (e.g., <code>{ name: 'John', age: 30 }</code>).<br>2. When you do <code>draft.age = 31</code>, the Proxy's <code>set</code> trap records "age changed from 30 to 31" and marks that node as modified.<br>3. When the recipe finishes, Immer walks the object tree: if a node was modified, it creates a shallow copy with the changes applied. If a node was NOT modified, it reuses the original reference (structural sharing).<br>4. The result is an entirely new top-level object, but unmodified subtrees are shared with the original — minimizing memory.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Immer produce() examples</div>
+    <pre><code><span class="keyword">import</span> produce <span class="keyword">from</span> <span class="string">'immer'</span>;
+
+<span class="keyword">const</span> base = {
+  <span class="attr">user</span>: { <span class="attr">name</span>: <span class="string">'Alice'</span>, <span class="attr">address</span>: { <span class="attr">city</span>: <span class="string">'NYC'</span> } },
+  <span class="attr">tags</span>: [<span class="string">'react'</span>, <span class="string">'typescript'</span>],
+};
+
+<span class="keyword">const</span> next = <span class="function">produce</span>(base, (<span class="function">draft</span>) =&gt; {
+  draft.user.address.city = <span class="string">'SF'</span>;       <span class="comment">// Deep update, looks mutable</span>
+  draft.tags.<span class="function">push</span>(<span class="string">'javascript'</span>);            <span class="comment">// Array push without spread!</span>
+  draft.user.lastLogin = <span class="keyword">new</span> <span class="function">Date</span>();      <span class="comment">// Add new property</span>
+});
+
+<span class="comment">// base is untouched — Immer returned a new object</span>
+console.<span class="function">log</span>(base.user.address.city);   <span class="comment">// 'NYC'</span>
+console.<span class="function">log</span>(next.user.address.city);   <span class="comment">// 'SF'</span>
+console.<span class="function">log</span>(base.tags.length);          <span class="comment">// 2</span>
+console.<span class="function">log</span>(next.tags.length);          <span class="comment">// 3</span>
+
+<span class="comment">// Structural sharing: unmodified subtrees are the same reference</span>
+console.<span class="function">log</span>(base.user === next.user);           <span class="comment">// false (parent changed)</span>
+console.<span class="function">log</span>(base.user.name === next.user.name); <span class="comment">// true  (string didn't change)</span>
+
+<span class="comment">// Curried produce: returns a function</span>
+<span class="keyword">const</span> addTag = <span class="function">produce</span>(<span class="function">draft</span>, <span class="function">tag</span> =&gt; {
+  draft.tags.<span class="function">push</span>(tag);
+});
+<span class="keyword">const</span> next2 = <span class="function">addTag</span>(base, <span class="string">'css'</span>);</code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Immer in Redux Toolkit</div>
+    <p>Every reducer in a <code>createSlice</code> is wrapped in Immer's <code>produce()</code>. You can write <code>state.items.push(action.payload)</code> and Redux Toolkit handles the immutability. But there's a catch: you must either <strong>mutate the draft</strong> OR <strong>return a new value</strong>, never both. If you return a value, Immer ignores any mutations you made to the draft.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Immer = Proxy that tracks what you change, then builds a new object using only the changes." Write like JavaScript, get immutability for free.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Immer uses Proxies to record mutations, then produces an immutable result</li>
+      <li>Structural sharing: unmodified parts of the tree are re-used by reference</li>
+      <li>Built into Redux Toolkit — all <code>createSlice</code> reducers auto-wrapped</li>
+      <li>Mutate the draft XOR return a new value — never both in the same reducer</li>
+      <li>Independent of React — works with any JavaScript codebase</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="section-divider">
+  <h2>P2 — Common Questions (Concise Format)</h2>
+  <p>Important topics that interviewers expect you to know, with focused explanations.</p>
+</div>
+
+<div class="container">
+
+<!-- Q11: Jotai vs Recoil vs Zustand -->
+<div class="question-card" id="q11">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Jotai vs Recoil vs Zustand — Atomic state and when to choose each.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Core Difference</div>
+    <p><strong>Zustand</strong> uses a single store (like Redux but simpler). <strong>Jotai</strong> and <strong>Recoil</strong> use atomic state — each piece of state is its own independent "atom." Jotai is essentially the open-source spiritual successor to Recoil (Meta abandoned Recoil in 2024).</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Feature</th><th>Zustand</th><th>Jotai</th><th>Recoil</th></tr></thead>
+    <tbody>
+      <tr><td>Architecture</td><td>Single store</td><td>Independent atoms</td><td>Independent atoms</td></tr>
+      <tr><td>Size</td><td>1.1 KB</td><td>3.2 KB</td><td>21 KB</td></tr>
+      <tr><td>Provider needed?</td><td>No</td><td>Optional</td><td>Yes (RecoilRoot)</td></tr>
+      <tr><td>Derived state</td><td>Manual selectors</td><td>Computed atoms</td><td>Selectors</td></tr>
+      <tr><td>Status</td><td>Active</td><td>Active</td><td>Abandoned (Meta, 2024)</td></tr>
+    </tbody>
+  </table>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Same counter in all three</div>
+    <pre><code><span class="comment">// Zustand: Single store, hook API</span>
+<span class="keyword">const</span> <span class="function">useStore</span> = create&lt;{ count: <span class="type">number</span>; inc: () =&gt; <span class="keyword">void</span> }&gt;(<span class="function">set</span> =&gt; ({
+  count: <span class="number">0</span>, inc: () =&gt; <span class="function">set</span>(<span class="function">s</span> =&gt; ({ count: s.count + <span class="number">1</span> })),
+}));
+
+<span class="comment">// Jotai: Independent atoms, composable</span>
+<span class="keyword">const</span> countAtom = <span class="function">atom</span>(<span class="number">0</span>);
+<span class="keyword">const</span> doubleAtom = <span class="function">atom</span>(<span class="function">get</span> =&gt; <span class="function">get</span>(countAtom) * <span class="number">2</span>); <span class="comment">// Derived atom</span>
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useAtom</span>(countAtom);
+  <span class="keyword">const</span> [double] = <span class="function">useAtom</span>(doubleAtom);
+}
+
+<span class="comment">// Recoil (deprecated — use Jotai instead)</span>
+<span class="comment">// const counterState = atom({ key: 'counter', default: 0 });</span></code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Decision Rule</div>
+    <p>Use <strong>Zustand</strong> for most apps — simplest API, smallest bundle, most battle-tested. Use <strong>Jotai</strong> when you need fine-grained derived state or when your state naturally decomposes into independent atoms (like a design tool with many independent properties). Never choose <strong>Recoil</strong> for new projects — it's abandoned.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Zustand for stores. Jotai for atoms. Recoil for legacy." — Choose based on whether you want a store or independent atoms.
+  </div>
+</div>
+
+<!-- Q12: Redux Middleware -->
+<div class="question-card" id="q12">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Redux Middleware — Thunk, Logger, persist, and how to write custom middleware.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Is Middleware?</div>
+    <p>Middleware is a pipeline that sits between <code>dispatch(action)</code> and the reducer. Every action passes through the middleware chain before reaching the reducer. This lets you intercept, log, modify, delay, or cancel actions. Middleware is a functional composition pattern: <code>middleware = store => next => action => { ... next(action) ... }</code>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Custom crash reporter middleware</div>
+    <pre><code><span class="keyword">import</span> { Middleware } <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit'</span>;
+
+<span class="keyword">const</span> <span class="function">crashReporter</span>: Middleware = (<span class="function">storeApi</span>) =&gt; (<span class="function">next</span>) =&gt; (<span class="function">action</span>) =&gt; {
+  <span class="keyword">try</span> {
+    <span class="function">console</span>.<span class="function">group</span>(action.type);
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'Before:'</span>, storeApi.<span class="function">getState</span>());
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'Action:'</span>, action);
+    <span class="keyword">const</span> result = <span class="function">next</span>(action); <span class="comment">// Pass to next middleware or reducer</span>
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">'After:'</span>, storeApi.<span class="function">getState</span>());
+    <span class="function">console</span>.<span class="function">groupEnd</span>();
+    <span class="keyword">return</span> result;
+  } <span class="keyword">catch</span> (err) {
+    <span class="function">console</span>.<span class="function">error</span>(<span class="string">'Redux crash:'</span>, err);
+    <span class="function">Sentry</span>.<span class="function">captureException</span>(err, { extra: { action, state: storeApi.<span class="function">getState</span>() } });
+    <span class="keyword">throw</span> err;
+  }
+};
+
+<span class="comment">// Usage with configureStore:</span>
+<span class="function">configureStore</span>({
+  reducer: rootReducer,
+  middleware: <span class="function">getDefaultMiddleware</span>() =&gt;
+    <span class="function">getDefaultMiddleware</span>().<span class="function">concat</span>(crashReporter, logger),
+});</code></pre>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Middleware</th><th>Purpose</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr><td><strong>redux-thunk</strong></td><td>Dispatch functions (async actions)</td><td>Any async Redux logic</td></tr>
+      <tr><td><strong>redux-logger</strong></td><td>Console log every action/state</td><td>Development only</td></tr>
+      <tr><td><strong>redux-persist</strong></td><td>Save state to localStorage/AsyncStorage</td><td>Refresh survival</td></tr>
+      <tr><td><strong>redux-saga</strong></td><td>Complex async flows via generators</td><td>Orchestration-heavy apps</td></tr>
+      <tr><td><strong>redux-observable</strong></td><td>RxJS-based async handling</td><td>Apps already using RxJS</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-remember">
+    <div class="callout-title">Redux Toolkit bundles thunk by default</div>
+    <p>RTK's <code>configureStore</code> automatically includes <code>redux-thunk</code> and <code>redux-devtools-extension</code>. You rarely need to add middleware manually unless you're doing something custom.</p>
+  </div>
+</div>
+
+<!-- Q13: Form State Management -->
+<div class="question-card" id="q13">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Form State Management — React Hook Form + Zod, controlled vs uncontrolled patterns.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Controlled vs Uncontrolled</div>
+    <p><strong>Controlled:</strong> React state is the single source of truth. Every keystroke triggers a state update and re-render. Good for real-time validation, bad for large forms.<br><strong>Uncontrolled:</strong> The DOM manages the value. React hooks in to get values on submit. Faster, fewer re-renders. React Hook Form uses uncontrolled by default.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — React Hook Form + Zod validation</div>
+    <pre><code><span class="keyword">import</span> { useForm } <span class="keyword">from</span> <span class="string">'react-hook-form'</span>;
+<span class="keyword">import</span> { zodResolver } <span class="keyword">from</span> <span class="string">'@hookform/resolvers/zod'</span>;
+<span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">'zod'</span>;
+
+<span class="keyword">const</span> schema = z.<span class="function">object</span>({
+  email: z.<span class="function">string</span>().<span class="function">email</span>(<span class="string">'Invalid email'</span>),
+  password: z.<span class="function">string</span>().<span class="function">min</span>(<span class="number">8</span>, <span class="string">'Minimum 8 characters'</span>),
+  age: z.<span class="function">number</span>({ invalid_type_error: <span class="string">'Required'</span> }).<span class="function">min</span>(<span class="number">18</span>),
+});
+
+<span class="keyword">type</span> <span class="type">FormData</span> = z.infer&lt;<span class="keyword">typeof</span> schema&gt;;
+
+<span class="keyword">function</span> <span class="function">SignupForm</span>() {
+  <span class="keyword">const</span> { register, handleSubmit, <span class="function">formState</span>: { errors } } =
+    <span class="function">useForm</span>&lt;<span class="type">FormData</span>&gt;({ resolver: <span class="function">zodResolver</span>(schema) });
+
+  <span class="keyword">const</span> <span class="function">onSubmit</span> = <span class="keyword">async</span> (<span class="function">data</span>: <span class="type">FormData</span>) =&gt; {
+    <span class="comment">// data is fully typed and validated</span>
+    <span class="keyword">await</span> <span class="function">api</span>.<span class="function">signup</span>(data);
+  };
+
+  <span class="keyword">return</span> (
+    &lt;<span class="function">form</span> onSubmit={<span class="function">handleSubmit</span>(onSubmit)}&gt;
+      &lt;<span class="function">input</span> {...<span class="function">register</span>(<span class="string">'email'</span>)} /&gt;
+      {errors.email &amp;&amp; &lt;<span class="function">span</span>&gt;{errors.email.message}&lt;/span&gt;}
+
+      &lt;<span class="function">input</span> type=<span class="string">"password"</span> {...<span class="function">register</span>(<span class="string">'password'</span>)} /&gt;
+      {errors.password &amp;&amp; &lt;<span class="function">span</span>&gt;{errors.password.message}&lt;/span&gt;}
+
+      &lt;<span class="function">input</span> type=<span class="string">"number"</span> {...<span class="function">register</span>(<span class="string">'age'</span>, { valueAsNumber: <span class="keyword">true</span> })} /&gt;
+      {errors.age &amp;&amp; &lt;<span class="function">span</span>&gt;{errors.age.message}&lt;/span&gt;}
+
+      &lt;<span class="function">button</span> type=<span class="string">"submit"</span>&gt;Sign Up&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Why React Hook Form + Zod?</div>
+    <p>RHF is uncontrolled by default (fast), has tiny bundle (10KB), handles validation with any library (Zod, Yup, Joi), and exposes field-level errors. Zod gives you type-safe validation that infers TypeScript types from schemas — no need to define types twice. Together they reduce form code by 60-70% compared to raw controlled inputs.</p>
+  </div>
+</div>
+
+<!-- Q14: URL State -->
+<div class="question-card" id="q14">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">URL State — useSearchParams, shareable/bookmarkable state, and why the URL is the best state manager.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why URL State Matters</div>
+    <p>The URL is the <strong>original global state manager</strong>. It persists across refreshes, is shareable via copy-paste, bookmarks work naturally, and the browser's back/forward buttons handle undo/redo for free. For anything that should be shareable — search queries, filter selections, current page, selected tab — the URL is the right answer, not Redux or Context.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — useSearchParams for filters + pagination</div>
+    <pre><code><span class="keyword">import</span> { useSearchParams } <span class="keyword">from</span> <span class="string">'react-router-dom'</span>;
+
+<span class="keyword">function</span> <span class="function">ProductList</span>() {
+  <span class="keyword">const</span> [searchParams, setSearchParams] = <span class="function">useSearchParams</span>();
+
+  <span class="keyword">const</span> page = <span class="function">Number</span>(searchParams.<span class="function">get</span>(<span class="string">'page'</span>)) || <span class="number">1</span>;
+  <span class="keyword">const</span> query = searchParams.<span class="function">get</span>(<span class="string">'q'</span>) || <span class="string">''</span>;
+  <span class="keyword">const</span> sort = searchParams.<span class="function">get</span>(<span class="string">'sort'</span>) || <span class="string">'newest'</span>;
+  <span class="keyword">const</span> category = searchParams.<span class="function">get</span>(<span class="string">'category'</span>) || <span class="string">'all'</span>;
+
+  <span class="keyword">const</span> <span class="function">updateFilter</span> = (<span class="function">key</span>: <span class="type">string</span>, value: <span class="type">string</span>) =&gt; {
+    <span class="keyword">const</span> next = <span class="keyword">new</span> <span class="function">URLSearchParams</span>(searchParams);
+    <span class="keyword">if</span> (value) {
+      next.<span class="function">set</span>(key, value);
+    } <span class="keyword">else</span> {
+      next.<span class="function">delete</span>(key);
+    }
+    next.<span class="function">set</span>(<span class="string">'page'</span>, <span class="string">'1'</span>); <span class="comment">// Reset page on filter change</span>
+    <span class="function">setSearchParams</span>(next);
+  };
+
+  <span class="comment">// URL is now: /products?q=shoe&sort=price-asc&page=1&category=men</span>
+  <span class="comment">// Share this URL — recipient sees the exact same results</span>
+
+  <span class="comment">// Fetch products based on URL params (React Query)</span>
+  <span class="keyword">const</span> { data } = <span class="function">useQuery</span>({
+    queryKey: [<span class="string">'products'</span>, { page, query, sort, category }],
+    queryFn: () =&gt; <span class="function">fetchProducts</span>({ page, query, sort, category }),
+  });
+}</code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Amazon product search URLs are the perfect example: the URL encodes every filter, sort order, and page number. Copy the URL to another tab and everything is restored. This is superior to storing filters in Redux because it's trivially shareable. As a rule: if you'd email the state to a colleague, put it in the URL.</p>
+  </div>
+</div>
+
+<!-- Q15: State Persistence -->
+<div class="question-card" id="q15">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">State Persistence — localStorage, Zustand persist, redux-persist, and IndexedDB. When to use which.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Storage Hierarchy</div>
+    <table class="styled-table">
+      <thead><tr><th>Storage</th><th>Capacity</th><th>Sync/Async</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>localStorage</strong></td><td>5-10 MB</td><td>Synchronous</td><td>Theme, auth token, small prefs</td></tr>
+        <tr><td><strong>sessionStorage</strong></td><td>5-10 MB</td><td>Synchronous</td><td>Per-tab ephemeral state</td></tr>
+        <tr><td><strong>IndexedDB</strong></td><td>~50% of disk</td><td>Async (Promise)</td><td>Large datasets, offline storage</td></tr>
+        <tr><td><strong>Cookies</strong></td><td>4 KB</td><td>Sent with requests</td><td>Session tokens (httpOnly)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Zustand persist vs manual localStorage</div>
+    <pre><code><span class="comment">// Zustand persist: one-line persistence</span>
+<span class="keyword">const</span> <span class="function">useStore</span> = create(
+  <span class="function">persist</span>(
+    (<span class="function">set</span>) =&gt; ({
+      theme: <span class="string">'light'</span>,
+      <span class="function">setTheme</span>: (t: <span class="type">Theme</span>) =&gt; <span class="function">set</span>({ theme: t }),
+    }),
+    {
+      name: <span class="string">'app-preferences'</span>,           <span class="comment">// localStorage key</span>
+      partialize: <span class="function">state</span> =&gt; ({ theme: state.theme }), <span class="comment">// Only persist theme</span>
+    }
+  )
+);
+
+<span class="comment">// redux-persist: integrates with Redux toolkit</span>
+<span class="comment">// import { persistStore, persistReducer } from 'redux-persist';</span>
+<span class="comment">// import storage from 'redux-persist/lib/storage';</span>
+
+<span class="comment">// IndexedDB (via idb-keyval): large async storage</span>
+<span class="keyword">import</span> { get, set } <span class="keyword">from</span> <span class="string">'idb-keyval'</span>;
+<span class="keyword">await</span> <span class="function">set</span>(<span class="string">'draft-post'</span>, { title: <span class="string">'...'</span>, content: <span class="string">'...'</span>, images: [...] });
+<span class="keyword">const</span> draft = <span class="keyword">await</span> <span class="function">get</span>(<span class="string">'draft-post'</span>);</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Storing sensitive data (passwords, tokens, PII) in localStorage — it's accessible to any JavaScript on the page and persists across sessions. Use httpOnly cookies for auth tokens. Also: localStorage is synchronous — reading large data on the main thread blocks rendering. Use IndexedDB for anything over ~100KB.</p>
+  </div>
+</div>
+
+<!-- Q16: Undo/Redo -->
+<div class="question-card" id="q16">
+  <div class="q-header">
+    <div class="q-number">16</div>
+    <div>
+      <div class="q-text">Undo/Redo Pattern — History stack and state snapshots.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Pattern</div>
+    <p>Maintain three arrays: <code>past</code> (previous states), <code>present</code> (current state), <code>future</code> (states after undo). Each state change pushes the current present onto past, and sets present to the new state. Undo: move present to future, shift past to present. Redo: move present to past, shift future to present. Clear future when a new action occurs (any redo-only branch dies).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Undo/Redo hook</div>
+    <pre><code><span class="keyword">interface</span> <span class="type">UndoState</span>&lt;<span class="type">T</span>&gt; { past: <span class="type">T</span>[]; present: <span class="type">T</span>; future: <span class="type">T</span>[]; }
+
+<span class="keyword">function</span> <span class="function">useUndo</span>&lt;<span class="type">T</span>&gt;(<span class="function">initial</span>: <span class="type">T</span>) {
+  <span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(
+    <span class="function">undoReducer</span>&lt;<span class="type">T</span>&gt;,
+    { past: [], present: initial, future: [] }
+  );
+
+  <span class="keyword">const</span> undo = <span class="function">useCallback</span>(() =&gt; {
+    <span class="keyword">if</span> (state.past.length === <span class="number">0</span>) <span class="keyword">return</span>;
+    <span class="keyword">const</span> previous = state.past[state.past.length - <span class="number">1</span>];
+    <span class="function">dispatch</span>({
+      past: state.past.<span class="function">slice</span>(<span class="number">0</span>, <span class="number">-1</span>),
+      present: previous,
+      future: [state.present, ...state.future],
+    });
+  }, [state]);
+
+  <span class="keyword">const</span> <span class="function">redo</span> = <span class="function">useCallback</span>(() =&gt; {
+    <span class="keyword">if</span> (state.future.length === <span class="number">0</span>) <span class="keyword">return</span>;
+    <span class="function">dispatch</span>({
+      past: [...state.past, state.present],
+      present: state.future[<span class="number">0</span>],
+      future: state.future.<span class="function">slice</span>(<span class="number">1</span>),
+    });
+  }, [state]);
+
+  <span class="keyword">const</span> <span class="function">update</span> = <span class="function">useCallback</span>((<span class="function">next</span>: <span class="type">T</span>) =&gt; {
+    <span class="function">dispatch</span>({
+      past: [...state.past, state.present],
+      present: next,
+      future: [], <span class="comment">// Clear redo stack on new change</span>
+    });
+  }, [state]);
+
+  <span class="keyword">return</span> { present: state.present, undo, redo, update,
+    canUndo: state.past.length &gt; <span class="number">0</span>,
+    canRedo: state.future.length &gt; <span class="number">0</span> };
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">When to mention this in an interview</div>
+    <p>If you're asked "how would you build a drawing app?" or "how would you implement undo?" — this is the answer. Figma, Canva, Excalidraw all use variations of this pattern. Bonus points if you mention <strong>command pattern</strong>: store actions instead of state snapshots for memory efficiency (undo = reverse-apply command, not restore entire state).</p>
+  </div>
+</div>
+
+<!-- Q17: Cross-tab Sync -->
+<div class="question-card" id="q17">
+  <div class="q-header">
+    <div class="q-number">17</div>
+    <div>
+      <div class="q-text">Cross-tab State Sync — BroadcastChannel and storage events.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Two Approaches</div>
+    <p><strong>BroadcastChannel:</strong> Dedicated API for cross-tab messaging. Send structured data between same-origin tabs. Works in all modern browsers. Perfect when you control both the sender and receiver.<br><strong>storage event:</strong> The <code>window.addEventListener('storage')</code> fires when localStorage changes in <em>another</em> tab (not the current one). Good as a fallback or for libraries that already persist to localStorage.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Zustand cross-tab sync</div>
+    <pre><code><span class="keyword">const</span> <span class="function">useStore</span> = create(
+  <span class="function">persist</span>(
+    (<span class="function">set</span>) =&gt; ({ count: <span class="number">0</span>, <span class="function">inc</span>: () =&gt; <span class="function">set</span>(<span class="function">s</span> =&gt; ({ count: s.count + <span class="number">1</span> })) }),
+    { name: <span class="string">'counter'</span> }
+  )
+);
+
+<span class="comment">// Listen for changes from OTHER tabs</span>
+<span class="function">window</span>.<span class="function">addEventListener</span>(<span class="string">'storage'</span>, (<span class="function">e</span>) =&gt; {
+  <span class="keyword">if</span> (e.key === <span class="string">'counter'</span> &amp;&amp; e.newValue) {
+    <span class="keyword">const</span> parsed = <span class="function">JSON</span>.<span class="function">parse</span>(e.newValue);
+    useStore.<span class="function">setState</span>(parsed.state); <span class="comment">// Directly set zustand state</span>
+  }
+});
+
+<span class="comment">// Alternative: BroadcastChannel (cleaner API)</span>
+<span class="keyword">const</span> channel = <span class="keyword">new</span> <span class="function">BroadcastChannel</span>(<span class="string">'app-state'</span>);
+channel.<span class="function">onmessage</span> = (<span class="function">event</span>) =&gt; {
+  useStore.<span class="function">setState</span>(event.data);
+};
+
+<span class="comment">// When state changes locally, broadcast to other tabs</span>
+useStore.<span class="function">subscribe</span>(<span class="function">state</span> =&gt; channel.<span class="function">postMessage</span>(state));</code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">Real Usage</div>
+    <p><strong>Notion</strong> syncs notes across tabs. <strong>Google Docs</strong> shows live cursors from other users (cross-tab + WebSocket). <strong>Spotify Web</strong> syncs the currently playing track between tabs. The combination of localStorage for persistence + BroadcastChannel/storage events for sync covers 90% of cross-tab use cases.</p>
+  </div>
+</div>
+
+<!-- Q18: Real-time State -->
+<div class="question-card" id="q18">
+  <div class="q-header">
+    <div class="q-number">18</div>
+    <div>
+      <div class="q-text">Real-time State — WebSocket + React Query cache updates for live data.</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Pattern</div>
+    <p>WebSocket pushes data to your app; React Query's cache acts as the single source of truth for that data in the UI. The WebSocket listener calls <code>queryClient.setQueryData()</code> to update the cache directly — no refetch needed. React Query then notifies all subscribed components of the change. This avoids: loading spinners on live data, duplicate network requests, and stale UI.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — WebSocket + React Query integration</div>
+    <pre><code><span class="keyword">function</span> <span class="function">useRealtimePosts</span>() {
+  <span class="keyword">const</span> queryClient = <span class="function">useQueryClient</span>();
+
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="keyword">const</span> ws = <span class="keyword">new</span> <span class="function">WebSocket</span>(<span class="string">'wss://api.example.com/live'</span>);
+
+    ws.<span class="function">onmessage</span> = (<span class="function">event</span>) =&gt; {
+      <span class="keyword">const</span> update: <span class="type">PostUpdate</span> = <span class="function">JSON</span>.<span class="function">parse</span>(event.data);
+
+      <span class="keyword">switch</span> (update.type) {
+        <span class="keyword">case</span> <span class="string">'POST_CREATED'</span>:
+          <span class="comment">// Prepend to cached posts list</span>
+          queryClient.<span class="function">setQueryData</span>([<span class="string">'posts'</span>], (<span class="function">old</span>: <span class="type">Post</span>[] = []) =&gt;
+            [update.post, ...old]
+          );
+          <span class="keyword">break</span>;
+
+        <span class="keyword">case</span> <span class="string">'POST_LIKED'</span>:
+          <span class="comment">// Update single post in-place</span>
+          queryClient.<span class="function">setQueryData</span>([<span class="string">'posts'</span>], (<span class="function">old</span>: <span class="type">Post</span>[] = []) =&gt;
+            old.<span class="function">map</span>(<span class="function">p</span> =&gt;
+              p.id === update.postId
+                ? { ...p, likes: p.likes + <span class="number">1</span> }
+                : p
+            )
+          );
+          <span class="keyword">break</span>;
+
+        <span class="keyword">case</span> <span class="string">'POST_DELETED'</span>:
+          queryClient.<span class="function">setQueryData</span>([<span class="string">'posts'</span>], (<span class="function">old</span>: <span class="type">Post</span>[] = []) =&gt;
+            old.<span class="function">filter</span>(<span class="function">p</span> =&gt; p.id !== update.postId)
+          );
+          <span class="keyword">break</span>;
+      }
+    };
+
+    <span class="keyword">return</span> () =&gt; ws.<span class="function">close</span>();
+  }, [queryClient]);
+
+  <span class="comment">// Also fetch initial data via REST/GraphQL</span>
+  <span class="keyword">return</span> <span class="function">useQuery</span>({ queryKey: [<span class="string">'posts'</span>], queryFn: fetchPosts });
+}</code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>The WebSocket is just a transport — don't use it as your state manager. React Query's cache should always be the final source of truth in the UI. The WebSocket only writes to the cache; components only read from the cache. This separation makes debugging, testing, and offline handling (websocket disconnected = stale cache shown = still usable) much easier.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="end-section">
+  <h2>Most Asked State Management Questions</h2>
+  <p>Based on interview reports from FAANG and top-tier companies. These four come up in nearly every interview.</p>
+
+  <table class="styled-table">
+    <thead>
+      <tr><th>Rank</th><th>Question</th><th>Frequency</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>#1</strong></td>
+        <td>Explain the different types of state in a React app and which tools to use for each</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#2</strong></td>
+        <td>Redux Toolkit — walk me through createSlice, createAsyncThunk, RTK Query</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#3</strong></td>
+        <td>When would you use Context vs Zustand vs Redux? Decision framework</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#4</strong></td>
+        <td>How do you handle server state? staleTime vs gcTime, optimistic updates</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#5</strong></td>
+        <td>What is state normalization and why does it matter?</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#6</strong></td>
+        <td>How do you persist state and handle cross-tab synchronization?</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#7</strong></td>
+        <td>Explain Immer — how does mutable syntax produce immutable results?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>#8</strong></td>
+        <td>How would you implement undo/redo functionality?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="memory-trick" style="margin-top: 2rem;">
+    <strong>Final Memory Trick:</strong> "Client state is yours. Server state is theirs. React Query caches theirs. Zustand/Redux manages yours. The URL is the universal state manager."
+  </div>
+</div>
+
+</body>
+</html>

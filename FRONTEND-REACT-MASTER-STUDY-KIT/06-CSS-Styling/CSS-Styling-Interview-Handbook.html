@@ -1,0 +1,1596 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS and Styling Interview Handbook — 18 Must-Know Questions</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(236,72,153,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(99,102,241,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(236,72,153,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #EC4899 40%, #6366F1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #EC4899 0%, #6366F1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-divider h2 {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #EC4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Interview Preparation — 2024 Edition</div>
+  <h1 class="cover-title">CSS and Styling Interview Handbook</h1>
+  <p class="cover-subtitle">Master the Box Model, Flexbox, Grid, responsive design, Tailwind, animations, and every modern CSS feature. Built from real interview questions asked at FAANG and top startups.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="number">18</span>
+      <span class="label">Must-Know Questions</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="number">2</span>
+      <span class="label">Parts — Core and Modern CSS</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="number">40+</span>
+      <span class="label">Code Examples</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>Part 1: Core Concepts — In-Depth</h2>
+  <p>The fundamentals every frontend developer must know. These 10 questions get the full treatment.</p>
+</div>
+
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">CSS Box Model — content-box vs border-box, margin collapsing, React component dimensions</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>The CSS box model defines how every HTML element is rendered as a rectangular box. It has four layers from inside out: <strong>content</strong> → <strong>padding</strong> → <strong>border</strong> → <strong>margin</strong>. With <code>box-sizing: content-box</code> (default), <code>width</code> only applies to the content area — padding and border are added on top, causing unexpected overflow. With <code>box-sizing: border-box</code>, <code>width</code> includes content, padding, and border — this is the universal reset every project should use. <strong>Margin collapsing</strong> occurs when vertical margins of adjacent block elements overlap: the larger margin wins instead of adding together. This only happens with block elements in normal flow, and only vertically — never horizontally, and never inside flex/grid containers.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of an Amazon package. The <strong>content</strong> is the item you bought. The <strong>padding</strong> is the bubble wrap inside the box. The <strong>border</strong> is the cardboard box itself. The <strong>margin</strong> is the space between your box and your neighbor's boxes on the delivery truck. With <code>content-box</code>, saying "I want a 200px box" means the item is 200px — the bubble wrap adds more size. With <code>border-box</code>, the whole package (item + bubble wrap + cardboard) is 200px. Margin collapsing is like two people in a hallway — they don't need double the space between them; they just stand at arm's length.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">content-box vs border-box Comparison</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Scenario</th><th>content-box (default)</th><th>border-box (recommended)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>width: 200px; padding: 20px</strong></td><td>Total width: 240px</td><td>Total width: 200px (content shrinks)</td></tr>
+        <tr><td><strong>width: 100%; padding: 10px</strong></td><td>Overflows parent by 20px</td><td>Fits perfectly inside parent</td></tr>
+        <tr><td><strong>When adding border/padding</strong></td><td>Must recalculate width manually</td><td>Width stays same, content adjusts</td></tr>
+        <tr><td><strong>Mental model</strong></td><td>Width = content only</td><td>Width = content + padding + border</td></tr>
+        <tr><td><strong>Use case</strong></td><td>Legacy code, rare specific cases</td><td>Every modern project</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Amazon's product grid</strong> needs cards to fit exactly 4 per row at 25% width. With <code>content-box</code>, adding 12px padding to each card pushes the 4th card to the next row because 25% + padding exceeds 100%. With <code>border-box</code>, the padding is absorbed into the 25% width, and the cards stay perfectly aligned. This is why every CSS reset (including Tailwind's Preflight) sets <code>*, *::before, *::after { box-sizing: border-box; }</code>.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Forgetting that margin collapsing only applies to <strong>block elements in normal flow</strong>. Flexbox children, grid children, absolutely positioned elements, and inline-block elements never collapse margins. Also, it's <strong>vertical only</strong> — horizontal margins always add together.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Universal border-box reset</div>
+      <pre><code><span class="comment">/* Should be at the top of every stylesheet */</span>
+<span class="type">*</span>,
+<span class="type">*</span><span class="keyword">::before</span>,
+<span class="type">*</span><span class="keyword">::after</span> {
+  <span class="attr">box-sizing</span>: <span class="string">border-box</span>;
+}
+
+<span class="comment">/* Margin collapsing example */</span>
+<span class="type">.block1</span> { <span class="attr">margin-bottom</span>: <span class="number">30px</span>; }
+<span class="type">.block2</span> { <span class="attr">margin-top</span>: <span class="number">20px</span>; }
+<span class="comment">/* Gap between block1 and block2 is 30px, NOT 50px */</span>
+<span class="comment">/* The larger margin (30px) wins — they collapse */</span>
+
+<span class="comment">/* No collapse in flex container */</span>
+<span class="type">.flex-container</span> {
+  <span class="attr">display</span>: <span class="string">flex</span>;
+  <span class="attr">flex-direction</span>: <span class="string">column</span>;
+  <span class="attr">gap</span>: <span class="number">20px</span>; <span class="comment">/* Use gap instead — predictable! */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>In React, the box model interacts with the component model. A common trap: setting <code>width: 100%</code> on a child component's root element while passing <code>padding</code> as a prop. If the grandchild also uses <code>width: 100%</code>, you get a cascade of unintended overflows. The fix: either use <code>border-box</code> (always) or avoid percentage widths on deeply nested elements — prefer <code>flex: 1</code> or <code>auto</code> in flex/grid layouts.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "content-box = width measures the baby. border-box = width measures baby + clothes + stroller. Always use border-box."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Box model layers: content → padding → border → margin</li>
+      <li>border-box: width includes content + padding + border (use this)</li>
+      <li>content-box: width applies to content only (legacy default)</li>
+      <li>Margin collapsing: vertical only, block only, larger margin wins</li>
+      <li>Flex/Grid children never collapse margins — use gap instead</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">Flexbox Complete Guide — justify-content, align-items, common patterns</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Flexbox is a one-dimensional layout system that distributes space along either a row (horizontal) or column (vertical). The container controls children with: <strong>justify-content</strong> (main axis alignment), <strong>align-items</strong> (cross-axis alignment for all children), <strong>align-self</strong> (cross-axis for individual child), <strong>flex-wrap</strong> (whether items wrap to new lines), <strong>gap</strong> (spacing between items), and <strong>flex-direction</strong> (row/column, normal/reverse). Children control their own sizing with: <strong>flex-grow</strong> (expand to fill space), <strong>flex-shrink</strong> (shrink when needed), <strong>flex-basis</strong> (initial size before grow/shrink), and the shorthand <strong>flex: grow shrink basis</strong>. The most common shorthand: <code>flex: 1</code> = <code>flex: 1 1 0%</code> (grow, shrink, start from zero).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Imagine a row of people sitting on a bench. <strong>justify-content</strong> decides how they spread across the bench (packed left, centered, spaced out evenly). <strong>align-items</strong> decides if they sit at the front edge, back edge, or center of the bench. <strong>flex-grow</strong> is like giving some people permission to take up more room if the bench is wider. <strong>gap</strong> is the minimum personal space between people. If the bench is a column instead of a row (<code>flex-direction: column</code>), just rotate everything 90 degrees in your head.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Flexbox Properties Reference</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Property</th><th>Values</th><th>What It Does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>justify-content</strong></td><td>flex-start, flex-end, center, space-between, space-around, space-evenly</td><td>Alignment along the main axis (row or column direction)</td></tr>
+        <tr><td><strong>align-items</strong></td><td>stretch, flex-start, flex-end, center, baseline</td><td>Alignment along the cross axis (perpendicular)</td></tr>
+        <tr><td><strong>flex-wrap</strong></td><td>nowrap, wrap, wrap-reverse</td><td>Whether items wrap to new lines when overflowing</td></tr>
+        <tr><td><strong>gap</strong></td><td>any length value</td><td>Spacing between flex items (replaces margin hacks)</td></tr>
+        <tr><td><strong>flex-direction</strong></td><td>row, row-reverse, column, column-reverse</td><td>Main axis direction</td></tr>
+        <tr><td><strong>flex (shorthand)</strong></td><td>flex-grow flex-shrink flex-basis</td><td>Sizing: grow factor, shrink factor, initial size</td></tr>
+        <tr><td><strong>align-self</strong></td><td>auto, stretch, flex-start, flex-end, center, baseline</td><td>Override align-items for a single child</td></tr>
+        <tr><td><strong>order</strong></td><td>integer (default 0)</td><td>Visual order (does NOT affect DOM order or accessibility)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example — Three Classic Patterns</div>
+    <p><strong>Netflix's navbar</strong>: <code>display: flex; justify-content: space-between; align-items: center;</code> pushes the logo to the left, nav links to the right, and vertically centers everything. <strong>Pinterest's masonry-adjacent grid</strong>: <code>display: flex; flex-wrap: wrap; gap: 16px;</code> with each card having <code>flex: 0 0 calc(25% - 12px)</code> for a responsive 4-column layout. <strong>Instagram's post footer</strong>: <code>display: flex; align-items: center; gap: 12px;</code> for the like/comment/share/ save icon row with the bookmark icon pushed right via <code>margin-left: auto</code>.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using <code>justify-content: center</code> on a flex container with wrapping children and more items than fit on one row. The last partial row gets centered, creating a jagged, orphaned-look layout. Use <strong>CSS Grid with auto-fill</strong> for wrapping grids instead — it handles partial rows properly.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example — Three Common Flex Patterns</div>
+    <div class="code-block">
+      <div class="code-block-header">Pattern 1: Holy Grail Navbar</div>
+      <pre><code><span class="type">.navbar</span> {
+  <span class="attr">display</span>: <span class="string">flex</span>;
+  <span class="attr">justify-content</span>: <span class="string">space-between</span>;
+  <span class="attr">align-items</span>: <span class="string">center</span>;
+  <span class="attr">padding</span>: <span class="number">1rem</span> <span class="number">2rem</span>;
+}
+<span class="type">.nav-right</span> {
+  <span class="attr">display</span>: <span class="string">flex</span>;
+  <span class="attr">align-items</span>: <span class="string">center</span>;
+  <span class="attr">gap</span>: <span class="number">1rem</span>;
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Pattern 2: Perfect Centering</div>
+      <pre><code><span class="type">.center-hero</span> {
+  <span class="attr">display</span>: <span class="string">flex</span>;
+  <span class="attr">justify-content</span>: <span class="string">center</span>;
+  <span class="attr">align-items</span>: <span class="string">center</span>;
+  <span class="attr">min-height</span>: <span class="number">100vh</span>;
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Pattern 3: Sidebar Layout</div>
+      <pre><code><span class="type">.layout</span> {
+  <span class="attr">display</span>: <span class="string">flex</span>;
+  <span class="attr">min-height</span>: <span class="number">100vh</span>;
+}
+<span class="type">.sidebar</span> {
+  <span class="attr">flex</span>: <span class="number">0 0 250px</span>; <span class="comment">/* Fixed 250px, no grow/no shrink */</span>
+}
+<span class="type">.main-content</span> {
+  <span class="attr">flex</span>: <span class="number">1</span>; <span class="comment">/* Takes remaining space */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>The <code>margin-left: auto</code> trick: When you have a flex container and want to push one item to the far end, give it <code>margin-left: auto</code> (for row) or <code>margin-top: auto</code> (for column). Flexbox treats auto margins as "absorb all remaining space." This is cleaner than using spacer divs or complex justify-content calculations.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "justify = main axis (think 'justify text' is horizontal). align = cross axis. flex: 1 = 'take all available space'. gap = 'personal space'."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Flexbox = one-dimensional layout (row or column)</li>
+      <li>justify-content: main axis; align-items: cross axis</li>
+      <li>flex: 1 = flex-grow: 1; flex-shrink: 1; flex-basis: 0%</li>
+      <li>margin-left: auto = push item to right; margin-top: auto = push down</li>
+      <li>Use gap instead of margin for spacing between flex children</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">CSS Grid Complete Guide — grid-template, auto-fill vs auto-fit, minmax, dashboard layout</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>CSS Grid is a <strong>two-dimensional</strong> layout system that works in both rows and columns simultaneously. Define grid tracks with <code>grid-template-columns</code> and <code>grid-template-rows</code>, place items with <code>grid-column</code>/<code>grid-row</code> or named <code>grid-area</code>. The real power comes from responsiveness without media queries: <code>auto-fill</code> creates as many tracks as fit (leaving empty tracks), while <code>auto-fit</code> collapses empty tracks to zero. <code>minmax(min, max)</code> gives each track a dynamic size range. Together: <code>grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))</code> creates a responsive card grid that flows from 4 columns to 3 to 2 to 1 as the viewport shrinks — no media queries needed.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Flexbox is like arranging books on a single shelf — you control how they spread out along one dimension. CSS Grid is like arranging furniture in a room — you define rows AND columns, and place items wherever you want on that 2D grid. <code>auto-fit</code> is like having smart shelves that disappear when empty. Flexbox dominates for UI components (navbars, button groups); Grid dominates for page layouts (dashboards, card grids, magazine-style designs).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Flexbox vs Grid — When to Use Which</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Scenario</th><th>Flexbox</th><th>CSS Grid</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Navbar (logo left, links right)</strong></td><td>Perfect — one row, two groups</td><td>Overkill — grid for 1 row?</td></tr>
+        <tr><td><strong>Card grid (4 per row responsive)</strong></td><td>Works, but partial row centering issues</td><td>Perfect — auto-fill/minmax</td></tr>
+        <tr><td><strong>Dashboard layout (sidebar + header + content)</strong></td><td>Awkward — nested flexboxes</td><td>Perfect — named grid areas</td></tr>
+        <tr><td><strong>Centering a single element</strong></td><td>Perfect — 2 lines of code</td><td>Also works — equally simple</td></tr>
+        <tr><td><strong>Magazine layout (overlapping items)</strong></td><td>Not possible</td><td>Perfect — grid-row/column</td></tr>
+        <tr><td><strong>Variable item height rows</strong></td><td>Requires JS or fixed height</td><td>Perfect — align to row tracks</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Stripe's dashboard</strong> uses CSS Grid for its analytics layout. The page is a 4x3 grid with named areas: "revenue-chart" spans 2 columns, "recent-transactions" spans 1 column and 2 rows, and the remaining cells hold smaller metric cards. When the viewport shrinks, the grid-template-areas change to stack everything vertically. <strong>GitHub's explore page</strong> uses <code>repeat(auto-fill, minmax(300px, 1fr))</code> for its repository card grid — the cards resize smoothly from 3 columns to 2 to 1 without any breakpoints.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Confusing <code>auto-fill</code> and <code>auto-fit</code>. <code>auto-fill</code> creates empty tracks when items don't fill the row (visual gaps). <code>auto-fit</code> collapses empty tracks and stretches existing items to fill the row. Use <code>auto-fit</code> 90% of the time — it gives you the responsive behavior you actually want.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example — Dashboard Layout with Grid Areas</div>
+    <div class="code-block">
+      <div class="code-block-header">Dashboard Grid with Named Areas</div>
+      <pre><code><span class="type">.dashboard</span> {
+  <span class="attr">display</span>: <span class="string">grid</span>;
+  <span class="attr">grid-template-columns</span>: <span class="number">250px</span> <span class="number">1fr</span> <span class="number">1fr</span>;
+  <span class="attr">grid-template-rows</span>: <span class="string">auto</span> <span class="number">1fr</span> <span class="number">1fr</span>;
+  <span class="attr">grid-template-areas</span>:
+    <span class="string">"sidebar header  header"</span>
+    <span class="string">"sidebar chart1  chart2"</span>
+    <span class="string">"sidebar stats   activity"</span>;
+  <span class="attr">gap</span>: <span class="number">1rem</span>;
+  <span class="attr">min-height</span>: <span class="number">100vh</span>;
+}
+<span class="type">.sidebar</span>  { <span class="attr">grid-area</span>: <span class="string">sidebar</span>; }
+<span class="type">.header</span>   { <span class="attr">grid-area</span>: <span class="string">header</span>; }
+<span class="type">.chart1</span>   { <span class="attr">grid-area</span>: <span class="string">chart1</span>; }
+<span class="type">.chart2</span>   { <span class="attr">grid-area</span>: <span class="string">chart2</span>; }
+<span class="type">.stats</span>    { <span class="attr">grid-area</span>: <span class="string">stats</span>; }
+<span class="type">.activity</span> { <span class="attr">grid-area</span>: <span class="string">activity</span>; }
+
+<span class="comment">/* Responsive card grid — no media queries! */</span>
+<span class="type">.card-grid</span> {
+  <span class="attr">display</span>: <span class="string">grid</span>;
+  <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="string">auto-fit</span>, <span class="function">minmax</span>(<span class="number">280px</span>, <span class="number">1fr</span>));
+  <span class="attr">gap</span>: <span class="number">1.5rem</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The true power of Grid isn't just layout — it's the separation of <strong>visual order from DOM order</strong>. You can place your main content first in the HTML (for SEO and accessibility) but display it in the center column visually. Screen readers follow DOM order, while sighted users see the visual Grid order. This is impossible with Flexbox alone.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Flexbox = one-dimensional (row OR column). Grid = two-dimensional (rows AND columns). auto-fill leaves gaps, auto-fit fills them. minmax = 'at least X, at most Y'."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>CSS Grid: two-dimensional layout, rows + columns simultaneously</li>
+      <li>grid-template-areas: visual layout with named zones</li>
+      <li>auto-fit vs auto-fill: collapse vs keep empty tracks</li>
+      <li>minmax(): responsive tracks without media queries</li>
+      <li>Grid for page layouts; Flexbox for UI components</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">4</div>
+    <div>
+      <div class="q-text">CSS Position — static, relative, absolute, fixed, sticky, stacking context (z-index)</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>CSS position controls how an element is placed in the document flow. <strong>static</strong> (default) follows normal flow — top/left/z-index have no effect. <strong>relative</strong> stays in flow but can be offset from its original position with top/left/right/bottom — the original space is preserved. <strong>absolute</strong> removes the element from flow and positions it relative to the nearest positioned ancestor (or the initial containing block if none). <strong>fixed</strong> removes from flow and positions relative to the viewport — stays put during scrolling. <strong>sticky</strong> is a hybrid: it behaves as relative until it reaches a scroll threshold, then "sticks" like fixed. Z-index only works on positioned elements (not static), and it creates a <strong>stacking context</strong> — children within that context are isolated from elements outside it.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of a classroom seating chart. <strong>static</strong> students sit in their assigned seats (normal flow). <strong>relative</strong> students are in their seat but leaning to one side — their desk (space) is still there. <strong>absolute</strong> students are out of their seat, standing relative to the teacher's desk (nearest positioned ancestor) or the classroom wall (viewport). <strong>fixed</strong> students are stuck to the classroom window — they don't move when the teacher rearranges seats. <strong>sticky</strong> students stay in their seat until the teacher walks past, then they follow the teacher — once the teacher's zone passes, they return to their seat.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Position Values Reference</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Value</th><th>In Flow?</th><th>Positioned Relative To</th><th>Space Preserved?</th><th>Common Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>static</strong></td><td>Yes</td><td>N/A</td><td>N/A</td><td>Default — no special positioning</td></tr>
+        <tr><td><strong>relative</strong></td><td>Yes</td><td>Its own normal position</td><td>Yes</td><td>Offset tweaks, z-index stacking</td></tr>
+        <tr><td><strong>absolute</strong></td><td>No</td><td>Nearest positioned ancestor</td><td>No</td><td>Dropdowns, modals, tooltips</td></tr>
+        <tr><td><strong>fixed</strong></td><td>No</td><td>Viewport</td><td>No</td><td>Sticky headers, cookie banners, chatbots</td></tr>
+        <tr><td><strong>sticky</strong></td><td>Yes (until threshold)</td><td>Nearest scrolling ancestor</td><td>Yes</td><td>Table headers, section titles</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Twitter's compose button</strong> uses <code>position: fixed; bottom: 24px; right: 24px;</code> so it's always accessible regardless of scroll position. <strong>Airbnb's search bar</strong> uses <code>position: sticky; top: 0;</code> — it scrolls with the page but locks to the top when you scroll past it, keeping search always available. <strong>Notion's dropdown menus</strong> use <code>position: absolute</code> relative to their trigger button (which has <code>position: relative</code>) — the dropdown appears exactly below the button regardless of where it is on the page.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Assuming <code>z-index: 9999</code> will always work. Z-index only operates within a stacking context, and a new stacking context is created by any element with <code>position</code> + <code>z-index</code> (not auto), <code>opacity < 1</code>, <code>transform</code>, <code>filter</code>, <code>isolation: isolate</code>, or <code>will-change</code>. A child with z-index: 9999 inside a stacking context with z-index: 1 can never appear above a sibling with z-index: 2. The numbers are relative to the stacking context, not global.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Stacking Context Trap and Fix</div>
+      <pre><code><span class="comment">/* TRAP: z-index: 9999 won't beat this */</span>
+<span class="type">.parent</span> {
+  <span class="attr">position</span>: <span class="string">relative</span>;
+  <span class="attr">z-index</span>: <span class="number">1</span>; <span class="comment">/* Creates stacking context */</span>
+  <span class="attr">opacity</span>: <span class="number">0.99</span>; <span class="comment">/* Also creates stacking context! */</span>
+}
+<span class="type">.child</span> {
+  <span class="attr">position</span>: <span class="string">absolute</span>;
+  <span class="attr">z-index</span>: <span class="number">9999</span>; <span class="comment">/* Trapped inside parent's context */</span>
+}
+
+<span class="comment">/* Sticky header that works */</span>
+<span class="type">.sticky-header</span> {
+  <span class="attr">position</span>: <span class="string">sticky</span>;
+  <span class="attr">top</span>: <span class="number">0</span>;
+  <span class="attr">z-index</span>: <span class="number">100</span>; <span class="comment">/* Stays above scrolling content */</span>
+  <span class="attr">background</span>: <span class="string">white</span>; <span class="comment">/* Required! Transparent sticky = visible overlap */</span>
+}
+
+<span class="comment">/* Dropdown relative to button */</span>
+<span class="type">.dropdown-wrapper</span> {
+  <span class="attr">position</span>: <span class="string">relative</span>; <span class="comment">/* Positioning anchor */</span>
+}
+<span class="type">.dropdown-menu</span> {
+  <span class="attr">position</span>: <span class="string">absolute</span>;
+  <span class="attr">top</span>: <span class="number">100%</span>;
+  <span class="attr">left</span>: <span class="number">0</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The most common z-index battle is modals vs. sticky headers vs. dropdowns. Establish a z-index scale as CSS custom properties: <code>--z-dropdown: 100; --z-sticky: 200; --z-modal-backdrop: 300; --z-modal: 400; --z-toast: 500;</code>. This prevents the arms race of z-index: 1, 10, 100, 1000, 10000. Everyone on the team uses the same scale, and debugging stacking issues becomes trivial.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "static = in seat. relative = in seat leaning. absolute = out of seat, relative to parent. fixed = stuck to wall. sticky = stays until pushed, then follows. z-index only works on non-static, and creates isolation chambers (stacking contexts)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>static: default, normal flow, z-index ignored</li>
+      <li>relative: stays in flow, offset from self, creates positioning anchor</li>
+      <li>absolute: removed from flow, relative to nearest positioned ancestor</li>
+      <li>fixed: removed from flow, relative to viewport, survives scroll</li>
+      <li>sticky: hybrid — relative until scroll threshold, then sticks</li>
+      <li>Stacking context: z-index is local, not global — watch for opacity/transform traps</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">5</div>
+    <div>
+      <div class="q-text">CSS Specificity — How calculated, !important dangers, cascade order</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Specificity is calculated as a four-part value <strong>(a, b, c, d)</strong>: <strong>a</strong> = inline styles (style attribute), <strong>b</strong> = ID selectors, <strong>c</strong> = class/attribute/pseudo-class selectors, <strong>d</strong> = element/pseudo-element selectors. Higher specificity wins; if equal, the later rule wins (cascade order). <strong>!important</strong> overrides everything except another !important with higher specificity. The universal selector (*) and combinators (>, +, ~) contribute zero specificity. <strong>:is()</strong> and <strong>:not()</strong> use the specificity of their most specific argument. <strong>:where()</strong> always has zero specificity — it's the "specificity eraser."</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of specificity as a scoring system. Inline styles are a 1000-point bonus. Each ID is 100 points. Each class is 10 points. Each element tag is 1 point. When two rules conflict, the one with more points wins. If it's a tie, the one that appears later in the stylesheet wins. <strong>!important</strong> is like bribing the referee — it always wins, but overusing it makes everyone hate you and debugging impossible.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Specificity Examples</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Selector</th><th>Specificity (a,b,c,d)</th><th>Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>*</code> (universal)</td><td>(0,0,0,0)</td><td>0</td></tr>
+        <tr><td><code>div</code></td><td>(0,0,0,1)</td><td>1</td></tr>
+        <tr><td><code>.card</code></td><td>(0,0,1,0)</td><td>10</td></tr>
+        <tr><td><code>div.card.active</code></td><td>(0,0,2,1)</td><td>21</td></tr>
+        <tr><td><code>#header</code></td><td>(0,1,0,0)</td><td>100</td></tr>
+        <tr><td><code>style="color: red"</code></td><td>(1,0,0,0)</td><td>1000</td></tr>
+        <tr><td><code>:where(.card)</code></td><td>(0,0,0,0)</td><td>0</td></tr>
+        <tr><td><code>:is(#id, .class)</code></td><td>(0,1,0,0)</td><td>100 (takes highest)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>GitHub's code editor</strong> uses CSS specificity intentionally: base syntax highlighting uses element selectors (low specificity), language-specific themes use class selectors (medium), and user customizations use a wrapper with higher specificity to override. <strong>Tailwind CSS</strong> intentionally keeps all utility classes at the same specificity level ((0,0,1,0)), so the cascade order (last one wins) is predictable — unlike traditional CSS where deeply nested selectors accidentally override utilities.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>The !important cascade of doom: dev A can't override a style, adds !important. Dev B can't override dev A's !important, adds their own. Dev C uses an ID + !important. Now the stylesheet is unmaintainable. The fix: use <strong>BEM naming</strong> or <strong>CSS Modules</strong> to keep specificity flat, and use <strong>:where()</strong> for reset/default styles that should always be overridable.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Specificity Battle and :where() Fix</div>
+      <pre><code><span class="comment">/* High specificity — hard to override */</span>
+<span class="type">#sidebar .nav .link.active</span> {  <span class="comment">/* (0,1,2,0) = 120 */</span>
+  <span class="attr">color</span>: <span class="string">blue</span>;
+}
+
+<span class="comment">/* Trying to override — needs even higher specificity */</span>
+<span class="type">#sidebar .nav .link.active.highlighted</span> {  <span class="comment">/* (0,1,3,0) = 130 — messy! */</span>
+  <span class="attr">color</span>: <span class="string">red</span>;
+}
+
+<span class="comment">/* Better: flat BEM-style selectors */</span>
+<span class="type">.nav__link--active</span> { <span class="attr">color</span>: <span class="string">blue</span>; }       <span class="comment">/* (0,0,1,0) = 10 */</span>
+<span class="type">.nav__link--highlighted</span> { <span class="attr">color</span>: <span class="string">red</span>; }  <span class="comment">/* (0,0,1,0) = 10 — cascade wins */</span>
+
+<span class="comment">/* Tailwind default reset using :where() — zero specificity */</span>
+<span class="type">:where(h1, h2, h3)</span> {
+  <span class="attr">font-weight</span>: <span class="string">normal</span>; <span class="comment">/* Always overridable by any class */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Inline (1000) > ID (100) > Class (10) > Element (1). :where() = 0. !important = cheat code (don't use). Cascade = tiebreaker (last rule wins)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Specificity: (inline, ID, class, element) = (a,b,c,d)</li>
+      <li>:where() always has zero specificity — use for resets</li>
+      <li>:is()/:not() take the highest specificity of their arguments</li>
+      <li>!important creates unmaintainable code — avoid it</li>
+      <li>Keep specificity flat: use BEM, CSS Modules, or Tailwind</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">6</div>
+    <div>
+      <div class="q-text">Responsive Design — Mobile-first, media queries, clamp(), container queries (@container)</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Responsive design ensures web applications look and function well on any screen size. <strong>Mobile-first</strong> means you write base styles for mobile and use <code>min-width</code> media queries to add complexity for larger screens — the opposite of the old desktop-first approach. <strong>Media queries</strong> (<code>@media (min-width: 768px)</code>) apply styles conditionally based on viewport dimensions. <strong>clamp()</strong> enables fluid typography and spacing without media queries: <code>clamp(min, preferred, max)</code> — e.g., <code>font-size: clamp(1rem, 2.5vw, 2rem)</code> scales smoothly between 1rem and 2rem. <strong>Container queries</strong> (<code>@container</code>) are the next evolution: they style elements based on their <strong>parent container's size</strong>, not the viewport — enabling truly reusable, context-independent components.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Mobile-first is like designing a shirt that fits a small person first, then adding extra fabric for larger sizes. Media queries are like tailoring instructions: "If the person is wider than 768px, use this seam." <code>clamp()</code> is like elastic fabric that stretches between a minimum and maximum size. Container queries are revolutionary: instead of asking "how big is the window?" you ask "how big is MY parent?" — which is what components actually care about. A card component doesn't know if it's in a sidebar or full page; with container queries, it adapts automatically.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Spotify's web player</strong> uses container queries for its playlist grid. When the sidebar is collapsed, the main content area grows, and individual playlist cards expand from 3 columns to 5 columns — all based on the parent container's width, not the viewport. Without container queries, you'd need JavaScript to detect the sidebar's state and toggle classes. <strong>Notion</strong> uses <code>clamp()</code> for its heading sizes: <code>h1 { font-size: clamp(1.5rem, 4vw, 2.5rem); }</code> — the headings grow smoothly as the window widens, with no jump between breakpoints.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using <code>max-width</code> media queries (desktop-first) in new projects. This means you're writing all the complex desktop styles as defaults, then overriding them for mobile — more code, harder maintenance. Mobile-first (<code>min-width</code>) means your default styles are the simplest mobile layout, and you progressively enhance — less code, better performance on mobile, and a more natural thinking flow.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Mobile-First with clamp() — No Media Queries</div>
+      <pre><code><span class="comment">/* Mobile-first base styles */</span>
+<span class="type">.card</span> {
+  <span class="attr">padding</span>: <span class="function">clamp</span>(<span class="number">0.75rem</span>, <span class="number">2vw</span>, <span class="number">1.5rem</span>);
+  <span class="attr">font-size</span>: <span class="function">clamp</span>(<span class="number">0.875rem</span>, <span class="number">1.5vw</span>, <span class="number">1.125rem</span>);
+  <span class="attr">display</span>: <span class="string">grid</span>;
+  <span class="attr">gap</span>: <span class="number">1rem</span>;
+}
+
+<span class="comment">/* Enhance for tablets */</span>
+<span class="keyword">@media</span> (<span class="attr">min-width</span>: <span class="number">768px</span>) {
+  <span class="type">.card</span> {
+    <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">2</span>, <span class="number">1fr</span>);
+  }
+}
+
+<span class="comment">/* Enhance for desktop */</span>
+<span class="keyword">@media</span> (<span class="attr">min-width</span>: <span class="number">1024px</span>) {
+  <span class="type">.card</span> {
+    <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">4</span>, <span class="number">1fr</span>);
+  }
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Container Query — Component adapts to PARENT width</div>
+      <pre><code><span class="comment">/* Define a containment context */</span>
+<span class="type">.sidebar</span> {
+  <span class="attr">container-type</span>: <span class="string">inline-size</span>;
+  <span class="attr">container-name</span>: <span class="string">sidebar</span>;
+}
+
+<span class="comment">/* Card adapts based on sidebar's width, not viewport */</span>
+<span class="keyword">@container</span> sidebar (<span class="attr">min-width</span>: <span class="number">300px</span>) {
+  <span class="type">.card</span> {
+    <span class="attr">display</span>: <span class="string">grid</span>;
+    <span class="attr">grid-template-columns</span>: <span class="keyword">repeat</span>(<span class="number">2</span>, <span class="number">1fr</span>);
+  }
+}
+
+<span class="keyword">@container</span> sidebar (<span class="attr">max-width</span>: <span class="number">299px</span>) {
+  <span class="type">.card</span> {
+    <span class="attr">display</span>: <span class="string">block</span>;  <span class="comment">/* Stack vertically in narrow sidebar */</span>
+  }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p><code>clamp()</code> replaces dozens of media queries for typography. Instead of setting font-size at 5 breakpoints, use <code>clamp(1rem, 2.5vw, 2rem)</code> once. It scales fluidly across all screen sizes. Combined with <code>min()</code> and <code>max()</code>, you can build entire responsive layouts with zero media queries.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Mobile-first = start small, enhance up (min-width). Desktop-first = start big, degrade down (max-width). clamp() = elastic sizing. Container queries = 'how big is MY parent?' not 'how big is the window?'"
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Mobile-first: default styles for mobile, min-width media queries for larger</li>
+      <li>Media queries: @media (min-width: 768px) — conditionally apply styles</li>
+      <li>clamp(min, preferred, max): fluid scaling without breakpoints</li>
+      <li>Container queries (@container): style based on parent container width</li>
+      <li>Container queries enable truly reusable, context-independent components</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">7</div>
+    <div>
+      <div class="q-text">Tailwind CSS vs CSS Modules vs Styled Components — Utility-first, scoped styles, runtime cost</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Tailwind CSS</strong> is a utility-first framework: you compose designs using predefined classes (<code>flex</code>, <code>p-4</code>, <code>text-lg</code>) directly in JSX. Styles are extracted at build time — zero runtime cost, tiny production CSS (~5-10KB gzipped). <strong>CSS Modules</strong> (.module.css files) scope styles locally by auto-generating unique class names — no naming collisions, good for traditional CSS workflows. <strong>Styled Components</strong> (and Emotion) use tagged template literals to create React components with scoped styles injected at runtime via a style tag — great DX for dynamic styling but adds ~12-15KB bundle and runtime overhead. The industry has largely moved toward Tailwind + CSS Modules for new projects; Styled Components is in decline due to React Server Components not supporting runtime CSS-in-JS.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Comparison Matrix</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>Tailwind CSS</th><th>CSS Modules</th><th>Styled Components</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Naming</strong></td><td>No naming needed (utility classes)</td><td>Automatic unique class names</td><td>No naming (component = style)</td></tr>
+        <tr><td><strong>Runtime cost</strong></td><td>Zero (build-time extraction)</td><td>Zero (CSS file)</td><td>12-15KB + runtime injection</td></tr>
+        <tr><td><strong>SSR/Server Components</strong></td><td>Perfect — no JS needed</td><td>Perfect — standard CSS</td><td>Problematic — needs runtime</td></tr>
+        <tr><td><strong>Dynamic styling</strong></td><td>Via className logic, CVA, cn()</td><td>Via CSS custom properties</td><td>Via props (excellent DX)</td></tr>
+        <tr><td><strong>Learning curve</strong></td><td>Moderate (utility names to learn)</td><td>Low (standard CSS)</td><td>Low (standard CSS in JS)</td></tr>
+        <tr><td><strong>Bundle size</strong></td><td>Tiny (5-10KB, purged)</td><td>Per-component CSS files</td><td>12-15KB + per-component</td></tr>
+        <tr><td><strong>Best for</strong></td><td>Rapid prototyping, consistent design</td><td>Traditional CSS devs, animation-heavy</td><td>Heavily dynamic UIs (declining)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Vercel's marketing site and dashboard</strong> use Tailwind CSS. Every component is built with utility classes, and the design system (colors, spacing, typography) is configured in <code>tailwind.config.ts</code>. <strong>Facebook's old codebase</strong> used CSS Modules extensively — each component had a .module.css file with scoped class names. <strong>Vercel (again)</strong> is a prime example of the shift: they initially used Styled Components for their dashboard, then migrated to Tailwind because of Server Components compatibility and bundle size concerns. The entire dashboard's CSS is now 7KB versus 45KB with Styled Components.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Choosing Styled Components for a new Next.js 13+ project. The library doesn't work with React Server Components (styled-components requires client-side JavaScript to inject styles). You'll be forced to use "use client" everywhere, losing all RSC benefits. Use Tailwind or CSS Modules for new projects — they work everywhere, including Server Components.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Tailwind CSS — Utility-first in JSX</div>
+      <pre><code><span class="keyword">export function</span> <span class="function">Card</span>({ title, children }: { title: string; children: React.ReactNode }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow"</span>&gt;
+      &lt;<span class="type">h3</span> <span class="attr">className</span>=<span class="string">"text-lg font-semibold"</span>&gt;{title}&lt;/<span class="type">h3</span>&gt;
+      &lt;<span class="type">p</span> <span class="attr">className</span>=<span class="string">"text-gray-600 dark:text-gray-300"</span>&gt;{children}&lt;/<span class="type">p</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">CSS Modules — Scoped styles</div>
+      <pre><code><span class="comment">/* Card.module.css */</span>
+<span class="type">.card</span> {
+  <span class="attr">background</span>: <span class="string">white</span>;
+  <span class="attr">border-radius</span>: <span class="number">12px</span>;
+  <span class="attr">padding</span>: <span class="number">1.5rem</span>;
+  <span class="attr">box-shadow</span>: <span class="number">0 2px 8px</span> <span class="function">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>);
+}
+
+<span class="comment">// Card.tsx</span>
+<span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">'./Card.module.css'</span>;
+<span class="keyword">export function</span> <span class="function">Card</span>() { <span class="keyword">return</span> &lt;<span class="type">div</span> <span class="attr">className</span>={styles.card}&gt;...&lt;/<span class="type">div</span>&gt;; }</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Styled Components — CSS-in-JS (Declining)</div>
+      <pre><code><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">'styled-components'</span>;
+
+<span class="keyword">const</span> Card = styled.div`
+  <span class="attr">background</span>: <span class="string">white</span>;
+  <span class="attr">border-radius</span>: <span class="number">12px</span>;
+  <span class="attr">padding</span>: <span class="number">1.5rem</span>;
+  <span class="comment">/* Dynamic via props — but runs at runtime */</span>
+`;</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The CSS-in-JS vs utility-first debate is settled for most use cases. React Server Components make runtime CSS-in-JS non-viable. But CSS Modules still have their place: complex animations with <code>@keyframes</code>, print stylesheets, and projects where designers write CSS directly are better with CSS Modules. Tailwind wins for speed, consistency, and bundle size. The pragmatic approach: use Tailwind for 90% of styles, CSS Modules for the 10% that need CSS features Tailwind can't express (complex keyframe animations, scroll-driven animations, intricate pseudo-element styling).</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Tailwind = build-time, zero runtime, utility classes. CSS Modules = build-time, scoped .css files. Styled Components = runtime, CSS-in-JS, dying. Choose Tailwind for new Next.js projects."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Tailwind: utility-first, zero runtime, tiny bundle, perfect for RSC</li>
+      <li>CSS Modules: scoped .css files, traditional workflow, zero runtime</li>
+      <li>Styled Components: CSS-in-JS, runtime injection, incompatible with RSC</li>
+      <li>Industry trend: Tailwind + CSS Modules for new projects</li>
+      <li>Choose based on: SSR requirement, dynamic styling needs, team expertise</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">8</div>
+    <div>
+      <div class="q-text">CSS Custom Properties (Variables) — Theming, dynamic styling, design tokens</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>CSS Custom Properties (variables) are defined with <code>--name: value</code> and accessed with <code>var(--name)</code>. Unlike Sass variables (which are static and compile away), CSS custom properties are <strong>live at runtime</strong> — they can be changed with JavaScript, respond to media queries, and cascade through the DOM. This makes them perfect for <strong>theming</strong> (dark/light mode), <strong>design tokens</strong> (colors, spacing, typography), and <strong>dynamic styling</strong> (animating with CSS variables). They're also inheritable — a variable set on <code>:root</code> is available everywhere; one set on a parent is available to all children. <code>@property</code> registration gives them types and enables smooth transitions.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Sass variables are like a photocopier — the value is baked into the paper at build time and can't change. CSS custom properties are like a dimmer switch — you can adjust them live, and everything using them updates instantly. Set <code>--button-color: blue</code> on the root, and every button turns blue. Change it on hover to red — only that button turns red, because the variable cascades locally. This is why CSS variables enable dark mode without JavaScript: just swap <code>--bg</code> from white to black inside a <code>prefers-color-scheme: dark</code> media query.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Stripe's design system</strong> uses CSS custom properties as design tokens: <code>--color-primary: #635BFF; --spacing-md: 1rem; --radius-sm: 4px;</code>. Every component references these tokens, so changing the primary color in one place updates the entire application. <strong>GitHub's dark mode</strong> uses CSS custom properties: the variables are defined once in <code>:root</code> (light) and overridden in <code>[data-color-mode="dark"]</code>. The actual components just use <code>var(--bg-primary)</code> — they don't know or care what the current theme is.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Thinking CSS variables work exactly like Sass variables. Sass variables are compiled away and can't be changed at runtime. CSS variables are live and cascade — which also means they can cause unexpected behavior if you set a variable too high in the tree (e.g., on :root) and a child component accidentally inherits it. Always scope theme variables to their appropriate context (e.g., theme-specific classes).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Design Tokens + Dark Mode Theming</div>
+      <pre><code><span class="type">:root</span> {
+  <span class="comment">/* Design tokens — the single source of truth */</span>
+  <span class="attr">--color-primary</span>: <span class="string">#635BFF</span>;
+  <span class="attr">--color-bg</span>: <span class="string">#FFFFFF</span>;
+  <span class="attr">--color-text</span>: <span class="string">#1A1A2E</span>;
+  <span class="attr">--spacing-md</span>: <span class="number">1rem</span>;
+  <span class="attr">--radius-sm</span>: <span class="number">4px</span>;
+  <span class="attr">--shadow-card</span>: <span class="number">0 2px 8px</span> <span class="function">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>);
+}
+
+<span class="type">[data-theme</span>=<span class="string">"dark"</span>] {
+  <span class="attr">--color-bg</span>: <span class="string">#0D1117</span>;
+  <span class="attr">--color-text</span>: <span class="string">#F0F6FC</span>;
+  <span class="attr">--shadow-card</span>: <span class="number">0 2px 8px</span> <span class="function">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.4</span>);
+}
+
+<span class="comment">/* Components just reference variables */</span>
+<span class="type">.card</span> {
+  <span class="attr">background</span>: <span class="function">var</span>(<span class="string">--color-bg</span>);
+  <span class="attr">color</span>: <span class="function">var</span>(<span class="string">--color-text</span>);
+  <span class="attr">padding</span>: <span class="function">var</span>(<span class="string">--spacing-md</span>);
+  <span class="attr">border-radius</span>: <span class="function">var</span>(<span class="string">--radius-sm</span>);
+  <span class="attr">box-shadow</span>: <span class="function">var</span>(<span class="string">--shadow-card</span>);
+  <span class="comment">/* Automatically picks up dark theme when parent has data-theme="dark" */</span>
+}
+
+<span class="comment">/* Dynamic via JS */</span>
+<span class="comment">// document.documentElement.style.setProperty('--color-primary', '#FF0000');</span></code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">@property — Typed variables with smooth transitions</div>
+      <pre><code><span class="keyword">@property</span> <span class="attr">--gradient-angle</span> {
+  <span class="attr">syntax</span>: <span class="string">'&lt;angle&gt;'</span>;
+  <span class="attr">initial-value</span>: <span class="number">0deg</span>;
+  <span class="attr">inherits</span>: <span class="string">false</span>;
+}
+
+<span class="type">.smooth-gradient</span> {
+  <span class="attr">--gradient-angle</span>: <span class="number">0deg</span>;
+  <span class="attr">background</span>: <span class="function">linear-gradient</span>(<span class="function">var</span>(<span class="string">--gradient-angle</span>), <span class="string">blue</span>, <span class="string">purple</span>);
+  <span class="attr">transition</span>: <span class="attr">--gradient-angle</span> <span class="number">0.5s</span>;
+}
+<span class="type">.smooth-gradient</span><span class="keyword">:hover</span> {
+  <span class="attr">--gradient-angle</span>: <span class="number">180deg</span>; <span class="comment">/* Transitions smoothly! */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Use <code>@property</code> to make custom properties animatable. Without it, CSS treats variable changes as discrete (instant). With <code>@property</code> declaring the syntax type (number, angle, color, etc.), the browser can smoothly interpolate between values — enabling pure CSS animations that were previously only possible with JavaScript.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Sass variables = compile-time, gone after build. CSS custom properties = runtime, live, cascade, theme-able. Use --token for design tokens, var(--token) to consume."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>CSS Custom Properties: defined with --name, consumed with var(--name)</li>
+      <li>Live at runtime: can change via JS, media queries, or cascade</li>
+      <li>Perfect for theming: define tokens on :root, override per theme class</li>
+      <li>Inheritable: set on parent, available to all children</li>
+      <li>@property: enables typed variables with smooth CSS transitions</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">9</div>
+    <div>
+      <div class="q-text">CSS Animations vs Transitions — @keyframes, transform, will-change, GPU-friendly properties</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Transitions</strong> animate between two states (A to B) when a CSS property changes — perfect for hover effects, class toggles, and state changes. <strong>Animations</strong> (<code>@keyframes</code>) define multi-step sequences that can loop, reverse, or run independently of state changes — perfect for spinners, loading skeletons, entrance effects. For smooth 60fps performance, only animate <strong>GPU-friendly properties</strong>: <code>transform</code> (translate, scale, rotate) and <code>opacity</code>. Avoid animating <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code>, <code>margin</code> — these trigger layout recalculations and paint on every frame, causing jank. Use <code>will-change</code> sparingly to hint the browser to optimize an element before it animates.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>Transitions</strong> are like a dimmer switch — you move it and the lights smoothly change from bright to dim. <strong>Animations</strong> are like a washing machine cycle — predefined steps that run automatically (wash, rinse, spin, repeat). Transitions react to changes; animations run on their own. The golden rule: only animate <code>transform</code> and <code>opacity</code> because the GPU handles them without bothering the CPU. Animating <code>width</code> or <code>left</code> is like asking the browser to re-measure and re-paint the entire room every frame — that's how you get janky animations.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Transitions vs Animations — Decision Guide</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>Transition</th><th>Animation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Trigger</strong></td><td>State change (hover, class toggle)</td><td>Auto-starts, can loop</td></tr>
+        <tr><td><strong>Keyframes</strong></td><td>No — A to B only</td><td>Yes — multi-step @keyframes</td></tr>
+        <tr><td><strong>Looping</strong></td><td>No</td><td>Yes (infinite, direction alternate)</td></tr>
+        <tr><td><strong>Easing</strong></td><td>ease, linear, cubic-bezier</td><td>Same + per-keyframe easing</td></tr>
+        <tr><td><strong>Pause/Play</strong></td><td>No (remove class to reverse)</td><td>Yes (animation-play-state)</td></tr>
+        <tr><td><strong>Best for</strong></td><td>Hover effects, state changes</td><td>Loading spinners, entrance effects, complex sequences</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">GPU-Friendly Properties (Always Smooth)</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Property</th><th>GPU Accelerated?</th><th>Tutorial</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>transform: translate()</code></td><td>Yes — GPU only</td><td>Move elements without layout</td></tr>
+        <tr><td><code>transform: scale()</code></td><td>Yes — GPU only</td><td>Resize without reflow</td></tr>
+        <tr><td><code>transform: rotate()</code></td><td>Yes — GPU only</td><td>Spin elements smoothly</td></tr>
+        <tr><td><code>opacity</code></td><td>Yes — GPU only</td><td>Fade in/out</td></tr>
+        <tr><td><code>filter: blur()</code></td><td>Yes (sometimes)</td><td>Blur effects (can be heavy)</td></tr>
+        <tr><td><code>width / height</code></td><td>No — triggers layout</td><td>Avoid for animation!</td></tr>
+        <tr><td><code>top / left / right / bottom</code></td><td>No — triggers layout</td><td>Use translate() instead</td></tr>
+        <tr><td><code>margin / padding</code></td><td>No — triggers layout</td><td>Use gap or transform</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Apple's product pages</strong> are masters of GPU-friendly animations. As you scroll, products translate() and scale() into view while fading in with opacity — all GPU-accelerated, hitting 60fps even on mobile. <strong>Discord's loading screen</strong> uses <code>@keyframes</code> with rotation and opacity on a simple SVG — the spinner runs at 60fps because it only animates transform. <strong>Twitter's "like" heart animation</strong> uses <code>@keyframes</code> with <code>scale()</code> — it bursts out from 0 to 1.2, then settles at 1.0, all on the GPU.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Animating <code>width</code> on a collapse/expand component. Every frame the browser recalculates layout, repaints, and potentially re-composites — the holy trinity of jank. Instead, use <code>transform: scaleY(0)</code> for expanding/collapsing, or better yet, use <code>max-height</code> with a transition (but set it to a value larger than you'll ever need).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">GPU-Friendly Animations — Best Practices</div>
+      <pre><code><span class="comment">/* TRANSITION: Smooth hover effect */</span>
+<span class="type">.button</span> {
+  <span class="attr">transform</span>: <span class="function">scale</span>(<span class="number">1</span>);
+  <span class="attr">opacity</span>: <span class="number">1</span>;
+  <span class="attr">transition</span>: <span class="string">transform 0.2s ease, opacity 0.2s ease</span>;
+}
+<span class="type">.button</span><span class="keyword">:hover</span> {
+  <span class="attr">transform</span>: <span class="function">scale</span>(<span class="number">1.05</span>);
+}
+<span class="type">.button</span><span class="keyword">:active</span> {
+  <span class="attr">transform</span>: <span class="function">scale</span>(<span class="number">0.97</span>);
+}
+
+<span class="comment">/* ANIMATION: Loading spinner */</span>
+<span class="keyword">@keyframes</span> <span class="function">spin</span> {
+  <span class="attr">from</span>  { <span class="attr">transform</span>: <span class="function">rotate</span>(<span class="number">0deg</span>); }
+  <span class="attr">to</span>    { <span class="attr">transform</span>: <span class="function">rotate</span>(<span class="number">360deg</span>); }
+}
+<span class="type">.spinner</span> {
+  <span class="attr">animation</span>: <span class="string">spin 0.8s linear infinite</span>;
+  <span class="attr">will-change</span>: <span class="string">transform</span>; <span class="comment">/* Hint: this element will animate */</span>
+}
+
+<span class="comment">/* ANIMATION: Fade-in entrance */</span>
+<span class="keyword">@keyframes</span> <span class="function">fadeInUp</span> {
+  <span class="attr">from</span> {
+    <span class="attr">opacity</span>: <span class="number">0</span>;
+    <span class="attr">transform</span>: <span class="function">translateY</span>(<span class="number">20px</span>);
+  }
+  <span class="attr">to</span> {
+    <span class="attr">opacity</span>: <span class="number">1</span>;
+    <span class="attr">transform</span>: <span class="function">translateY</span>(<span class="number">0</span>);
+  }
+}
+<span class="type">.entrance</span> {
+  <span class="attr">animation</span>: <span class="string">fadeInUp 0.5s ease-out both</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p><code>will-change</code> is a double-edged sword. It tells the browser "this element is going to animate" which creates a new GPU layer, making the animation buttery smooth. But if you apply it to everything, you're creating GPU layers for elements that never animate, consuming VRAM and potentially causing worse performance. The rule: add <code>will-change</code> just before the animation starts (via JavaScript or a class toggle), and remove it after the animation ends. Never put it on everything by default.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Only animate transform and opacity — the GPU handles these for free. Transitions = reaction to change. Animations = scripted performance. will-change = performance hint (use sparingly)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Transitions: animate between two states (hover, toggle), trigger-based</li>
+      <li>Animations: @keyframes with multi-step sequences, auto-run, can loop</li>
+      <li>GPU-friendly: transform (translate/scale/rotate) + opacity — always smooth</li>
+      <li>Avoid animating: width, height, top, left, margin — triggers layout recalc</li>
+      <li>will-change: use just before animating, remove after — not as a default</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Modern CSS Features (2024) — :has() selector, @layer, CSS nesting, text-wrap: balance</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Modern CSS has evolved dramatically with four game-changing features. <strong>:has()</strong> (the "parent selector") selects elements based on their children — e.g., <code>.card:has(img) { border: 1px solid; }</code> styles cards that contain images. <strong>@layer</strong> controls cascade priority explicitly — define <code>@layer base, components, utilities;</code> and the cascade always respects your layer order regardless of specificity. <strong>CSS Nesting</strong> lets you nest selectors inside other selectors (like Sass): <code>.card { & .title { font-size: 1.5rem; } }</code>. <strong>text-wrap: balance</strong> evenly distributes text across lines for headlines — no more widowed words. All four are Baseline 2024 (supported in all modern browsers) and eliminate common reasons people reach for preprocessors.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><strong>:has()</strong> is the selector CSS has needed for 20 years — "select the card IF it contains an image." It's like a reverse selector: instead of targeting children from a parent, you target a parent based on its children. <strong>@layer</strong> is like organizing your styles into folders with fixed priority — the "utilities" folder always overrides "components," no matter how specific the selector in "components" is. <strong>CSS Nesting</strong> is Sass's favorite feature, now built-in — no preprocessor needed. <strong>text-wrap: balance</strong> is pure typographic magic: your headlines will never have a single word on the last line again.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">The Four Modern CSS Features</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>What It Solves</th><th>Before</th><th>Now</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>:has()</strong></td><td>Select parent based on children</td><td>required JS or class toggles</td><td><code>.form:has(:invalid)</code></td></tr>
+        <tr><td><strong>@layer</strong></td><td>Cascade priority without specificity wars</td><td>!important battles, BEM depth</td><td>Declare order: base, components, utilities</td></tr>
+        <tr><td><strong>CSS Nesting</strong></td><td>Nested selectors (Sass replacement)</td><td>Sass/Less preprocessor required</td><td>Native in CSS with & parent reference</td></tr>
+        <tr><td><strong>text-wrap: balance</strong></td><td>Orphaned words on last line</td><td>Manual &lt;br&gt; tags or JS balancing</td><td>One line, automatic</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Airbnb's search form</strong> could use <code>.search-form:has(input:invalid) .submit-btn { opacity: 0.5; pointer-events: none; }</code> to disable the submit button when any field is invalid — pure CSS, no JavaScript validation state management. <strong>GitHub</strong> could use <code>@layer</code> to organize their massive codebase: <code>@layer reset, primer-base, primer-components, custom-enterprise;</code> — enterprise overrides always win without specificity wars. <strong>Medium</strong> uses <code>text-wrap: balance</code> on article titles — headlines like "The Future of Web Development in 2024" wrap beautifully across 2-3 lines without orphaned words.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Overusing <code>:has()</code> with complex selectors that degrade performance. <code>:has()</code> runs right-to-left (like all CSS selectors), so <code>body:has(.card .image:hover)</code> checks every element for hover state on every frame. Keep :has() selectors simple and target-specific: prefer <code>.card:has(img)</code> over <code>body:has(.deeply .nested .selector)</code>.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">:has() — The Parent Selector</div>
+      <pre><code><span class="comment">/* Style cards differently when they contain an image */</span>
+<span class="type">.card</span><span class="keyword">:has</span>(<span class="type">img</span>) {
+  <span class="attr">grid-column</span>: <span class="string">span 2</span>; <span class="comment">/* Image cards get double width */</span>
+}
+
+<span class="comment">/* Disable form submit when any field is invalid */</span>
+<span class="type">.form</span><span class="keyword">:has</span>(<span class="keyword">:user-invalid</span>) <span class="type">.submit-btn</span> {
+  <span class="attr">opacity</span>: <span class="number">0.5</span>;
+  <span class="attr">pointer-events</span>: <span class="string">none</span>;
+}
+
+<span class="comment">/* Style a section that has a following sibling */</span>
+<span class="type">.section</span><span class="keyword">:has</span>(<span class="string">+ .section</span>) {
+  <span class="attr">margin-bottom</span>: <span class="number">2rem</span>; <span class="comment">/* Not the last section */</span>
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">@layer — Cascade Without Specificity Wars</div>
+      <pre><code><span class="comment">/* Define layer order — utilities always win */</span>
+<span class="keyword">@layer</span> reset, base, components, utilities;
+
+<span class="comment">/* Reset layer — overridable by everything above */</span>
+<span class="keyword">@layer</span> reset {
+  <span class="type">*</span> { <span class="attr">margin</span>: <span class="number">0</span>; <span class="attr">padding</span>: <span class="number">0</span>; }
+}
+
+<span class="comment">/* Component layer — high specificity: (0,2,0) */</span>
+<span class="keyword">@layer</span> components {
+  <span class="type">#app .nav .link</span> { <span class="attr">color</span>: <span class="string">blue</span>; }
+}
+
+<span class="comment">/* Utility layer — low specificity: (0,0,1,0) */</span>
+<span class="comment">/* BUT IT WINS because utilities layer has higher priority! */</span>
+<span class="keyword">@layer</span> utilities {
+  <span class="type">.text-red</span> { <span class="attr">color</span>: <span class="string">red</span>; }
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">CSS Nesting + text-wrap: balance</div>
+      <pre><code><span class="comment">/* CSS Nesting — native Sass-like syntax */</span>
+<span class="type">.card</span> {
+  <span class="attr">padding</span>: <span class="number">1.5rem</span>;
+
+  <span class="string">& .title</span> {
+    <span class="attr">font-size</span>: <span class="number">1.25rem</span>;
+    <span class="attr">text-wrap</span>: <span class="string">balance</span>; <span class="comment">/* Beautiful headline wrapping */</span>
+  }
+
+  <span class="string">&:hover</span> {
+    <span class="attr">box-shadow</span>: <span class="number">0 4px 12px</span> <span class="function">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>);
+    <span class="string">& .title</span> { <span class="attr">color</span>: <span class="string">blue</span>; }
+  }
+}
+
+<span class="comment">/* text-wrap: balance — No more orphans */</span>
+<span class="type">h1</span>, <span class="type">h2</span>, <span class="type">h3</span> {
+  <span class="attr">text-wrap</span>: <span class="string">balance</span>;
+  <span class="attr">max-width</span>: <span class="number">60ch</span>; <span class="comment">/* Optimal reading length */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Interview Twist</div>
+    <p>"How would you build an accessible, CSS-only form validation indicator without using JavaScript?" — Answer: <code>:has(:user-invalid)</code> to detect any invalid input, combined with <code>:has(:user-valid)</code> for success states. Use <code>input:user-invalid + .error-message { display: block; }</code> to show error text, and <code>.form:has(:user-invalid) .submit-btn { opacity: 0.5; }</code> to prevent premature submission. Bonus: <code>:user-invalid</code> only triggers after user interaction, unlike <code>:invalid</code> which fires immediately.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> ":has() = parent selector. @layer = priority folders. CSS Nesting = Sass built-in. text-wrap: balance = no orphaned words. All Baseline 2024 — use them today."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>:has(): select parent based on children — the "parent selector"</li>
+      <li>@layer: explicit cascade priority — ends specificity wars</li>
+      <li>CSS Nesting: native nested selectors with & parent reference</li>
+      <li>text-wrap: balance: evenly wraps headlines, no orphaned words</li>
+      <li>All four are Baseline 2024 — supported in all modern browsers</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="section-divider">
+  <h2>Part 2: Modern CSS — Concise Reference</h2>
+  <p>Advanced techniques that differentiate senior developers. Know these for FAANG interviews.</p>
+</div>
+
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Container Queries Deep Dive — @container, vs media queries</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Container queries (<code>@container</code>) style elements based on their <strong>parent container's dimensions</strong>, not the viewport. First, declare a containment context with <code>container-type: inline-size</code> (or <code>size</code> for both dimensions). Then write <code>@container (min-width: 400px) { ... }</code> — the styles apply when the container (not the viewport) is at least 400px wide. This is revolutionary for <strong>component-level responsiveness</strong>: a card component adapts its layout based on whether it's in a sidebar (narrow) or main content (wide) — no media queries, no props, no JavaScript. Named containers (<code>container-name</code>) let you target specific containers when nesting: <code>@container sidebar (min-width: 300px)</code>.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Container Queries vs Media Queries</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Aspect</th><th>@media (viewport)</th><th>@container (parent)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Responds to</strong></td><td>Browser window width</td><td>Parent container width</td></tr>
+        <tr><td><strong>Component reusability</strong></td><td>Limited — tied to viewport</td><td>Perfect — context-independent</td></tr>
+        <tr><td><strong>Use case</strong></td><td>Page-level layout changes</td><td>Component-level layout changes</td></tr>
+        <tr><td><strong>Example</strong></td><td>"At 768px, switch to 2 columns"</td><td>"At 400px wide, switch card to horizontal"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Container Query — Card adapts to its parent</div>
+      <pre><code><span class="type">.card-wrapper</span> {
+  <span class="attr">container-type</span>: <span class="string">inline-size</span>;
+  <span class="attr">container-name</span>: <span class="string">card</span>;
+}
+
+<span class="type">.responsive-card</span> {
+  <span class="attr">display</span>: <span class="string">block</span>; <span class="comment">/* Narrow: stacked */</span>
+}
+
+<span class="keyword">@container</span> card (<span class="attr">min-width</span>: <span class="number">500px</span>) {
+  <span class="type">.responsive-card</span> {
+    <span class="attr">display</span>: <span class="string">flex</span>; <span class="comment">/* Wide: side-by-side */</span>
+    <span class="attr">gap</span>: <span class="number">1rem</span>;
+  }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Remember</div>
+    <p>Container queries don't replace media queries — they complement them. Use <code>@media</code> for page-level layout (sidebar vs full-width), and <code>@container</code> for component-level adaptation within those layouts. Together they enable fully responsive, context-independent components.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "@media asks 'how big is the window?', @container asks 'how big is my parent?'. Components should care about their container, not the viewport."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Display Properties — block, inline, inline-block, none, contents</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>block</strong>: Takes full width, starts new line, respect width/height. <strong>inline</strong>: Flows with text, ignores width/height, respects horizontal margin/padding only. <strong>inline-block</strong>: Flows with text but respects width/height and all margins/padding — best of both worlds. <strong>none</strong>: Removes element from the render tree entirely — no space, no paint, no layout. <strong>contents</strong>: The hidden gem — the element itself disappears from the DOM as a box, but its children render as if the parent didn't exist. Perfect for flattening nested structures for flex/grid without extra wrapper divs.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">display: contents — The Hidden Gem</div>
+    <p>When you have a grid container and your semantically grouped elements (like <code>&lt;article&gt;</code> wrapping a title and image) create intermediate wrappers that break grid placement, <code>display: contents</code> makes the wrapper invisible — its children participate directly in the grid. <strong>Stripe</strong> uses this for complex table layouts where <code>&lt;tr&gt;</code> elements need to participate in a CSS Grid while maintaining semantic HTML structure for accessibility.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Display Reference</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Value</th><th>New Line</th><th>width/height</th><th>Margins</th><th>Common Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>block</code></td><td>Yes</td><td>Yes</td><td>All sides</td><td>Layout containers, sections</td></tr>
+        <tr><td><code>inline</code></td><td>No</td><td>No</td><td>Horizontal only</td><td>Text spans, links in paragraphs</td></tr>
+        <tr><td><code>inline-block</code></td><td>No</td><td>Yes</td><td>All sides</td><td>Buttons, badges, icon + text</td></tr>
+        <tr><td><code>none</code></td><td>Removed</td><td>Removed</td><td>Removed</td><td>Conditional visibility</td></tr>
+        <tr><td><code>contents</code></td><td>Removed (children promoted)</td><td>Removed</td><td>Removed</td><td>Flex/Grid flattening</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using <code>display: none</code> vs <code>visibility: hidden</code> interchangeably. <code>display: none</code> removes the element from layout (no space). <code>visibility: hidden</code> hides the element but preserves its space (layout hole). <code>opacity: 0</code> makes it invisible but still interactive (can be clicked). Choose based on whether you need to preserve layout space.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "block = takes the whole row. inline = fits in text. inline-block = inline + respects size. none = gone. contents = invisible wrapper, children free."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Pseudo-classes vs Pseudo-elements — :hover, :focus-visible, ::before, ::after</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Pseudo-classes</strong> (single colon <code>:</code>) select elements based on <strong>state</strong> — <code>:hover</code> (mouse over), <code>:focus</code> (keyboard focused), <code>:focus-visible</code> (keyboard focused only, not mouse click — critical for accessibility), <code>:first-child</code>, <code>:nth-child()</code>, <code>:checked</code>, <code>:disabled</code>. <strong>Pseudo-elements</strong> (double colon <code>::</code>) create <strong>virtual elements</strong> that don't exist in the DOM — <code>::before</code> (insert before content), <code>::after</code> (insert after), <code>::placeholder</code>, <code>::selection</code>, <code>::marker</code>. The key distinction: pseudo-classes filter existing elements by state; pseudo-elements create new visual elements from CSS.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Key Pseudo-classes for Accessibility</div>
+      <pre><code><span class="comment">/* Better than :focus — only shows ring for keyboard nav */</span>
+<span class="type">button</span><span class="keyword">:focus-visible</span> {
+  <span class="attr">outline</span>: <span class="number">2px</span> <span class="string">solid</span> <span class="string">blue</span>;
+  <span class="attr">outline-offset</span>: <span class="number">2px</span>;
+}
+<span class="type">button</span><span class="keyword">:focus</span><span class="keyword">:not</span>(<span class="keyword">:focus-visible</span>) {
+  <span class="attr">outline</span>: <span class="string">none</span>; <span class="comment">/* No ring on mouse click */</span>
+}
+
+<span class="comment">/* Pseudo-elements for decoration */</span>
+<span class="type">.required-label</span><span class="keyword">::after</span> {
+  <span class="attr">content</span>: <span class="string">' *'</span>;
+  <span class="attr">color</span>: <span class="string">red</span>;
+}
+<span class="type">.tooltip</span><span class="keyword">::before</span> {
+  <span class="attr">content</span>: <span class="function">attr</span>(<span class="string">data-tooltip</span>);
+  <span class="attr">position</span>: <span class="string">absolute</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Always use <code>:focus-visible</code> instead of <code>:focus</code> for focus rings. <code>:focus</code> shows the ring on mouse clicks too (ugly), while <code>:focus-visible</code> only shows it when the user is navigating via keyboard — the browser intelligently determines when the ring is helpful. This is now Baseline and makes accessibility styling effortless.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Pseudo-classes (:) = filter by state. Pseudo-elements (::) = create virtual elements. :focus-visible = keyboard only, no ugly click rings."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">CSS Performance — content-visibility, contain, critical CSS</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>content-visibility: auto</strong> is the biggest CSS performance win since hardware acceleration. It tells the browser to <strong>skip rendering off-screen content entirely</strong> — the element's layout, paint, and hit-testing are deferred until it scrolls near the viewport. This can reduce initial render time by 50-90% on long pages. <strong>contain</strong> limits how changes inside an element affect the rest of the page: <code>contain: layout style paint</code> creates isolated regions where changes don't trigger expensive global recalculations. <strong>Critical CSS</strong> is the technique of inlining only the above-the-fold styles in <code>&lt;head&gt;</code> while deferring the rest — Google's Core Web Vitals cares deeply about this for Largest Contentful Paint (LCP).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">content-visibility — Render only what users see</div>
+      <pre><code><span class="comment">/* Massive list — render 50 items, skip 9500 */</span>
+<span class="type">.feed-item</span> {
+  <span class="attr">content-visibility</span>: <span class="string">auto</span>;
+  <span class="attr">contain-intrinsic-size</span>: <span class="string">auto 200px</span>; <span class="comment">/* Placeholder size while unrendered */</span>
+}
+
+<span class="comment">/* Widget container — isolate from global layout */</span>
+<span class="type">.widget</span> {
+  <span class="attr">contain</span>: <span class="string">layout style paint</span>;
+  <span class="comment">/* Changes inside .widget won't recalculate the entire page */</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Interview Gold</div>
+    <p><code>content-visibility: auto</code> is like <code>loading="lazy"</code> but for DOM rendering, not images. On a product listing page with 1000 items, the browser only renders the first ~20 items in the viewport — saving megabytes of layout and paint work. Combined with virtual scrolling in React, it's the most powerful performance pairing in modern frontend.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "content-visibility: auto = lazy render (skip off-screen). contain = isolate changes (no global recalc). Critical CSS = inline above-fold styles."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">View Transitions API — SPA-like page transitions</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p3">P3 — Nice to Know</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>The View Transitions API enables <strong>animated transitions between page states</strong> without JavaScript animation libraries. With a single CSS declaration <code>::view-transition-old</code> and <code>::view-transition-new</code>, the browser automatically captures snapshots of the old and new state, cross-fades between them, and morphs elements with matching <code>view-transition-name</code>. In SPAs, wrap navigation in <code>document.startViewTransition()</code> to animate route changes. The browser handles the entire morphing process — no GSAP, no Framer Motion, just CSS. It's like PowerPoint slide transitions, but for web pages, at 60fps.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">Multi-Page View Transitions (MPA)</div>
+      <pre><code><span class="comment">/* Same-origin navigation gets automatic cross-fade */</span>
+<span class="keyword">@view-transition</span> {
+  <span class="attr">navigation</span>: <span class="string">auto</span>; <span class="comment">/* Enable for all same-origin navigations */</span>
+}
+
+<span class="comment">/* Custom transition — slide instead of cross-fade */</span>
+<span class="keyword">::view-transition-old</span>(<span class="string">root</span>) {
+  <span class="attr">animation</span>: <span class="string">slide-out 0.3s ease</span>;
+}
+<span class="keyword">::view-transition-new</span>(<span class="string">root</span>) {
+  <span class="attr">animation</span>: <span class="string">slide-in 0.3s ease</span>;
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Named elements morph between pages</div>
+      <pre><code><span class="comment">/* Hero image morphs between list and detail views */</span>
+<span class="type">.hero-image</span> {
+  <span class="attr">view-transition-name</span>: <span class="string">hero</span>;
+}
+<span class="comment">/* Browser automatically morphs .hero-image between pages */</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>View Transitions API is the most underrated new browser API. It reduces hundreds of lines of JavaScript animation code to a few CSS declarations. The browser handles the complex parts (snapshot capture, morphing, timing) at native speed. The catch: it's still relatively new — check support before using in production. But for admin dashboards, internal tools, and progressive enhancement, it's production-ready today.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "View Transitions = browser-powered page animations. @view-transition { navigation: auto; } = free cross-fade. view-transition-name = morph specific elements between pages."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">16</div>
+    <div>
+      <div class="q-text">Dark Mode Implementation — prefers-color-scheme, class-based toggle, Tailwind dark:</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>There are three approaches to dark mode, and a production app uses all three. <strong>System-level</strong>: <code>@media (prefers-color-scheme: dark)</code> automatically matches the OS theme — zero JS needed. <strong>Class-based toggle</strong>: add <code>class="dark"</code> to <code>&lt;html&gt;</code> via a button click, and use <code>.dark .card { ... }</code> or Tailwind's <code>dark:bg-gray-900</code>. <strong>CSS Custom Properties</strong>: define colors as variables on <code>:root</code> and override them in <code>[data-theme="dark"]</code>. The best approach combines all three: system detection as default, class toggle for manual override, saved in localStorage for persistence, and custom properties as the underlying mechanism.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example — Tailwind dark: with System + Manual Toggle</div>
+    <div class="code-block">
+      <div class="code-block-header">tailwind.config.js</div>
+      <pre><code><span class="keyword">module</span>.exports = {
+  <span class="attr">darkMode</span>: <span class="string">'class'</span>, <span class="comment">// 'media' for system-only, 'class' for toggle</span>
+};</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">ThemeProvider.tsx</div>
+      <pre><code><span class="string">'use client'</span>;
+<span class="keyword">import</span> { useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">export function</span> <span class="function">ThemeProvider</span>({ children }: { children: React.ReactNode }) {
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> saved = localStorage.getItem(<span class="string">'theme'</span>);
+    <span class="keyword">const</span> prefersDark = window.matchMedia(<span class="string">'(prefers-color-scheme: dark)'</span>).matches;
+    <span class="keyword">if</span> (saved === <span class="string">'dark'</span> || (!saved && prefersDark)) {
+      document.documentElement.classList.add(<span class="string">'dark'</span>);
+    }
+  }, []);
+  <span class="keyword">return</span> &lt;&gt;{children}&lt;/&gt;;
+}
+
+<span class="comment">// Usage: className="bg-white dark:bg-gray-900 text-black dark:text-white"</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Flash of incorrect theme (FOIT for themes). If you rely on JavaScript to add the <code>dark</code> class, there's a flash of light theme before JS executes. Fix: add a blocking <code>&lt;script&gt;</code> in <code>&lt;head&gt;</code> that reads localStorage and sets the class synchronously, before the page paints. Or use the <code>media</code> strategy in Tailwind so the OS preference is respected instantly, with JS only for manual overrides.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "prefers-color-scheme = OS setting (instant, no JS). class='dark' = manual toggle (needs JS). Custom properties = the mechanism. Combine all three for production."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">17</div>
+    <div>
+      <div class="q-text">CSS-in-JS Trade-offs — Runtime cost, SSR, why Tailwind won</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>CSS-in-JS (Styled Components, Emotion) was revolutionary in 2017-2021: scoped styles, dynamic theming via props, and co-located component logic. But three forces killed it. <strong>Runtime cost</strong>: injecting <code>&lt;style&gt;</code> tags at runtime adds ~12-15KB JS + per-component overhead — on slow devices this is noticeable. <strong>SSR complexity</strong>: extracting critical CSS on the server is fragile; mismatches between server and client styles cause hydration errors. <strong>React Server Components</strong>: RSC sends zero JavaScript to the client, but CSS-in-JS fundamentally requires JavaScript to inject styles — they're architecturally incompatible. Tailwind won because it compiles to static CSS at build time (zero runtime, RSC compatible, tiny bundle) while maintaining the DX of co-located styles.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">The Three Forces That Killed CSS-in-JS</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Force</th><th>Problem</th><th>Tailwind's Solution</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Runtime Cost</strong></td><td>12-15KB + per-component style injection</td><td>Build-time extraction (zero runtime)</td></tr>
+        <tr><td><strong>SSR</strong></td><td>Style extraction errors, hydration mismatches</td><td>Standard CSS files (no SSR issues)</td></tr>
+        <tr><td><strong>RSC Compatibility</strong></td><td>Can't inject styles without JS</td><td>You don't need JS for CSS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Where CSS-in-JS Still Wins</div>
+    <p>For heavily dynamic, design-tool-like UIs (Figma, Canva) where styles change rapidly based on user input, CSS-in-JS with runtime injection is still better than toggling hundreds of Tailwind classes. But these are edge cases — for 95% of web apps, build-time CSS (Tailwind, CSS Modules, vanilla-extract) is the right choice.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "CSS-in-JS died from three bullets: runtime cost, SSR complexity, and RSC incompatibility. Tailwind survived because it's just CSS files at the end."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">18</div>
+    <div>
+      <div class="q-text">Scroll-driven Animations — scroll-timeline, parallax without JS</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p3">P3 — Nice to Know</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Scroll-driven animations link animation progress to <strong>scroll position</strong> instead of time. <code>animation-timeline: scroll()</code> or <code>view()</code> makes an @keyframes animation advance as the user scrolls — no JavaScript needed. <code>scroll()</code> links to the nearest scroll container; <code>view()</code> links to the element's visibility in the viewport (enter/exit animations). Combined with <code>animation-range</code>, you define exactly when the animation starts and ends relative to the scroll position. This enables parallax effects, progress bars, image reveals, and scroll-linked sticky headers — all at 60fps, GPU-accelerated, without a single line of JavaScript.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example — Pure CSS Parallax and Scroll Progress</div>
+    <div class="code-block">
+      <div class="code-block-header">Scroll Progress Bar</div>
+      <pre><code><span class="type">.progress-bar</span> {
+  <span class="attr">position</span>: <span class="string">fixed</span>;
+  <span class="attr">top</span>: <span class="number">0</span>;
+  <span class="attr">height</span>: <span class="number">4px</span>;
+  <span class="attr">background</span>: <span class="string">blue</span>;
+  <span class="attr">transform-origin</span>: <span class="string">left</span>;
+  <span class="attr">animation</span>: <span class="string">grow</span> <span class="attr">auto</span> <span class="string">linear</span>;
+  <span class="attr">animation-timeline</span>: <span class="function">scroll</span>();
+}
+
+<span class="keyword">@keyframes</span> <span class="function">grow</span> {
+  <span class="attr">from</span> { <span class="attr">transform</span>: <span class="function">scaleX</span>(<span class="number">0</span>); }
+  <span class="attr">to</span>   { <span class="attr">transform</span>: <span class="function">scaleX</span>(<span class="number">1</span>); }
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Scroll-Reveal Animations</div>
+      <pre><code><span class="type">.reveal</span> {
+  <span class="attr">animation</span>: <span class="string">fade-in</span> <span class="attr">linear</span>;
+  <span class="attr">animation-timeline</span>: <span class="function">view</span>();
+  <span class="attr">animation-range</span>: <span class="string">entry 0% entry 100%</span>;
+}
+
+<span class="keyword">@keyframes</span> <span class="function">fade-in</span> {
+  <span class="attr">from</span> { <span class="attr">opacity</span>: <span class="number">0</span>; <span class="attr">transform</span>: <span class="function">translateY</span>(<span class="number">30px</span>); }
+  <span class="attr">to</span>   { <span class="attr">opacity</span>: <span class="number">1</span>; <span class="attr">transform</span>: <span class="function">translateY</span>(<span class="number">0</span>); }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>Scroll-driven animations are a JavaScript performance engineer's dream. Previously, you'd attach scroll event listeners with requestAnimationFrame, calculate offsets, manage IntersectionObservers, and fight jank. Now it's 5 lines of CSS, GPU-accelerated, and the browser's compositor thread handles it — not the main thread. This offloads work from JavaScript to hardware, which is always the right call for animations.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "animation-timeline: scroll() = progress bar tied to scroll. animation-timeline: view() = element reveals on scroll. Zero JS, all GPU."
+  </div>
+</div>
+
+</div>
+
+<!-- Q19: What happens when you type a URL -->
+<div class="question-card" id="q19">
+  <div class="q-header">
+    <div class="q-number">19</div>
+    <div>
+      <div class="q-text">What happens when you type a URL in the browser? — DNS, TCP, TLS, HTTP, and the Critical Rendering Path</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p>This classic question tests your full-stack understanding of how the browser turns a URL into pixels. The sequence:</p>
+    <p><strong>1. DNS Resolution:</strong> Browser checks caches (browser → OS → router → ISP DNS → recursive lookup). Converts <code>example.com</code> → IP like <code>93.184.216.34</code>. Takes 20-120ms.</p>
+    <p><strong>2. TCP Connection:</strong> Three-way handshake: SYN → SYN-ACK → ACK. One round trip (~50ms).</p>
+    <p><strong>3. TLS Negotiation (HTTPS):</strong> Client Hello → Server Hello + Certificate → Key Exchange → Secure Connection. Takes 2-3 round trips (~100-200ms). <strong>TLS 1.3 reduces to 1 RTT (0-RTT for returning visitors).</strong></p>
+    <p><strong>4. HTTP Request:</strong> Browser sends <code>GET / HTTP/1.1</code> or <code>HTTP/2</code> (multiplexed) or <code>HTTP/3 QUIC</code> (UDP, 0-RTT).</p>
+    <p><strong>5. HTML Parsing:</strong> Browser parses incrementally. CSS is render-blocking — pauses parsing. Scripts without <code>async</code>/<code>defer</code> block. Modern: <code>&lt;link rel="preload"&gt;</code> for critical resources, <code>&lt;script defer&gt;</code> for non-blocking JS.</p>
+    <p><strong>6. Critical Rendering Path:</strong> DOM tree → CSSOM tree → Render Tree (visible nodes only) → Layout (geometry) → Paint (pixels) → Composite (GPU layers). Optimize: inline critical CSS, defer non-critical, preload key resources.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — Optimization by Reducing Round Trips</div>
+    <p>On 3G (400ms RTT): DNS (50ms) + TCP (50ms) + TLS (150ms) + HTTP (50ms) + response (1000ms) = ~1.3s before parsing begins. <strong>Reducing round trips is the highest-leverage perf optimization.</strong> Use: (1) <code>preconnect</code> to warm DNS+TLS early, (2) <code>preload</code> for critical CSS/fonts, (3) <code>modulepreload</code> for critical JS, (4) HTTP/3 (QUIC) for 0-RTT on repeat visits. <strong>This question is asked at every level at Google, Meta, Amazon, Apple, Microsoft — Scrimba 2026 lists it as the key browser/networking question.</strong></p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "URL → DNS (name to IP) → TCP (handshake) → TLS (encrypt) → HTTP (request) → Parse → Render (DOM + CSSOM + Layout + Paint + Composite). Reduce round trips: preconnect, preload, HTTP/3."
+  </div>
+</div>
+
+<div class="end-section">
+  <h2>Most Frequently Asked CSS Questions</h2>
+  <table class="styled-table">
+    <thead>
+      <tr><th>Rank</th><th>Question</th><th>Frequency</th><th>Difficulty</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td>CSS Box Model — content-box vs border-box</td><td>Very High</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>2</strong></td><td>Flexbox — justify-content, align-items, common patterns</td><td>Very High</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>3</strong></td><td>CSS Grid — grid-template, auto-fit, minmax, areas</td><td>Very High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>4</strong></td><td>CSS Position — static, relative, absolute, fixed, sticky</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>5</strong></td><td>CSS Specificity — calculation, !important, cascade</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>6</strong></td><td>Responsive Design — mobile-first, media queries, clamp()</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>7</strong></td><td>Tailwind vs CSS Modules vs Styled Components</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>8</strong></td><td>CSS Custom Properties (Variables) — theming, tokens</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>9</strong></td><td>CSS Animations vs Transitions — GPU-friendly properties</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>10</strong></td><td>Modern CSS — :has(), @layer, Nesting, text-wrap: balance</td><td>Medium</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>11</strong></td><td>Container Queries (@container) vs Media Queries</td><td>Medium</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>12</strong></td><td>Display Properties — block, inline, inline-block, contents</td><td>Medium</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>13</strong></td><td>Dark Mode — prefers-color-scheme, class toggle, Tailwind dark:</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>14</strong></td><td>Pseudo-classes (:focus-visible) vs Pseudo-elements (::before)</td><td>Low</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>15</strong></td><td>CSS-in-JS Trade-offs — runtime cost, SSR, RSC</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>16</strong></td><td>CSS Performance — content-visibility, contain, critical CSS</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>17</strong></td><td>View Transitions API</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>18</strong></td><td>Scroll-driven Animations — scroll-timeline</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>19</strong></td><td>Browser Internals — URL to pixels, DNS, TCP, TLS, CRP</td><td>Very High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top: 2rem; color: var(--text-tertiary);">Master these 19 questions and you'll ace any CSS interview — from startup to FAANG.</p>
+</div>
+
+</body>
+</html>

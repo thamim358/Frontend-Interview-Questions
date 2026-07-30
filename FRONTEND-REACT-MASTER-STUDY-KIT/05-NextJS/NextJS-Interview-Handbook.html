@@ -1,0 +1,1809 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next.js Interview Handbook — 20 Essential Questions</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(167,139,250,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(192,132,252,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(167,139,250,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #A78BFA 40%, #C084FC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #A78BFA 0%, #C084FC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-divider h2 {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">Interview Preparation — 2024 Edition</div>
+  <h1 class="cover-title">Next.js Interview Handbook</h1>
+  <p class="cover-subtitle">Master the App Router, Server Components, Caching, and everything in between. Built from real interview questions asked at Vercel, Meta, Shopify, and top startups.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="number">20</span>
+      <span class="label">Essential Questions</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="number">2</span>
+      <span class="label">Parts — Core &amp; Advanced</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="number">60+</span>
+      <span class="label">Code Examples</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>Part 1: Core Concepts — In-Depth</h2>
+  <p>The fundamentals every Next.js developer must know. These 10 questions get the full treatment.</p>
+</div>
+
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">1</div>
+    <div>
+      <div class="q-text">What is Next.js? Explain the App Router vs Pages Router.</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Next.js is a React framework built by Vercel that provides <strong>file-based routing, server-side rendering, static site generation, and API routes</strong> out of the box. The <strong>Pages Router</strong> (pre-v13) uses a <code>pages/</code> directory where each file becomes a route. The <strong>App Router</strong> (v13+) uses an <code>app/</code> directory with nested layouts, React Server Components by default, streaming, and a more opinionated architecture. The App Router is the recommended approach for new projects, while the Pages Router continues to be supported.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of Next.js as React with training wheels that are actually rocket boosters. React alone gives you components — Next.js gives you pages, routing, data fetching patterns, and production optimizations all pre-configured. The Pages Router is like a well-organized filing cabinet (<code>pages/about.js</code> = <code>/about</code>). The App Router is a smart filing cabinet where each folder can have its own layout, loading state, and error boundary built-in.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Key Differences: App Router vs Pages Router</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>Pages Router</th><th>App Router</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Directory</strong></td><td><code>pages/</code></td><td><code>app/</code></td></tr>
+        <tr><td><strong>Components</strong></td><td>All client components by default</td><td>Server Components by default</td></tr>
+        <tr><td><strong>Layouts</strong></td><td>Manual via <code>_app.js</code> or per-page components</td><td>Nested <code>layout.tsx</code> files that persist across navigation</td></tr>
+        <tr><td><strong>Data Fetching</strong></td><td><code>getServerSideProps</code>, <code>getStaticProps</code>, <code>getStaticPaths</code></td><td>Async Server Components, <code>fetch()</code> with caching, Server Actions</td></tr>
+        <tr><td><strong>Loading States</strong></td><td>Manual via <code>router.events</code></td><td>Built-in <code>loading.tsx</code> and Suspense</td></tr>
+        <tr><td><strong>Error Handling</strong></td><td>Custom <code>_error.js</code></td><td><code>error.tsx</code> (nested), <code>global-error.tsx</code></td></tr>
+        <tr><td><strong>Streaming</strong></td><td>Not supported</td><td>Native streaming via Suspense and React Server Components</td></tr>
+        <tr><td><strong>Middleware</strong></td><td>Supported</td><td>Supported (enhanced)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Netflix</strong> migrated parts of their dashboard to the App Router. Their authentication layout wraps all protected routes in a <code>layout.tsx</code> that checks sessions once (not on every navigation). Before, with the Pages Router, they had to duplicate auth logic in <code>getServerSideProps</code> on every single page. The App Router's nested layouts eliminated that duplication entirely.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Why Interviewers Ask This</div>
+    <p>This question tests whether you understand the <strong>evolution</strong> of Next.js and can articulate architectural decisions. Someone who can't explain why the App Router exists probably hasn't built anything serious with it. It also reveals whether you've been keeping up with the ecosystem or are stuck in 2021.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/layout.tsx — App Router Nested Layout</div>
+      <pre><code><span class="keyword">export default function</span> <span class="function">RootLayout</span>({ children }: { children: React.ReactNode }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;
+      &lt;<span class="type">body</span>&gt;
+        &lt;<span class="type">nav</span>&gt;{<span class="comment">/* Persistent across all pages */</span>}&lt;/<span class="type">nav</span>&gt;
+        &lt;<span class="type">main</span>&gt;{children}&lt;/<span class="type">main</span>&gt;
+      &lt;/<span class="type">body</span>&gt;
+    &lt;/<span class="type">html</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">pages/about.tsx — Pages Router (old)</div>
+      <pre><code><span class="keyword">export default function</span> <span class="function">About</span>() {
+  <span class="keyword">return</span> &lt;<span class="type">div</span>&gt;About Page&lt;/<span class="type">div</span>&gt;;
+}
+
+<span class="keyword">export async function</span> <span class="function">getStaticProps</span>() {
+  <span class="keyword">return</span> { <span class="attr">props</span>: {} };
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/about/page.tsx — App Router (new)</div>
+      <pre><code><span class="comment">// Server Component by default — can be async</span>
+<span class="keyword">export default async function</span> <span class="function">AboutPage</span>() {
+  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/about'</span>);
+  <span class="keyword">const</span> about = <span class="keyword">await</span> data.json();
+  <span class="keyword">return</span> &lt;<span class="type">div</span>&gt;{about.title}&lt;/<span class="type">div</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Can you mix App Router and Pages Router in the same project?</li>
+      <li>When would you still choose the Pages Router over the App Router?</li>
+      <li>How does the App Router handle route groups (parentheses folders)?</li>
+    </ol>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Pages Router = files as routes. App Router = folders as routes with superpowers (layouts, loading, error, all in the folder)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Next.js: React framework with SSR, SSG, ISR, API routes</li>
+      <li>Pages Router: <code>pages/</code> directory, file-based routing (simple)</li>
+      <li>App Router: <code>app/</code> directory, nested layouts, RSC by default</li>
+      <li>App Router is the future; Pages Router is stable and maintained</li>
+      <li>Key win: layouts persist, no more wrapper components everywhere</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">2</div>
+    <div>
+      <div class="q-text">Explain Server Components vs Client Components. When do you use each?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>In the App Router, <strong>all components are Server Components by default</strong>. They run on the server, have direct access to databases and filesystems, and send zero JavaScript to the client — reducing bundle size dramatically. <strong>Client Components</strong> are opt-in via the <code>"use client"</code> directive. They run in the browser, can use React hooks (<code>useState</code>, <code>useEffect</code>, <code>useContext</code>), event handlers (<code>onClick</code>), and browser APIs. The key insight: <strong>Server Components render on the server, Client Components hydrate on the client — and you can nest Client Components inside Server Components.</strong></p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Imagine a restaurant. Server Components are the kitchen — they have access to the fridge (database), the stove (computation), and they prepare the meal (HTML). Client Components are the waiter bringing interactive elements (onClick, useState) to the table. The kitchen doesn't need to know about the customer's fork preferences (browser state), and the waiter doesn't need access to the raw ingredients (server-only APIs). Next.js orchestrates both, sending the prepared meal (server-rendered HTML) and the waiter's toolkit (JavaScript bundle) together.</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Golden Rule</div>
+    <p>Push Client Components as far down the tree as possible. If only a button needs interactivity, make just the button a Client Component — not the entire page. Think "islands of interactivity" in a sea of server-rendered HTML.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Decision Matrix</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Need</th><th>Server Component</th><th>Client Component</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Fetch data from DB/API</td><td>Yes (direct)</td><td>Yes (via fetch/useEffect)</td></tr>
+        <tr><td>useState / useReducer</td><td>No</td><td>Yes</td></tr>
+        <tr><td>useEffect / event handlers</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Browser APIs (localStorage, etc.)</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Access to filesystem / DB directly</td><td>Yes</td><td>No</td></tr>
+        <tr><td>Keep sensitive keys secret</td><td>Yes (never sent to client)</td><td>No (exposed in bundle)</td></tr>
+        <tr><td>Reduce client JS bundle</td><td>Yes (0 KB JS)</td><td>No (adds to bundle)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Vercel's own dashboard</strong> uses this pattern extensively. The project list page is a Server Component that fetches all projects from the database and renders the list. Each project card has a "Delete" button which is a Client Component (<code>"use client"</code>) that handles the confirmation dialog and calls a Server Action. The heavy lifting (DB query, rendering 100+ cards) requires zero JavaScript sent to the browser.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Marking the entire page with <code>"use client"</code> just because one button needs interactivity. This kills all the benefits of Server Components — your data fetching, rendering, and bundle size all suffer. Instead, extract the interactive part into its own file with <code>"use client"</code> at the top and import it into the Server Component.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/products/page.tsx — Server Component (default)</div>
+      <pre><code><span class="keyword">import</span> { AddToCartButton } <span class="keyword">from</span> <span class="string">'./AddToCartButton'</span>;
+
+<span class="keyword">export default async function</span> <span class="function">ProductsPage</span>() {
+  <span class="comment">// Direct DB access — no API route needed</span>
+  <span class="keyword">const</span> products = <span class="keyword">await</span> db.product.findMany();
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      {products.map((p) =&gt; (
+        &lt;<span class="type">div</span> <span class="attr">key</span>={p.id}&gt;
+          &lt;<span class="type">h2</span>&gt;{p.name}&lt;/<span class="type">h2</span>&gt;
+          &lt;<span class="type">p</span>&gt;${p.price}&lt;/<span class="type">p</span>&gt;
+          {<span class="comment">/* Only the button is a Client Component */</span>}
+          &lt;<span class="type">AddToCartButton</span> <span class="attr">productId</span>={p.id} /&gt;
+        &lt;/<span class="type">div</span>&gt;
+      ))}
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/products/AddToCartButton.tsx — Client Component</div>
+      <pre><code><span class="string">'use client'</span>;
+
+<span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">export function</span> <span class="function">AddToCartButton</span>({ productId }: { productId: string }) {
+  <span class="keyword">const</span> [loading, setLoading] = <span class="function">useState</span>(<span class="keyword">false</span>);
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">button</span>
+      <span class="attr">onClick</span>{() =&gt; { setLoading(<span class="keyword">true</span>); }}
+      <span class="attr">disabled</span>={loading}
+    &gt;
+      {loading ? <span class="string">'Adding...'</span> : <span class="string">'Add to Cart'</span>}
+    &lt;/<span class="type">button</span>&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The real power isn't just smaller bundles — it's that Server Components <strong>never re-render</strong>. Once the server sends the HTML, that's it. No reconciliation, no virtual DOM diffing, no hooks to manage. This means you can put expensive computations (Markdown parsing, image processing) in Server Components and they run exactly once per request.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Can a Client Component import a Server Component?</li>
+      <li>What happens if you put "use client" in a file that's imported by another "use client" file?</li>
+      <li>How does the interleaving (Server to Client to Server) boundary work?</li>
+    </ol>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Server = silent (no JS). Client = chatty (needs JS). Keep the chatty parts small and close to the user interaction."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Server Components: default, run on server, 0 KB JS, can use async/await</li>
+      <li>Client Components: opt-in via "use client", run in browser, can use hooks</li>
+      <li>Push "use client" as deep as possible — islands architecture</li>
+      <li>Server Components can import Client Components (not vice versa directly)</li>
+      <li>Bundle savings are massive — typically 30-50% reduction</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">3</div>
+    <div>
+      <div class="q-text">Explain SSR vs SSG vs ISR. When should you use each?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>SSR (Server-Side Rendering)</strong> generates HTML on each request — best for personalized, real-time data like dashboards. <strong>SSG (Static Site Generation)</strong> builds HTML at build time — ideal for content that rarely changes like blog posts or marketing pages. <strong>ISR (Incremental Static Regeneration)</strong> combines both: pages are statically generated but can be <strong>revalidated</strong> at specified intervals or on-demand, updating stale content without a full rebuild. In the App Router, all of these are controlled through <code>fetch()</code> cache options and the <code>revalidate</code> segment config, not separate functions like <code>getStaticProps</code>.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of a newspaper. <strong>SSG</strong> is like printing 10,000 copies at the factory — fast to distribute, but content is frozen until the next print run. <strong>SSR</strong> is like printing a custom copy per reader — always fresh, but slower. <strong>ISR</strong> is like printing a base copy but updating headlines every hour — best of both worlds. You get the speed of pre-printed pages with periodic freshness.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Comparison Table</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>SSR</th><th>SSG</th><th>ISR</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Rendering time</strong></td><td>Per request</td><td>Build time</td><td>Build time + revalidation</td></tr>
+        <tr><td><strong>TTFB</strong></td><td>Slower (server work)</td><td>Fastest (CDN)</td><td>Fast (CDN, stale revalidate)</td></tr>
+        <tr><td><strong>Data freshness</strong></td><td>Real-time</td><td>Stale until rebuild</td><td>Eventually fresh</td></tr>
+        <tr><td><strong>Use cases</strong></td><td>Dashboards, user profiles, carts</td><td>Blog posts, docs, landing pages</td><td>Product listings, CMS pages, news</td></tr>
+        <tr><td><strong>App Router config</strong></td><td><code>dynamic: 'force-dynamic'</code></td><td>Default (no fetch)</td><td><code>revalidate: 60</code></td></tr>
+        <tr><td><strong>Scales to</strong></td><td>Server capacity</td><td>Infinity (CDN)</td><td>Infinity (CDN)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Amazon product pages</strong> are the textbook ISR case. Product details (title, description, price) don't change every second, but inventory status does. Amazon could ISR at 60 seconds — 99% of requests hit the CDN cache (super fast), and every 60 seconds the page silently regenerates with updated stock counts. <strong>Twitter's home feed</strong> uses SSR — your feed is unique to you and changes constantly. <strong>Stripe's documentation</strong> uses SSG — docs change when engineers update them, which triggers a rebuild.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using ISR with <code>revalidate: 1</code> thinking it equals real-time. Each revalidation still serves the stale page to the first visitor and regenerates in the background. For truly real-time data, use SSR with <code>dynamic: 'force-dynamic'</code> or stream updates via WebSockets.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/products/[id]/page.tsx — ISR Pattern</div>
+      <pre><code><span class="comment">// Revalidate this page every 60 seconds</span>
+<span class="keyword">export const</span> revalidate = <span class="number">60</span>;
+
+<span class="keyword">export default async function</span> <span class="function">ProductPage</span>({ params }: { params: { id: string } }) {
+  <span class="keyword">const</span> product = <span class="keyword">await</span> <span class="function">fetch</span>(`https://api.example.com/products/${params.id}`, {
+    <span class="attr">next</span>: { <span class="attr">revalidate</span>: <span class="number">60</span> }
+  }).then((res) => res.json());
+
+  <span class="keyword">return</span> &lt;<span class="type">div</span>&gt;{product.name}: ${product.price}&lt;/<span class="type">div</span>&gt;;
+}
+
+<span class="keyword">export async function</span> <span class="function">generateStaticParams</span>() {
+  <span class="keyword">const</span> products = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/products'</span>).then((r) => r.json());
+  <span class="keyword">return</span> products.map((p) => ({ <span class="attr">id</span>: p.id.toString() }));
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/page.tsx — SSR (Dynamic) Pattern</div>
+      <pre><code><span class="comment">// Always fetch fresh data — never cache this page</span>
+<span class="keyword">export const</span> dynamic = <span class="string">'force-dynamic'</span>;
+
+<span class="keyword">export default async function</span> <span class="function">DashboardPage</span>() {
+  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/live-stats'</span>, {
+    <span class="attr">cache</span>: <span class="string">'no-store'</span>
+  }).then((r) => r.json());
+
+  <span class="keyword">return</span> &lt;<span class="type">div</span>&gt;Active users: {data.activeUsers}&lt;/<span class="type">div</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The real art is <strong>composing these strategies within a single page</strong>. In the App Router, you can have a layout.tsx that's statically generated, a header that's SSR (dynamic user avatar), and content blocks that are ISR. This granularity didn't exist in the Pages Router — every page had a single strategy. Now you mix and match at the component boundary level.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "SSG = bake once, serve forever. SSR = cook per order. ISR = bake once, reheat every N minutes."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>SSR: HTML generated per request, best for dynamic/personalized content</li>
+      <li>SSG: HTML generated at build time, best for static content, infinite CDN scale</li>
+      <li>ISR: Static + periodic revalidation, best for mostly-static data with updates</li>
+      <li>App Router uses fetch() options + segment config (no more getX functions)</li>
+      <li>Can mix strategies: layouts can be static, pages dynamic, components ISR</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">4</div>
+    <div>
+      <div class="q-text">How does Data Fetching work in the App Router?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>In the App Router, Server Components can be <code>async</code> — you <code>await fetch()</code> directly in the component body. Next.js extends the native <code>fetch</code> API with caching options: <code>force-cache</code> (default, equivalent to SSG), <code>no-store</code> (SSR every request), and <code>revalidate: N</code> (ISR). There's no more <code>getServerSideProps</code> or <code>getStaticProps</code>. The data is fetched on the server, rendered to HTML, and sent to the client — the client never sees the raw API calls. You can also use <strong>Server Actions</strong> for mutations and <strong>React's cache()</strong> function for request-scoped deduplication.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Remember how in the Pages Router you had to jump through hoops — <code>getServerSideProps</code> for SSR, <code>getStaticProps</code> for SSG, and you couldn't fetch inside components? The App Router says "just write <code>await fetch()</code> where you need it." It's like going from a separate kitchen-prep room to an open kitchen — the data is fetched right where it's consumed, not in a separate function.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Fetch Cache Options</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Option</th><th>Behavior</th><th>Pages Router Equivalent</th><th>Use Case</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>cache: 'force-cache'</code></td><td>Cache indefinitely (default)</td><td><code>getStaticProps</code></td><td>Blog posts, docs</td></tr>
+        <tr><td><code>cache: 'no-store'</code></td><td>Fetch fresh every request</td><td><code>getServerSideProps</code></td><td>Dashboards, user data</td></tr>
+        <tr><td><code>next: { revalidate: 60 }</code></td><td>Cache for 60s, then revalidate</td><td><code>getStaticProps + revalidate</code></td><td>Product pages, CMS content</td></tr>
+        <tr><td><code>next: { tags: ['posts'] }</code></td><td>On-demand revalidation via <code>revalidateTag</code></td><td>On-Demand ISR</td><td>After CMS content update</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Shopify's Hydrogen storefront</strong> (built on Next.js) fetches product data in Server Components using <code>cache: 'no-cache'</code> for inventory (must be real-time) and <code>revalidate: 3600</code> for product descriptions (rarely change). They use React's <code>cache()</code> to deduplicate identical fetch calls across the component tree — if the header, sidebar, and product page all fetch the cart data, it only hits the API once per request.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Accidentally leaving <code>force-cache</code> (the default) on user-specific data. Imagine fetching the current user's profile with the default cache — every visitor sees the first user who triggered the cache! Always use <code>cache: 'no-store'</code> for authenticated data or use <code>cookies()</code> to vary the cache key.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/blog/[slug]/page.tsx — Parallel Fetching</div>
+      <pre><code><span class="keyword">import</span> { cache } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Deduplicate: if called multiple times, only fetches once per request</span>
+<span class="keyword">const</span> <span class="function">getPost</span> = cache((slug: string) =&gt;
+  <span class="function">fetch</span>(`https://api.example.com/posts/${slug}`).then((r) => r.json())
+);
+
+<span class="keyword">export default async function</span> <span class="function">BlogPost</span>({ params }: { params: { slug: string } }) {
+  <span class="keyword">const</span> post = <span class="keyword">await</span> <span class="function">getPost</span>(params.slug);
+  <span class="keyword">const</span> comments = <span class="keyword">await</span> <span class="function">fetch</span>(`https://api.example.com/comments/${post.id}`, {
+    <span class="attr">next</span>: { <span class="attr">revalidate</span>: <span class="number">60</span> }
+  }).then((r) => r.json());
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">article</span>&gt;
+      &lt;<span class="type">h1</span>&gt;{post.title}&lt;/<span class="type">h1</span>&gt;
+      &lt;<span class="type">CommentSection</span> <span class="attr">comments</span>={comments} /&gt;
+    &lt;/<span class="type">article</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Parallel data fetching — both run simultaneously</div>
+      <pre><code><span class="keyword">export default async function</span> <span class="function">DashboardPage</span>() {
+  <span class="keyword">const</span> [user, orders, analytics] = <span class="keyword">await</span> Promise.all([
+    <span class="function">fetch</span>(<span class="string">'/api/user'</span>, { <span class="attr">cache</span>: <span class="string">'no-store'</span> }).then((r) => r.json()),
+    <span class="function">fetch</span>(<span class="string">'/api/orders'</span>).then((r) => r.json()),
+    <span class="function">fetch</span>(<span class="string">'/api/analytics'</span>).then((r) => r.json()),
+  ]);
+
+  <span class="keyword">return</span> &lt;<span class="type">Dashboard</span> <span class="attr">user</span>={user} <span class="attr">orders</span>={orders} <span class="attr">analytics</span>={analytics} /&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Use <code>Promise.all()</code> inside Server Components to fetch multiple independent data sources in parallel. Unlike the Pages Router where you had to manually coordinate <code>getServerSideProps</code>, the App Router makes parallel fetching natural — just await all promises simultaneously.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "No more getX functions. Just async components + fetch(). The cache options ARE your rendering strategy."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Server Components are async — await fetch() directly in the component</li>
+      <li>Cache options: force-cache (SSG), no-store (SSR), revalidate: N (ISR)</li>
+      <li>react cache() deduplicates fetch calls within a single request</li>
+      <li>Promise.all() for parallel data fetching — avoid waterfalls</li>
+      <li>No more getStaticProps / getServerSideProps boilerplate</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">5</div>
+    <div>
+      <div class="q-text">Explain Layouts, Templates, and Pages in the App Router.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Layouts</strong> (<code>layout.tsx</code>) wrap child routes and <strong>persist state across navigations</strong> — the nav bar, sidebar, and footer don't re-render when you navigate between pages. <strong>Templates</strong> (<code>template.tsx</code>) are like layouts but <strong>remount on every navigation</strong> — useful for animations, scroll position reset, or tracking page views. <strong>Pages</strong> (<code>page.tsx</code>) are the leaf nodes that render the actual content for a route. All three can be nested: each folder in the <code>app/</code> directory can have its own layout, template, and page.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Layouts are like the frame of a painting — the ornate border stays the same as you flip through different artworks. Templates are like the stage curtain — it drops and rises between every act (animation opportunity). Pages are the artwork itself — each route has exactly one page. The beauty is that the frame (layout) persists, so the navigation bar doesn't flash or remount when you click a link.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Layout vs Template: When to Use Each</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Behavior</th><th>layout.tsx</th><th>template.tsx</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>State persistence</td><td>Yes (keeps state)</td><td>No (resets on navigation)</td></tr>
+        <tr><td>Re-renders on navigation</td><td>No (only children update)</td><td>Yes (full remount)</td></tr>
+        <tr><td>useEffect runs</td><td>Only on initial mount</td><td>On every navigation</td></tr>
+        <tr><td>Best for</td><td>Nav bars, sidebars, footers</td><td>Animations, analytics, scroll reset</td></tr>
+        <tr><td>Suspense boundary</td><td>Can wrap children</td><td>Can wrap children</td></tr>
+        <tr><td>Error boundary</td><td>Can wrap children</td><td>Can wrap children</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Linear's dashboard</strong> (built with Next.js App Router) uses nested layouts: the root layout has the sidebar and command palette, the project layout adds a project header, and the issue page renders the actual content. Clicking between issues in the same project keeps the sidebar and project header intact — only the issue content area re-renders. This is why the app feels instant when navigating.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Putting data fetching in a layout and expecting it to refresh on navigation. Layouts don't re-render or re-fetch when you navigate between sibling routes. If you need fresh data on each navigation, fetch it in the page component instead, or use a template.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/layout.tsx — Nested Layout (persists)</div>
+      <pre><code><span class="keyword">export default function</span> <span class="function">DashboardLayout</span>({ children }: { children: React.ReactNode }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"flex"</span>&gt;
+      &lt;<span class="type">Sidebar</span> /&gt;  {<span class="comment">/* Persists across /dashboard/* navigation */</span>}
+      &lt;<span class="type">main</span>&gt;{children}&lt;/<span class="type">main</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/template.tsx — Template (remounts)</div>
+      <pre><code><span class="string">'use client'</span>;
+
+<span class="keyword">import</span> { useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">export default function</span> <span class="function">DashboardTemplate</span>({ children }: { children: React.ReactNode }) {
+  <span class="function">useEffect</span>(() =&gt; {
+    <span class="comment">// Runs on every navigation within /dashboard/*</span>
+    console.log(<span class="string">'Page viewed:'</span>, window.location.pathname);
+  });
+
+  <span class="keyword">return</span> &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"animate-fade-in"</span>&gt;{children}&lt;/<span class="type">div</span>&gt;;
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Special files in a route segment</div>
+      <pre><code><span class="comment">// app/dashboard/
+//   layout.tsx    — Shared UI (persists)
+//   template.tsx  — Shared UI (remounts)
+//   page.tsx      — /dashboard route UI
+//   loading.tsx   — Suspense fallback while page loads
+//   error.tsx     — Error boundary for this segment
+//   not-found.tsx — 404 UI for this segment</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>Layout persistence is the single biggest UX improvement in the App Router. In the Pages Router, you'd use React's key prop hack or wrap the entire app in a custom Layout component that reimplements routing logic. Now it's built-in. The key interview point: layouts don't just avoid re-rendering — they <strong>preserve component state, scroll position, and even in-flight network requests</strong> across navigations.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Layouts are lazy (stay put), templates are eager (reset), pages are the destination."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>layout.tsx: Wraps children, persists across navigations, keeps state</li>
+      <li>template.tsx: Wraps children, remounts every navigation, resets state</li>
+      <li>page.tsx: The actual route content, leaf of the tree</li>
+      <li>All three support nesting — each folder can have its own</li>
+      <li>loading.tsx, error.tsx, not-found.tsx are also per-segment special files</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">6</div>
+    <div>
+      <div class="q-text">Explain Next.js Caching in depth — Data Cache, Full Route Cache, Router Cache.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Next.js has <strong>4 layers of caching</strong> that work together to serve pages as fast as possible. <strong>Data Cache</strong> stores raw fetch() responses on the server (cross-request, persistent). <strong>Full Route Cache</strong> stores the rendered HTML and RSC payload on the server (statically generated pages only). <strong>Router Cache</strong> stores RSC payloads in the browser's memory for 30s (soft navigation). <strong>Request Memoization</strong> deduplicates identical fetch calls within a single render pass (same request, React's cache() underneath). Understanding when to invalidate each cache is the key to building performant Next.js apps that don't serve stale data.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Think of it like a multi-level memory system in a CPU. <strong>Request Memoization</strong> = L1 cache (fastest, per-render). <strong>Router Cache</strong> = L2 cache (in browser memory, 30s). <strong>Full Route Cache</strong> = L3 cache (on server, rendered HTML). <strong>Data Cache</strong> = persistent storage (fetched data, survives deploys). Each layer trades freshness for speed, and you invalidate them with different APIs.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">The Four Cache Layers</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Cache Layer</th><th>Where</th><th>Whats Stored</th><th>Duration</th><th>Invalidation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Request Memoization</strong></td><td>Server (per-request)</td><td>fetch() return values</td><td>Until render completes</td><td>Automatic per request</td></tr>
+        <tr><td><strong>Data Cache</strong></td><td>Server (persistent)</td><td>fetch() responses</td><td>Persistent (across deploys)</td><td><code>revalidateTag</code>, <code>revalidatePath</code></td></tr>
+        <tr><td><strong>Full Route Cache</strong></td><td>Server (persistent)</td><td>Rendered HTML + RSC payload</td><td>Persistent</td><td>Redeploy or revalidate</td></tr>
+        <tr><td><strong>Router Cache</strong></td><td>Client (browser memory)</td><td>RSC payload</td><td>30s or session</td><td><code>router.refresh()</code>, cookies</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Netflix's browse page</strong> illustrates all four caches working together. The movie thumbnails (Data Cache) are fetched with <code>revalidate: 3600</code>. The browse page HTML (Full Route Cache) is regenerated when the data cache is stale. As you hover between rows, the Router Cache in your browser keeps recent titles instantly available. And within each render, Request Memoization ensures the "Continue Watching" row and the "Trending Now" row don't double-fetch the same user preferences API call.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Calling <code>revalidatePath('/')</code> and expecting it to instantly update the client. The Router Cache still holds stale data for 30 seconds! You also need to call <code>router.refresh()</code> on the client to clear the Router Cache. Most "stale data" bugs in Next.js are actually Router Cache issues, not Data Cache issues.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/api/revalidate/route.ts — On-Demand Revalidation</div>
+      <pre><code><span class="keyword">import</span> { revalidateTag, revalidatePath } <span class="keyword">from</span> <span class="string">'next/cache'</span>;
+<span class="keyword">import</span> { NextRequest } <span class="keyword">from</span> <span class="string">'next/server'</span>;
+
+<span class="keyword">export async function</span> <span class="function">POST</span>(request: NextRequest) {
+  <span class="keyword">const</span> secret = request.nextUrl.searchParams.get(<span class="string">'secret'</span>);
+
+  <span class="keyword">if</span> (secret !== process.env.REVALIDATION_SECRET) {
+    <span class="keyword">return</span> Response.json({ <span class="attr">error</span>: <span class="string">'Invalid token'</span> }, { <span class="attr">status</span>: <span class="number">401</span> });
+  }
+
+  <span class="function">revalidateTag</span>(<span class="string">'posts'</span>);
+  <span class="function">revalidatePath</span>(<span class="string">'/blog'</span>);
+
+  <span class="keyword">return</span> Response.json({ <span class="attr">revalidated</span>: <span class="keyword">true</span> });
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Tag-based fetch with on-demand revalidation</div>
+      <pre><code><span class="comment">// In your page component:</span>
+<span class="keyword">const</span> posts = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/posts'</span>, {
+  <span class="attr">next</span>: { <span class="attr">tags</span>: [<span class="string">'posts'</span>] }
+}).then((r) =&gt; r.json());
+
+<span class="comment">// In your CMS webhook handler:</span>
+<span class="function">revalidateTag</span>(<span class="string">'posts'</span>); <span class="comment">// All fetches tagged 'posts' are purged</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Interview Twist</div>
+    <p>"A user reports seeing old data after updating their profile. The data cache is correctly purged. What's likely wrong?" — Answer: The Router Cache. Even after server-side revalidation, the client holds the RSC payload for 30 seconds. You need <code>router.refresh()</code> after the mutation completes.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Memoize per render, Data until you revalidate, Route until you redeploy, Router for 30 seconds. Four layers, four invalidation strategies."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>4 cache layers: Request Memoization, Data Cache, Full Route Cache, Router Cache</li>
+      <li>Data Cache: Persistent, cross-request, invalidated via revalidateTag/revalidatePath</li>
+      <li>Full Route Cache: Rendered HTML, only for static pages, cleared on redeploy</li>
+      <li>Router Cache: Client-side in-memory, 30s default, cleared with router.refresh()</li>
+      <li>Stale data bugs are often Router Cache issues, not Data Cache issues</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">7</div>
+    <div>
+      <div class="q-text">What is Middleware in Next.js? How do you use it for auth, redirects, and more?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Middleware runs <strong>before every request</strong> completes, at the edge (or Node.js), giving you the ability to modify the request or response. Create a <code>middleware.ts</code> file in the project root (or <code>src/</code>). Use <code>config.matcher</code> to scope which routes it applies to. Common use cases: <strong>authentication checks</strong> (redirect unauthenticated users), <strong>geolocation-based redirects</strong> (serve different locales), <strong>A/B testing</strong> (rewrite to variant pages), and <strong>bot protection</strong>. Middleware has access to <code>cookies</code>, <code>headers</code>, and <code>NextRequest</code>/<code>NextResponse</code> — but runs in a limited Edge runtime, so no Node.js APIs (fs, net, etc.).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Middleware is a bouncer at the club entrance. Before anyone gets to the party (your pages), the bouncer checks their ID (cookies/tokens), verifies they're on the guest list (auth check), and either waves them through or redirects them to the line outside (login page). The bouncer is fast and runs close to the user (edge), but can't do heavy lifting like database queries — that's for the pages inside.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Instagram</strong> could use Next.js middleware for regional content filtering. Users in the EU hit a different API endpoint due to GDPR requirements. Instead of duplicating this logic on every page, a single middleware checks <code>request.geo?.country</code> and rewrites the request to EU-specific data sources. <strong>Stripe</strong> uses middleware for bot detection — analyzing request patterns and blocking suspicious traffic before it hits expensive SSR pages.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Running database queries inside middleware. Middleware runs on every request — if you have 10,000 RPM and each middleware makes a DB query, you've just created a massive bottleneck. Instead, only check lightweight tokens (JWTs, session cookies) in middleware, and do the heavy data fetching inside Server Components or Route Handlers.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">middleware.ts — Auth Guard and Redirect Pattern</div>
+      <pre><code><span class="keyword">import</span> { NextResponse } <span class="keyword">from</span> <span class="string">'next/server'</span>;
+<span class="keyword">import type</span> { NextRequest } <span class="keyword">from</span> <span class="string">'next/server'</span>;
+
+<span class="keyword">export function</span> <span class="function">middleware</span>(request: NextRequest) {
+  <span class="keyword">const</span> token = request.cookies.get(<span class="string">'auth-token'</span>)?.value;
+  <span class="keyword">const</span> isAuthPage = request.nextUrl.pathname.startsWith(<span class="string">'/login'</span>);
+
+  <span class="comment">// If not authenticated and trying to access protected route</span>
+  <span class="keyword">if</span> (!token && !isAuthPage) {
+    <span class="keyword">const</span> loginUrl = <span class="keyword">new</span> URL(<span class="string">'/login'</span>, request.url);
+    loginUrl.searchParams.set(<span class="string">'from'</span>, request.nextUrl.pathname);
+    <span class="keyword">return</span> NextResponse.redirect(loginUrl);
+  }
+
+  <span class="comment">// If authenticated and trying to access login page</span>
+  <span class="keyword">if</span> (token && isAuthPage) {
+    <span class="keyword">return</span> NextResponse.redirect(<span class="keyword">new</span> URL(<span class="string">'/dashboard'</span>, request.url));
+  }
+
+  <span class="comment">// Clone and modify headers</span>
+  <span class="keyword">const</span> response = NextResponse.next();
+  response.headers.set(<span class="string">'x-custom-header'</span>, <span class="string">'middleware-was-here'</span>);
+
+  <span class="keyword">return</span> response;
+}
+
+<span class="keyword">export const</span> config = {
+  <span class="attr">matcher</span>: [<span class="string">'/dashboard/:path*'</span>, <span class="string">'/login'</span>, <span class="string">'/settings/:path*'</span>],
+};</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">middleware.ts — Geo-based Rewrite (A/B Testing)</div>
+      <pre><code><span class="keyword">export function</span> <span class="function">middleware</span>(request: NextRequest) {
+  <span class="keyword">const</span> country = request.geo?.country || <span class="string">'US'</span>;
+
+  <span class="keyword">if</span> ([<span class="string">'DE'</span>, <span class="string">'FR'</span>, <span class="string">'ES'</span>, <span class="string">'IT'</span>].includes(country)) {
+    <span class="keyword">return</span> NextResponse.rewrite(<span class="keyword">new</span> URL(`/eu${request.nextUrl.pathname}`, request.url));
+  }
+
+  <span class="keyword">return</span> NextResponse.next();
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Use <code>config.matcher</code> aggressively. If you only need middleware on <code>/dashboard/*</code> routes, don't run it on <code>/public/*</code> or static assets. Every millisecond counts when middleware runs on every matched request.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Middleware = the gate. Cookies/headers check at the gate, DB queries inside the castle (Server Components)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>middleware.ts at project root, runs before every matched request</li>
+      <li>Use config.matcher to scope routes (use string array, not regex)</li>
+      <li>Runs in Edge runtime — limited APIs, no Node.js modules</li>
+      <li>Perfect for auth checks, redirects, rewrites, header manipulation</li>
+      <li>Don't do heavy computation or DB calls in middleware</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">8</div>
+    <div>
+      <div class="q-text">Explain Server Actions in Next.js. How do they work and when should you use them?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Server Actions are <strong>async functions that run on the server</strong> but can be called from Client Components like regular functions. Defined with <code>"use server"</code>, they enable <strong>form mutations, database writes, and API calls without creating a separate API route</strong>. They support <strong>progressive enhancement</strong> — forms work even before JavaScript loads. React provides <code>useFormStatus</code> (pending state) and <code>useOptimistic</code> (optimistic UI updates) hooks specifically for Server Actions. They're essentially RPC (Remote Procedure Call) — the client calls a function, Next.js serializes the arguments, sends them to the server, executes the function, and returns the result.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Remember how you used to write a form, create an API route <code>/api/submit</code>, add <code>fetch()</code> in the submit handler, handle errors, loading states, and validation — all manually? Server Actions collapse that into: write a function with <code>"use server"</code> at the top, pass it directly to <code>&lt;form action={myServerFn}&gt;</code>. That's it. The form submits, the function runs on the server, and React handles the rest. It's like having a direct hotline from the browser to your backend, no API routing layer needed.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Vercel's commerce templates</strong> use Server Actions for the entire checkout flow. The "Add to Cart" button triggers a Server Action that updates the database, revalidates the cart cache, and streams back the updated cart total — all without a single <code>/api/*</code> route. <strong>Notion</strong>-style apps use Server Actions for real-time collaborative editing, combining <code>useOptimistic</code> for instant UI feedback with a Server Action that persists to the database.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Calling Server Actions from event handlers thinking they're like regular functions. Server Actions make network requests — they're async and can fail. Always handle errors with try/catch and provide user feedback. Also, never pass class instances or non-serializable objects as arguments — only plain objects, FormData, strings, numbers, etc.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/actions.ts — Server Action Module</div>
+      <pre><code><span class="string">'use server'</span>;
+
+<span class="keyword">import</span> { revalidatePath } <span class="keyword">from</span> <span class="string">'next/cache'</span>;
+<span class="keyword">import</span> { z } <span class="keyword">from</span> <span class="string">'zod'</span>;
+
+<span class="keyword">const</span> schema = z.object({
+  <span class="attr">title</span>: z.string().min(<span class="number">1</span>),
+  <span class="attr">content</span>: z.string().min(<span class="number">10</span>),
+});
+
+<span class="keyword">export async function</span> <span class="function">createPost</span>(formData: FormData) {
+  <span class="keyword">const</span> parsed = schema.safeParse({
+    <span class="attr">title</span>: formData.get(<span class="string">'title'</span>),
+    <span class="attr">content</span>: formData.get(<span class="string">'content'</span>),
+  });
+
+  <span class="keyword">if</span> (!parsed.success) {
+    <span class="keyword">return</span> { <span class="attr">error</span>: <span class="string">'Validation failed'</span> };
+  }
+
+  <span class="keyword">await</span> db.post.create({ <span class="attr">data</span>: parsed.data });
+  <span class="function">revalidatePath</span>(<span class="string">'/posts'</span>);
+
+  <span class="keyword">return</span> { <span class="attr">success</span>: <span class="keyword">true</span> };
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/posts/NewPostForm.tsx — Client Component with Server Action</div>
+      <pre><code><span class="string">'use client'</span>;
+
+<span class="keyword">import</span> { useFormStatus } <span class="keyword">from</span> <span class="string">'react-dom'</span>;
+<span class="keyword">import</span> { useRef } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { createPost } <span class="keyword">from</span> <span class="string">'@/app/actions'</span>;
+
+<span class="keyword">function</span> <span class="function">SubmitButton</span>() {
+  <span class="keyword">const</span> { pending } = <span class="function">useFormStatus</span>();
+  <span class="keyword">return</span> (
+    &lt;<span class="type">button</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">disabled</span>={pending}&gt;
+      {pending ? <span class="string">'Creating...'</span> : <span class="string">'Create Post'</span>}
+    &lt;/<span class="type">button</span>&gt;
+  );
+}
+
+<span class="keyword">export function</span> <span class="function">NewPostForm</span>() {
+  <span class="keyword">const</span> formRef = useRef&lt;HTMLFormElement&gt;(<span class="keyword">null</span>);
+
+  <span class="keyword">async function</span> <span class="function">handleSubmit</span>(formData: FormData) {
+    <span class="keyword">const</span> result = <span class="keyword">await</span> <span class="function">createPost</span>(formData);
+    <span class="keyword">if</span> (result.success) formRef.current?.reset();
+  }
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">form</span> <span class="attr">ref</span>={formRef} <span class="attr">action</span>={handleSubmit}&gt;
+      &lt;<span class="type">input</span> <span class="attr">name</span>=<span class="string">"title"</span> <span class="attr">placeholder</span>=<span class="string">"Title"</span> /&gt;
+      &lt;<span class="type">textarea</span> <span class="attr">name</span>=<span class="string">"content"</span> <span class="attr">placeholder</span>=<span class="string">"Content"</span> /&gt;
+      &lt;<span class="type">SubmitButton</span> /&gt;
+    &lt;/<span class="type">form</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">useOptimistic — Instant UI updates</div>
+      <pre><code><span class="string">'use client'</span>;
+
+<span class="keyword">import</span> { useOptimistic } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { likePost } <span class="keyword">from</span> <span class="string">'@/app/actions'</span>;
+
+<span class="keyword">export function</span> <span class="function">LikeButton</span>({ postId, initialLikes }: { postId: string; initialLikes: number }) {
+  <span class="keyword">const</span> [optimisticLikes, addOptimisticLike] = <span class="function">useOptimistic</span>(
+    initialLikes,
+    (state, amount: number) =&gt; state + amount
+  );
+
+  <span class="keyword">async function</span> <span class="function">handleLike</span>() {
+    <span class="function">addOptimisticLike</span>(<span class="number">1</span>); <span class="comment">// Instant UI update</span>
+    <span class="keyword">await</span> <span class="function">likePost</span>(postId); <span class="comment">// Server call in background</span>
+  }
+
+  <span class="keyword">return</span> &lt;<span class="type">button</span> <span class="attr">onClick</span>={handleLike}&gt;Heart {optimisticLikes}&lt;/<span class="type">button</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>Server Actions are fundamentally RPC, not REST. This is a paradigm shift. Instead of thinking in terms of resources and HTTP methods (POST /api/posts), you think in terms of operations (createPost, deletePost). The form works without JavaScript (progressive enhancement), and React handles serialization, error propagation, and revalidation. The biggest architectural win: <strong>colocating mutations with the data they read</strong>. Your Server Action that creates a post lives right next to the Server Component that reads posts — not in a separate /api directory.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Server Actions = 'use server' + &lt;form action={fn}&gt;. No API route. No fetch(). Just direct function calls that run on the server."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Server Actions: async functions with "use server" that run server-side</li>
+      <li>Called from Client Components via form action or imperative invocation</li>
+      <li>useFormStatus: track pending state without prop drilling</li>
+      <li>useOptimistic: update UI instantly before server confirms</li>
+      <li>Progressive enhancement: forms work even with JavaScript disabled</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">9</div>
+    <div>
+      <div class="q-text">How do Image and Font Optimization work in Next.js?</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>next/image</strong> is a wrapper around the native <code>&lt;img&gt;</code> tag that provides automatic image optimization: <strong>lazy loading</strong> by default, <strong>responsive sizing</strong> via <code>sizes</code> prop, <strong>format conversion</strong> to WebP/AVIF, and <strong>blur-up placeholders</strong>. It prevents Cumulative Layout Shift (CLS) by requiring explicit <code>width</code> and <code>height</code> or <code>fill</code>. <strong>next/font</strong> optimizes web fonts by <strong>self-hosting</strong> them at build time — Google Fonts are downloaded and served from your domain, eliminating external network requests and improving privacy. It also supports <code>variable</code> fonts and automatic <code>font-display: swap</code> for no flash of invisible text (FOIT).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p><code>next/image</code> is like having a professional photo editor that automatically resizes, compresses, and converts every image on your site — and only delivers the right size for each device. <code>next/font</code> is like downloading all your fonts and storing them in your own basement, so visitors don't have to walk to Google's warehouse every time they load a page. Both eliminate layout shift, which is the #1 cause of bad Core Web Vitals scores.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Image Component Features</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Feature</th><th>How It Works</th><th>Why It Matters</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Lazy Loading</strong></td><td>Native loading="lazy" + Intersection Observer</td><td>Reduces initial page weight</td></tr>
+        <tr><td><strong>Responsive Sizes</strong></td><td>Generates srcSet with multiple widths</td><td>Serves appropriate resolution per device</td></tr>
+        <tr><td><strong>Format Detection</strong></td><td>Serves WebP/AVIF to supporting browsers</td><td>30-50% smaller than JPEG/PNG</td></tr>
+        <tr><td><strong>Blur Placeholder</strong></td><td>placeholder="blur" with inline base64</td><td>Prevents CLS, looks polished</td></tr>
+        <tr><td><strong>CLS Prevention</strong></td><td>Requires width/height or fill prop</td><td>Reserves space before image loads</td></tr>
+        <tr><td><strong>Remote Patterns</strong></td><td>next.config.js domains/remotePatterns</td><td>Optimizes external images safely</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Airbnb's listing pages</strong> (if built with Next.js) would benefit tremendously from next/image. Each property has 10-20 high-res photos. Without optimization, that's 20MB+ of images. With next/image's automatic responsive sizing, format conversion, and lazy loading, the initial page load only downloads the visible hero image at the user's viewport size — typically under 100KB. The rest load as you scroll, and they're served as WebP for 40% smaller files.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using <code>fill</code> without a parent with <code>position: relative</code> and explicit dimensions. The image either collapses to 0x0 or overflows. Always wrap <code>fill</code> images in a container with defined dimensions and <code>relative</code> positioning.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">next/image — Local and Remote Images</div>
+      <pre><code><span class="keyword">import</span> Image <span class="keyword">from</span> <span class="string">'next/image'</span>;
+<span class="keyword">import</span> heroImage <span class="keyword">from</span> <span class="string">'@/public/hero.jpg'</span>;
+
+<span class="keyword">export default function</span> <span class="function">HeroBanner</span>() {
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="type">Image</span>
+        <span class="attr">src</span>={heroImage}
+        <span class="attr">alt</span>=<span class="string">"Hero banner"</span>
+        <span class="attr">priority</span>
+        <span class="attr">placeholder</span>=<span class="string">"blur"</span>
+      /&gt;
+
+      &lt;<span class="type">Image</span>
+        <span class="attr">src</span>=<span class="string">"https://cdn.example.com/photo.jpg"</span>
+        <span class="attr">width</span>={<span class="number">800</span>}
+        <span class="attr">height</span>={<span class="number">600</span>}
+        <span class="attr">alt</span>=<span class="string">"Remote photo"</span>
+      /&gt;
+
+      &lt;<span class="type">div</span> <span class="attr">style</span>={{ <span class="attr">position</span>: <span class="string">'relative'</span>, <span class="attr">width</span>: <span class="string">'100%'</span>, <span class="attr">height</span>: <span class="string">'400px'</span> }}&gt;
+        &lt;<span class="type">Image</span>
+          <span class="attr">src</span>=<span class="string">"/banner.jpg"</span>
+          <span class="attr">fill</span>
+          <span class="attr">style</span>={{ <span class="attr">objectFit</span>: <span class="string">'cover'</span> }}
+          <span class="attr">alt</span>=<span class="string">"Full-width banner"</span>
+        /&gt;
+      &lt;/<span class="type">div</span>&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">next/font — Google Font and Local Font</div>
+      <pre><code><span class="keyword">import</span> { Inter, Roboto_Mono } <span class="keyword">from</span> <span class="string">'next/font/google'</span>;
+<span class="keyword">import</span> localFont <span class="keyword">from</span> <span class="string">'next/font/local'</span>;
+
+<span class="keyword">const</span> inter = <span class="function">Inter</span>({
+  <span class="attr">subsets</span>: [<span class="string">'latin'</span>],
+  <span class="attr">variable</span>: <span class="string">'--font-inter'</span>,
+  <span class="attr">display</span>: <span class="string">'swap'</span>,
+});
+
+<span class="keyword">const</span> mono = <span class="function">Roboto_Mono</span>({
+  <span class="attr">subsets</span>: [<span class="string">'latin'</span>],
+  <span class="attr">weight</span>: [<span class="string">'400'</span>, <span class="string">'700'</span>],
+});
+
+<span class="keyword">export default function</span> <span class="function">RootLayout</span>({ children }: { children: React.ReactNode }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">html</span> <span class="attr">className</span>{`${inter.variable}`}&gt;
+      &lt;<span class="type">body</span> <span class="attr">className</span>={inter.className}&gt;{children}&lt;/<span class="type">body</span>&gt;
+    &lt;/<span class="type">html</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">next.config.js — Remote Image Patterns</div>
+      <pre><code><span class="keyword">const</span> nextConfig = {
+  <span class="attr">images</span>: {
+    <span class="attr">remotePatterns</span>: [
+      {
+        <span class="attr">protocol</span>: <span class="string">'https'</span>,
+        <span class="attr">hostname</span>: <span class="string">'cdn.example.com'</span>,
+        <span class="attr">port</span>: <span class="string">''</span>,
+        <span class="attr">pathname</span>: <span class="string">'/images/**'</span>,
+      },
+    ],
+  },
+};
+
+<span class="keyword">module</span>.exports = nextConfig;</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Use <code>priority</code> on your Largest Contentful Paint (LCP) image. Next.js defaults to lazy loading all images, which is great for below-the-fold content but hurts LCP for above-the-fold hero images. Adding <code>priority</code> preloads the image and removes <code>loading="lazy"</code>.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "next/image = automatic CLS killer. next/font = no more Google font network requests. Both = better Core Web Vitals."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>next/image: lazy loading, responsive srcSet, WebP/AVIF, CLS prevention</li>
+      <li>next/font: self-hosts Google Fonts and local fonts at build time</li>
+      <li>Always set width/height or use fill with a positioned parent</li>
+      <li>Use priority on above-the-fold images for better LCP</li>
+      <li>Configure remotePatterns in next.config.js for external image sources</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">How do you handle Metadata and SEO in Next.js App Router?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1 — Critical</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Next.js provides a powerful <strong>Metadata API</strong> that generates <code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code>, and <code>&lt;link&gt;</code> tags by exporting a <code>metadata</code> object or <code>generateMetadata</code> function from any <code>layout.tsx</code> or <code>page.tsx</code>. Metadata is <strong>merged from layouts down to pages</strong> — a root layout sets site-wide Open Graph defaults, and child pages override specific fields. Supports <strong>static metadata</strong> (export const), <strong>dynamic metadata</strong> (generateMetadata async function), file-based metadata (<code>opengraph-image.tsx</code>, <code>sitemap.ts</code>, <code>robots.ts</code>), and <strong>structured data</strong> (JSON-LD) for rich snippets. Everything is server-rendered, so it's fully crawlable.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Metadata in the App Router is like a Russian nesting doll. The root layout sets the broad strokes ("My App"), each nested layout adds more context ("Blog"), and each page sets the specific details ("How to Write Clean Code"). You export a simple object or an async function, and Next.js handles the <code>&lt;head&gt;</code> tags. No more <code>&lt;Head&gt;</code> component from <code>next/head</code> — it's all declarative, type-safe, and automatically deduplicated.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Metadata API Overview</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>API</th><th>Purpose</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>export const metadata</code></td><td>Static metadata on any page/layout</td><td><code>{ title: 'About', description: '...' }</code></td></tr>
+        <tr><td><code>export async function generateMetadata()</code></td><td>Dynamic metadata based on fetched data</td><td>Fetch post, return title + description</td></tr>
+        <tr><td><code>opengraph-image.tsx</code></td><td>Dynamic OG images (JSX to PNG)</td><td>Template with post title, author avatar</td></tr>
+        <tr><td><code>sitemap.ts</code></td><td>Auto-generated XML sitemap</td><td>Return array of URLs with lastmod</td></tr>
+        <tr><td><code>robots.ts</code></td><td>Robots.txt generation</td><td>Define allow/disallow rules</td></tr>
+        <tr><td><code>JSON-LD</code></td><td>Structured data in page body</td><td>Article, Product, FAQ schema</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p><strong>Medium</strong> (hypothetically rebuilt with Next.js) leverages dynamic metadata for SEO dominance. Each article's <code>generateMetadata</code> fetches the post title, description, author name, and cover image — generating perfect Open Graph tags. Search results show rich previews with author avatars. Their <code>sitemap.ts</code> streams 10M+ URLs efficiently. Dynamic <code>opengraph-image.tsx</code> renders unique social cards per article (title + author + publication) using JSX — no design tool needed.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Setting metadata in Client Components. The Metadata API only works in Server Components (layouts and pages). If you need client-side title updates (like unread message counts), use <code>document.title</code> in a <code>useEffect</code> or emit a <code>&lt;title&gt;</code> tag via React — but know that search engines won't see client-only changes.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/layout.tsx — Root Metadata (inherited by all pages)</div>
+      <pre><code><span class="keyword">import type</span> { Metadata } <span class="keyword">from</span> <span class="string">'next'</span>;
+
+<span class="keyword">export const</span> metadata: Metadata = {
+  <span class="attr">title</span>: {
+    <span class="attr">default</span>: <span class="string">'My SaaS App'</span>,
+    <span class="attr">template</span>: <span class="string">'%s | My SaaS App'</span>,
+  },
+  <span class="attr">description</span>: <span class="string">'The best SaaS app in existence'</span>,
+  <span class="attr">openGraph</span>: {
+    <span class="attr">type</span>: <span class="string">'website'</span>,
+    <span class="attr">siteName</span>: <span class="string">'My SaaS App'</span>,
+    <span class="attr">images</span>: [{ <span class="attr">url</span>: <span class="string">'/og-default.jpg'</span> }],
+  },
+  <span class="attr">twitter</span>: {
+    <span class="attr">card</span>: <span class="string">'summary_large_image'</span>,
+    <span class="attr">creator</span>: <span class="string">'@mysaasapp'</span>,
+  },
+};</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/blog/[slug]/page.tsx — Dynamic Metadata</div>
+      <pre><code><span class="keyword">export async function</span> <span class="function">generateMetadata</span>({ params }: { params: { slug: string } }): Promise&lt;Metadata&gt; {
+  <span class="keyword">const</span> post = <span class="keyword">await</span> <span class="function">getPost</span>(params.slug);
+
+  <span class="keyword">return</span> {
+    <span class="attr">title</span>: post.title,
+    <span class="attr">description</span>: post.excerpt,
+    <span class="attr">openGraph</span>: {
+      <span class="attr">title</span>: post.title,
+      <span class="attr">description</span>: post.excerpt,
+      <span class="attr">images</span>: [{ <span class="attr">url</span>: post.coverImage }],
+      <span class="attr">type</span>: <span class="string">'article'</span>,
+      <span class="attr">publishedTime</span>: post.publishedAt,
+      <span class="attr">authors</span>: [post.author.name],
+    },
+  };
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/sitemap.ts — Dynamic Sitemap</div>
+      <pre><code><span class="keyword">import type</span> { MetadataRoute } <span class="keyword">from</span> <span class="string">'next'</span>;
+
+<span class="keyword">export default async function</span> <span class="function">sitemap</span>(): Promise&lt;MetadataRoute.Sitemap&gt; {
+  <span class="keyword">const</span> posts = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/posts'</span>).then((r) => r.json());
+
+  <span class="keyword">return</span> [
+    { <span class="attr">url</span>: <span class="string">'https://example.com'</span>, <span class="attr">lastModified</span>: <span class="keyword">new</span> Date() },
+    ...posts.map((post) => ({
+      <span class="attr">url</span>: `https://example.com/blog/${post.slug}`,
+      <span class="attr">lastModified</span>: <span class="keyword">new</span> Date(post.updatedAt),
+    })),
+  ];
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Interview Twist</div>
+    <p>"How would you generate dynamic Open Graph images at scale for millions of pages without a design team?" — Answer: Use <code>opengraph-image.tsx</code> with Satori (JSX to PNG) to render programmatic social cards. Run it at request time or pre-generate at build. Vercel's OG Image Generation library handles this at the edge.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Metadata merges down, titles concatenate via template. Export objects or async functions. No more Head component."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Metadata API: export metadata object or generateMetadata function</li>
+      <li>Merged hierarchically: root layout to nested layouts to pages</li>
+      <li>title.template: "%s | Site Name" — pages fill in the %s</li>
+      <li>File-based: opengraph-image, sitemap.ts, robots.ts</li>
+      <li>All server-rendered — SEO-friendly and crawlable by search engines</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="section-divider">
+  <h2>Part 2: Advanced Topics — Concise Reference</h2>
+  <p>These questions cover deeper areas. Know these to stand out from other candidates.</p>
+</div>
+
+<div class="container">
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Streaming and Suspense — loading.tsx, Progressive HTML, PPR</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Streaming allows the server to send HTML in chunks as it's ready, rather than waiting for the entire page to render. <code>loading.tsx</code> is a file-level Suspense boundary — show a skeleton while a route segment loads. <strong>Progressive Page Rendering (PPR)</strong> combines static and dynamic content: the static shell (nav, footer) is served instantly from the edge, while dynamic content (user data, recommendations) streams in. React's <code>&lt;Suspense&gt;</code> boundaries define where streaming splits happen. This dramatically improves Time to First Byte (TTFB) and First Contentful Paint (FCP).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/loading.tsx — Route-level loading skeleton</div>
+      <pre><code><span class="keyword">export default function</span> <span class="function">DashboardLoading</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"animate-pulse"</span>&gt;
+      &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"h-8 w-48 bg-gray-700 rounded mb-4"</span> /&gt;
+      &lt;<span class="type">div</span> <span class="attr">className</span>=<span class="string">"h-64 bg-gray-700 rounded"</span> /&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/page.tsx — Component-level Suspense</div>
+      <pre><code><span class="keyword">import</span> { Suspense } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { SlowDataComponent } <span class="keyword">from</span> <span class="string">'./SlowDataComponent'</span>;
+
+<span class="keyword">export default function</span> <span class="function">DashboardPage</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">h1</span>&gt;Dashboard&lt;/<span class="type">h1</span>&gt;
+      &lt;<span class="type">QuickStats</span> /&gt;
+      &lt;<span class="type">Suspense</span> <span class="attr">fallback</span>={&lt;<span class="type">ChartsSkeleton</span> /&gt;}&gt;
+        &lt;<span class="type">SlowDataComponent</span> /&gt;
+      &lt;/<span class="type">Suspense</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Remember</div>
+    <p>PPR is the future. It means your marketing page's static shell loads in ~100ms from the edge, while the personalized dashboard widget takes 500ms — but users see something immediately. No more all-or-nothing SSR.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Streaming = HTML delivered like Netflix — you watch (render) as chunks arrive, not after the whole movie downloads."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>loading.tsx = file-level Suspense boundary, auto-applied to the route segment</li>
+      <li>Suspense = component-level streaming boundary, wrap slow components</li>
+      <li>PPR = static shell streams instantly, dynamic content follows</li>
+      <li>Reduces TTFB, improves FCP, better perceived performance</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Authentication Patterns — NextAuth/Auth.js, Middleware Auth, Server Sessions</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Authentication in Next.js typically follows three layers: <strong>Middleware</strong> checks session tokens and redirects unauthenticated users (fast, edge-level), <strong>Server Components</strong> read the session to fetch user-specific data (secure, no client exposure), and <strong>Client Components</strong> handle UI state (login buttons, user dropdowns). <strong>NextAuth.js (Auth.js v5)</strong> provides OAuth providers, database adapters, and JWT/session strategies out of the box. The key pattern: <strong>validate in middleware, personalize in Server Components, interact in Client Components.</strong></p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example — Middleware + Server Session</div>
+    <div class="code-block">
+      <div class="code-block-header">lib/auth.ts — Session helper (runs on server)</div>
+      <pre><code><span class="keyword">import</span> { cookies } <span class="keyword">from</span> <span class="string">'next/headers'</span>;
+<span class="keyword">import</span> { jwtVerify } <span class="keyword">from</span> <span class="string">'jose'</span>;
+
+<span class="keyword">export async function</span> <span class="function">getSession</span>() {
+  <span class="keyword">const</span> token = <span class="function">cookies</span>().get(<span class="string">'session'</span>)?.value;
+  <span class="keyword">if</span> (!token) <span class="keyword">return null</span>;
+
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> { payload } = <span class="keyword">await</span> <span class="function">jwtVerify</span>(token, <span class="keyword">new</span> TextEncoder().encode(process.env.JWT_SECRET!));
+    <span class="keyword">return</span> payload;
+  } <span class="keyword">catch</span> {
+    <span class="keyword">return null</span>;
+  }
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">app/dashboard/page.tsx — Server Component reads session</div>
+      <pre><code><span class="keyword">import</span> { getSession } <span class="keyword">from</span> <span class="string">'@/lib/auth'</span>;
+<span class="keyword">import</span> { redirect } <span class="keyword">from</span> <span class="string">'next/navigation'</span>;
+
+<span class="keyword">export default async function</span> <span class="function">DashboardPage</span>() {
+  <span class="keyword">const</span> session = <span class="keyword">await</span> <span class="function">getSession</span>();
+  <span class="keyword">if</span> (!session) <span class="function">redirect</span>(<span class="string">'/login'</span>);
+
+  <span class="keyword">const</span> user = <span class="keyword">await</span> db.user.findUnique({ <span class="attr">where</span>: { <span class="attr">id</span>: session.sub } });
+  <span class="keyword">return</span> &lt;<span class="type">div</span>&gt;Welcome back, {user.name}!&lt;/<span class="type">div</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Checking auth only in Client Components with <code>useEffect</code>. This causes a flash of unauthenticated content before the redirect fires. Always gate protected routes in middleware (fast, server-side, no flash) and Server Components.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Middleware = bouncer (redirects fast). Server Component = personal butler (fetches your data). Client Component = the furniture (interactive UI)."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Three layers: Middleware (gate), Server Components (data), Client Components (UI)</li>
+      <li>NextAuth.js v5: OAuth, database adapters, JWT sessions built-in</li>
+      <li>Never check auth in useEffect — use middleware for redirects</li>
+      <li>Server Components read sessions securely, never exposed to client</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Route Handlers (API Routes) in the App Router</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Route Handlers replace the Pages Router's API Routes. Create a <code>route.ts</code> file in the <code>app/</code> directory with exported async functions named after HTTP methods: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, <code>HEAD</code>, <code>OPTIONS</code>. They receive a standard <code>Request</code> and return a <code>Response</code> (Web API, not Express-style). They support <strong>streaming</strong> (return a ReadableStream), <strong>caching</strong> (same fetch options as pages), and <strong>CORS</strong> configuration. Route Handlers can live in the same folder as pages without conflicting — <code>route.ts</code> for API, <code>page.tsx</code> for UI.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/api/posts/route.ts — Full CRUD Route Handler</div>
+      <pre><code><span class="keyword">import</span> { NextRequest } <span class="keyword">from</span> <span class="string">'next/server'</span>;
+
+<span class="keyword">export async function</span> <span class="function">GET</span>(request: NextRequest) {
+  <span class="keyword">const</span> { searchParams } = request.nextUrl;
+  <span class="keyword">const</span> page = searchParams.get(<span class="string">'page'</span>) || <span class="string">'1'</span>;
+
+  <span class="keyword">const</span> posts = <span class="keyword">await</span> db.post.findMany({
+    <span class="attr">skip</span>: (parseInt(page) - <span class="number">1</span>) * <span class="number">10</span>,
+    <span class="attr">take</span>: <span class="number">10</span>,
+  });
+
+  <span class="keyword">return</span> Response.json(posts);
+}
+
+<span class="keyword">export async function</span> <span class="function">POST</span>(request: Request) {
+  <span class="keyword">const</span> body = <span class="keyword">await</span> request.json();
+  <span class="keyword">const</span> post = <span class="keyword">await</span> db.post.create({ <span class="attr">data</span>: body });
+  <span class="keyword">return</span> Response.json(post, { <span class="attr">status</span>: <span class="number">201</span> });
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Streaming Route Handler</div>
+      <pre><code><span class="keyword">export async function</span> <span class="function">GET</span>() {
+  <span class="keyword">const</span> stream = <span class="keyword">new</span> ReadableStream({
+    <span class="keyword">async</span> <span class="function">start</span>(controller) {
+      controller.enqueue(<span class="string">'data: First chunk\n\n'</span>);
+      <span class="keyword">await</span> <span class="keyword">new</span> Promise((r) =&gt; setTimeout(r, <span class="number">1000</span>));
+      controller.enqueue(<span class="string">'data: Second chunk\n\n'</span>);
+      controller.close();
+    },
+  });
+
+  <span class="keyword">return new</span> Response(stream, {
+    <span class="attr">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'text/event-stream'</span> },
+  });
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Prefer Server Actions over Route Handlers for mutations. Route Handlers are best for external-facing APIs (webhooks, third-party integrations, public REST endpoints). For your own app's forms and mutations, Server Actions are simpler and more secure.</p>
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>route.ts replaces pages/api/*.ts — Web API Request/Response</li>
+      <li>Export named functions: GET, POST, PUT, PATCH, DELETE</li>
+      <li>Supports streaming and standard fetch caching options</li>
+      <li>Can coexist with page.tsx in the same folder</li>
+    </ul>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">Dynamic Routes — [slug], [...catchAll], generateStaticParams</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Dynamic routes use bracket notation in folder/file names: <code>[slug]</code> for a single segment, <code>[...slug]</code> for catch-all (matches /a, /a/b, /a/b/c), and <code>[[...slug]]</code> for optional catch-all (matches / as well). <code>generateStaticParams</code> replaces <code>getStaticPaths</code> — it returns an array of params objects that Next.js pre-renders at build time. For routes not in the array, the page is dynamically rendered at request time (or returns 404 if <code>dynamicParams: false</code>).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/blog/[...slug]/page.tsx — Catch-all</div>
+      <pre><code><span class="keyword">export async function</span> <span class="function">generateStaticParams</span>() {
+  <span class="keyword">const</span> posts = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.example.com/posts'</span>).then((r) => r.json());
+  <span class="keyword">return</span> posts.map((post) => ({
+    <span class="attr">slug</span>: post.slug.split(<span class="string">'/'</span>),
+  }));
+}
+
+<span class="keyword">export default async function</span> <span class="function">BlogPost</span>({ params }: { params: { slug: string[] } }) {
+  <span class="keyword">const</span> fullPath = params.slug.join(<span class="string">'/'</span>);
+  <span class="keyword">const</span> post = <span class="keyword">await</span> <span class="function">getPostByPath</span>(fullPath);
+  <span class="keyword">return</span> &lt;<span class="type">article</span>&gt;{post.content}&lt;/<span class="type">article</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Remember</div>
+    <p><code>generateStaticParams</code> + <code>dynamicParams: false</code> = pure SSG (404 for unknown paths). Without <code>dynamicParams: false</code> = ISR-like (renders unknown paths on-demand and caches).</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "[single], [...many], [[...optional-many]]. generateStaticParams replaces getStaticPaths."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">Environment Variables — NEXT_PUBLIC_, Server-Only, Runtime vs Build</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Next.js distinguishes between <strong>server-only</strong> and <strong>public</strong> environment variables. Variables without the <code>NEXT_PUBLIC_</code> prefix are only available in Server Components, Route Handlers, and Middleware — they're <strong>never exposed to the browser</strong>. Variables prefixed with <code>NEXT_PUBLIC_</code> are inlined at build time and available anywhere, including Client Components — so never put secrets here. Next.js loads <code>.env</code>, <code>.env.local</code>, <code>.env.[production|development]</code>, and <code>.env.[production|development].local</code> with specific precedence rules.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">.env.local</div>
+      <pre><code><span class="comment"># Server-only — NEVER exposed to client</span>
+DATABASE_URL=postgres://...
+STRIPE_SECRET_KEY=sk_live_...
+JWT_SECRET=super-secret-key
+
+<span class="comment"># Public — bundled with client code at BUILD TIME</span>
+NEXT_PUBLIC_API_URL=https://api.mysite.com
+NEXT_PUBLIC_SITE_URL=https://mysite.com
+NEXT_PUBLIC_GA_ID=G-XXXXXXXX</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Putting <code>NEXT_PUBLIC_</code> on a secret key. It gets inlined into the client bundle and is visible to anyone who inspects your JavaScript. If the variable name starts with <code>NEXT_PUBLIC_</code>, treat it as public — because it is.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "No prefix = server secret. NEXT_PUBLIC_ prefix = visible to anyone. Never put secrets in NEXT_PUBLIC_."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">16</div>
+    <div>
+      <div class="q-text">Parallel and Intercepting Routes — @modal, (.)photo Patterns</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Parallel Routes</strong> use <code>@foldername</code> slots to render multiple pages in the same layout simultaneously — think dashboard with <code>@analytics</code>, <code>@revenue</code>, <code>@notifications</code> panels. <strong>Intercepting Routes</strong> use <code>(.)folder</code> notation to "intercept" navigation and show a route in context (like a modal or inline view) instead of full-page navigation. Together they enable patterns like photo galleries where clicking a photo opens it as a modal (<code>/photos/1</code> intercepted), but refreshing the page loads the full photo page (<code>/photos/1</code> directly). The folder notation: <code>(.)</code> = same level, <code>(..)</code> = one up, <code>(..)(..)</code> = two up, <code>(...)</code> = root.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">app/layout.tsx — Parallel Route Slots</div>
+      <pre><code><span class="keyword">export default function</span> <span class="function">DashboardLayout</span>({
+  children, analytics, notifications,
+}: {
+  children: React.ReactNode;
+  analytics: React.ReactNode;
+  notifications: React.ReactNode;
+}) {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">main</span>&gt;{children}&lt;/<span class="type">main</span>&gt;
+      &lt;<span class="type">aside</span>&gt;{analytics}&lt;/<span class="type">aside</span>&gt;
+      &lt;<span class="type">aside</span>&gt;{notifications}&lt;/<span class="type">aside</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Intercepting Route Pattern — Photo Modal</div>
+      <pre><code><span class="comment">// app/photos/page.tsx         — Photo grid
+// app/photos/[id]/page.tsx    — Full photo page (direct navigation)
+// app/@modal/(.)photos/[id]/page.tsx — Intercepted: opens as modal
+
+// When user clicks a photo in the grid:
+// /photos/1 is intercepted by @modal/(.)photos/[id]
+// Photo opens in a modal overlay (user stays in context)
+//
+// When user refreshes or navigates directly to /photos/1:
+// No interception since no navigation occurred
+// Full photo page renders normally</span></code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>Parallel + Intercepting Routes is how <strong>Linear, Vercel, and Instagram</strong> build those slick modal-based navigations where you never lose context. The user clicks a post, sees a modal, and can press back to return to the feed — but if they share the URL, it loads the standalone page. This is the SPA-like UX that React Router could never quite nail, and Next.js now provides natively.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "@slot = side-by-side rendering. (.)path = contextual navigation (modal). Share URL = full page. Click from feed = modal."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">17</div>
+    <div>
+      <div class="q-text">Turbopack vs Webpack — What's the Difference?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3 — Nice to Know</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p><strong>Turbopack</strong> is Next.js's Rust-based bundler that replaces Webpack for development. It's <strong>700x faster than Webpack</strong> on large applications because it uses incremental computation — only re-bundling files that actually changed. Webpack rebuilds entire chunks on any change. Turbopack is currently development-only; production builds still use Webpack. Key differentiators: <strong>function-level caching</strong> (not file-level), <strong>lazy compilation</strong> (only bundles what's actually imported), and Rust's memory safety + performance.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Performance Comparison</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Metric</th><th>Webpack</th><th>Turbopack</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Initial cold start</td><td>~30-60s (large apps)</td><td>~3-5s</td></tr>
+        <tr><td>HMR update speed</td><td>~2-5s</td><td>~15-50ms</td></tr>
+        <tr><td>Caching granularity</td><td>File-level</td><td>Function-level</td></tr>
+        <tr><td>Language</td><td>JavaScript</td><td>Rust</td></tr>
+        <tr><td>Production bundling</td><td>Yes (mature)</td><td>Experimental</td></tr>
+        <tr><td>Plugin ecosystem</td><td>Massive</td><td>Limited (growing)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Interview Gold</div>
+    <p>When asked about Webpack, mention that Next.js 15 makes Turbopack the default for dev mode. Say: "Turbopack's key insight is that bundling can be incremental like React's virtual DOM — only re-compute what changed." This shows you understand the principle, not just the marketing.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Turbopack: Rust, function-level caching, ~50ms HMR. Webpack: JS, file-level, ~2-5s HMR. Both target the same output, different speed."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">18</div>
+    <div>
+      <div class="q-text">Internationalization (i18n) in Next.js App Router</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>The App Router takes a <strong>file-system-based i18n approach</strong> using <code>[lang]</code> dynamic segments: <code>app/[lang]/page.tsx</code> for <code>/en</code>, <code>/fr</code>, etc. Middleware detects the user's preferred locale (from <code>Accept-Language</code> header or cookie) and redirects or rewrites accordingly. Libraries like <strong>next-intl</strong> provide type-safe translations, date/time formatting, and pluralization. The pages router's built-in <code>i18n</code> config is not supported in the App Router — i18n is now fully manual and more flexible.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">middleware.ts — Locale Detection with next-intl</div>
+      <pre><code><span class="keyword">import</span> createMiddleware <span class="keyword">from</span> <span class="string">'next-intl/middleware'</span>;
+
+<span class="keyword">export default</span> <span class="function">createMiddleware</span>({
+  <span class="attr">locales</span>: [<span class="string">'en'</span>, <span class="string">'fr'</span>, <span class="string">'de'</span>],
+  <span class="attr">defaultLocale</span>: <span class="string">'en'</span>,
+  <span class="attr">localeDetection</span>: <span class="keyword">true</span>,
+});
+
+<span class="keyword">export const</span> config = {
+  <span class="attr">matcher</span>: [<span class="string">'/((?!api|_next|_vercel|.*\..*).*)'</span>],
+};</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>Always use <code>generateStaticParams</code> for known locales so the home page for each language is statically generated. Otherwise, the first visitor to <code>/fr</code> experiences a slower SSR hit.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "App Router i18n = [lang] folder + middleware locale detection. No built-in i18n config. next-intl is the go-to library."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">19</div>
+    <div>
+      <div class="q-text">Deployment Strategies — Vercel, Docker, Self-Hosting</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>Next.js supports three main deployment strategies. <strong>Vercel</strong> (zero-config, edge functions, ISR, automatic HTTPS) — the easiest and most feature-complete. <strong>Docker</strong> — use <code>output: 'standalone'</code> to generate a self-contained Node.js server in a minimal Docker image (~100MB). <strong>Self-hosting</strong> on Node.js — run <code>next start</code> after building, optionally behind Nginx for SSL and load balancing. For static exports only, use <code>output: 'export'</code> for pure SSG, but lose SSR, ISR, and API routes. The key tradeoff: Vercel gives you edge caching and ISR out of the box; self-hosting requires more setup but gives full control.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Docker Example</div>
+    <div class="code-block">
+      <div class="code-block-header">next.config.js — Standalone Output</div>
+      <pre><code><span class="keyword">module</span>.exports = {
+  <span class="attr">output</span>: <span class="string">'standalone'</span>,
+};</code></pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">Dockerfile — Multi-stage Build</div>
+      <pre><code><span class="comment"># Stage 1: Build</span>
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+<span class="comment"># Stage 2: Run (minimal image)</span>
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre>
+    </div>
+  </div>
+
+  <div class="callout callout-remember">
+    <div class="callout-title">Interview Gold</div>
+    <p>When asked about deployment, always mention <code>output: 'standalone'</code> — it shows you've actually deployed Next.js outside of Vercel. Also note that ISR requires a persistent filesystem or Redis adapter when self-hosting.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Vercel = zero-ops, full features. Docker = output standalone, ~100MB image. Self-host = next start + Nginx. Static = output export (loses SSR)."
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">20</div>
+    <div>
+      <div class="q-text">Edge vs Node.js Runtime — Cold Starts, API Limitations, When to Use Each</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2 — High Value</span>
+    </div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Interview Answer</div>
+    <p>The <strong>Edge Runtime</strong> is a lightweight subset of Web APIs that runs on V8 isolates close to users (low latency, no cold starts in practice). It supports Web APIs like <code>fetch</code>, <code>Request</code>/<code>Response</code>, <code>crypto</code>, <code>URL</code>, <code>TextEncoder</code>, and streaming — but <strong>NO Node.js APIs</strong> (no <code>fs</code>, <code>net</code>, <code>tls</code>, <code>child_process</code>). The <strong>Node.js Runtime</strong> is the full Node.js environment with access to database drivers, filesystem, and npm packages. Edge is ideal for middleware, authentication checks, A/B testing, and geolocation redirects. Node.js is for data-heavy pages, database queries, image processing, and complex business logic. You set the runtime per route: <code>export const runtime = 'edge'</code> or <code>'nodejs'</code>.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Runtime Comparison</div>
+    <table class="styled-table">
+      <thead>
+        <tr><th>Capability</th><th>Edge Runtime</th><th>Node.js Runtime</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Cold start</td><td>Negligible (~0ms)</td><td>~50-500ms</td></tr>
+        <tr><td>Latency</td><td>Global edge (near users)</td><td>Regional data centers</td></tr>
+        <tr><td>fs, net, tls APIs</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Database drivers</td><td>Limited (HTTP-based only)</td><td>All (native TCP)</td></tr>
+        <tr><td>NPM packages</td><td>Limited (no native addons)</td><td>All packages</td></tr>
+        <tr><td>Streaming</td><td>Yes (ReadableStream)</td><td>Yes (Node streams)</td></tr>
+        <tr><td>Best for</td><td>Middleware, auth, rewrite/redirect</td><td>Pages, API, DB operations</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Developer Insight</div>
+    <p>The edge runtime isn't universally faster — it's faster for <strong>simple, I/O-bound operations</strong> because it runs close to users. But for CPU-bound work (Markdown parsing, image resizing, complex database queries), Node.js can be faster because it has more compute power available and isn't limited by edge worker constraints. The real skill is knowing which runtime each route needs and not blindly choosing "edge" for everything.</p>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Edge = fast bouncer at the door (lightweight checks). Node.js = heavy kitchen in the back (full processing power). Choose based on the task."
+  </div>
+
+  <div class="q-section">
+    <ul class="summary-list">
+      <li>Edge: Web APIs only, no Node.js modules, global distribution, near-zero cold start</li>
+      <li>Node.js: Full Node.js, all NPM packages, native DB drivers</li>
+      <li>Set per route: export const runtime = 'edge' or 'nodejs'</li>
+      <li>Edge for middleware, auth, A/B tests. Node.js for DB operations, pages</li>
+      <li>Don't blindly use "edge" for everything — not always faster</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+
+<div class="end-section">
+  <h2>Most Frequently Asked Next.js Questions</h2>
+  <table class="styled-table">
+    <thead>
+      <tr><th>Rank</th><th>Question</th><th>Frequency</th><th>Difficulty</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td>Server Components vs Client Components</td><td>Very High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>2</strong></td><td>SSR vs SSG vs ISR — when to use each</td><td>Very High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>3</strong></td><td>App Router vs Pages Router differences</td><td>Very High</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>4</strong></td><td>Server Actions — how they work, useFormStatus</td><td>High</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>5</strong></td><td>Next.js caching layers (Data, Route, Router)</td><td>High</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>6</strong></td><td>Middleware — auth, redirects, matcher config</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>7</strong></td><td>Data fetching patterns (fetch, cache(), revalidate)</td><td>High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>8</strong></td><td>Layouts, Templates, Pages — persistence behavior</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>9</strong></td><td>next/image and next/font optimization</td><td>Medium</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>10</strong></td><td>Metadata API and SEO best practices</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>11</strong></td><td>Authentication patterns (NextAuth, middleware)</td><td>Medium</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>12</strong></td><td>Streaming, Suspense, and PPR</td><td>Medium</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>13</strong></td><td>Environment variables — NEXT_PUBLIC_ rules</td><td>Medium</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>14</strong></td><td>Route Handlers (API routes) vs Server Actions</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>15</strong></td><td>Deployment strategies (Vercel, Docker, standalone)</td><td>Medium</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>16</strong></td><td>Dynamic routes — [slug], [...catchAll], optional</td><td>Low</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
+      <tr><td><strong>17</strong></td><td>Parallel and Intercepting Routes</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>18</strong></td><td>Internationalization (i18n) patterns</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>19</strong></td><td>Edge vs Node.js runtime comparison</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
+      <tr><td><strong>20</strong></td><td>Turbopack vs Webpack</td><td>Low</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top: 2rem; color: var(--text-tertiary);">Master these 20 questions and you'll walk into any Next.js interview with confidence.</p>
+</div>
+
+</body>
+</html>

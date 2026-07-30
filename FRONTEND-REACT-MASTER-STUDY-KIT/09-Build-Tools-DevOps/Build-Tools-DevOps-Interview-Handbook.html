@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Tools &amp; DevOps Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(249,115,22,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(239,68,68,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(249,115,22,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #F97316 50%, #EF4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #F97316 0%, #EF4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">INTERVIEW HANDBOOK</div>
+  <h1 class="cover-title">Build Tools &amp; DevOps</h1>
+  <p class="cover-subtitle">15 Essential Questions on Tooling — from Webpack internals to production deployment pipelines, taught by a senior engineer who's broken every config.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">8</span><span class="label">P1 — Must Know</span></div>
+    <div class="cover-meta-item"><span class="number">7</span><span class="label">P2 — Common</span></div>
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">Total Questions</span></div>
+    <div class="cover-meta-item"><span class="number">40+</span><span class="label">Code Examples</span></div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>P1 — Must Know Questions</h2>
+  <p>These 8 questions come up in virtually every senior frontend interview. Master the trade-offs, not just the syntax.</p>
+</div>
+
+<div class="container">
+
+<!-- Q1: Vite vs Webpack -->
+<div class="question-card" id="q1">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">Vite vs Webpack — When, Why, and How?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Vite</strong> leverages native ES modules in the browser during development — it serves unbundled source code, transforming files on-demand via esbuild. <strong>Webpack</strong> bundles everything upfront (or through persistent caching). This gives Vite near-instant cold starts and HMR regardless of project size, while Webpack's startup time grows linearly with module count. In production, Vite uses Rollup for bundling; Webpack has its own production pipeline.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Architecture Breakdown</div>
+    <p><strong>Webpack dev flow:</strong> Read all files → resolve dependency graph → bundle everything → serve. Cold start for a large app (3000+ modules) can take 30-60 seconds. HMR is fast on small files but slows as the bundle grows because Webpack must re-bundle affected chunks.</p>
+    <p><strong>Vite dev flow:</strong> Pre-bundle dependencies with esbuild once (fast — esbuild is written in Go, ~100x faster than Babel). Source code is served as individual ESM files via the browser's native import. Each file is transformed on-the-fly by esbuild only when the browser requests it. HMR updates exactly the changed module without re-bundling — sub-50ms updates even in massive projects.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Trade-offs</div>
+    <table class="styled-table">
+      <thead><tr><th>Dimension</th><th>Vite</th><th>Webpack</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dev cold start</strong></td><td>Under 1s (regardless of project size)</td><td>10-60s for large apps</td></tr>
+        <tr><td><strong>HMR speed</strong></td><td>Sub-50ms (only changed module)</td><td>50-500ms (re-bundles affected chunks)</td></tr>
+        <tr><td><strong>Dev transform</strong></td><td>esbuild (Go, incredibly fast)</td><td>Babel / SWC / esbuild (configurable)</td></tr>
+        <tr><td><strong>Production build</strong></td><td>Rollup (mature tree-shaking)</td><td>Webpack (customizable, massive plugin ecosystem)</td></tr>
+        <tr><td><strong>Maturity</strong></td><td>5 years — stable but younger</td><td>12+ years — battle-tested everywhere</td></tr>
+        <tr><td><strong>Plugin ecosystem</strong></td><td>Growing, compatible Rollup plugins</td><td>Massive — everything has a webpack plugin</td></tr>
+        <tr><td><strong>CSS handling</strong></td><td>Built-in CSS Modules, PostCSS, preprocessors</td><td>Requires explicit config (css-loader, style-loader, etc.)</td></tr>
+        <tr><td><strong>Legacy browser support</strong></td><td>Limited (needs @vitejs/plugin-legacy)</td><td>Extensive — polyfills, transpilation built-in</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">When to Choose What</div>
+    <p><strong>Choose Vite when:</strong> Greenfield React/Vue/Svelte projects, you value developer experience, you're not targeting IE11, you want zero-config startup. Vite is the default for new projects in 2025.</p>
+    <p><strong>Choose Webpack when:</strong> You're maintaining a mature codebase, need advanced code-splitting strategies, have a highly customized build pipeline, need <code>require.context</code>, or work in a large organization with existing webpack customizations. Next.js uses Webpack (or Turbopack) under the hood — you're often already using Webpack without realizing it.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Vite's "unbundled dev" architecture is the real innovation here, not esbuild speed. The browser-native ESM approach means the dependency graph is inherently incremental — no need to rebuild the world when one file changes. This architectural advantage cannot be replicated by making Webpack's internals faster. Webpack's persistent cache (filesystem cache in v5) gets close to Vite on rebuilds but still pays the initial bundle cost. If you're on Webpack, enabling <code>cache: { type: 'filesystem' }</code> is the single biggest DX improvement you can make.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Configuration Comparison — Vite vs Webpack</div>
+    <pre><code><span class="comment">// vite.config.js — zero-config philosophy</span>
+<span class="keyword">import</span> { defineConfig } <span class="keyword">from</span> <span class="string">'vite'</span>;
+<span class="keyword">import</span> react <span class="keyword">from</span> <span class="string">'@vitejs/plugin-react'</span>;
+
+<span class="keyword">export default</span> <span class="function">defineConfig</span>({
+  <span class="attr">plugins</span>: [<span class="function">react</span>()],
+  <span class="attr">server</span>: { <span class="attr">port</span>: <span class="number">3000</span>, <span class="attr">open</span>: <span class="number">true</span> },
+  <span class="attr">build</span>: { <span class="attr">rollupOptions</span>: { <span class="attr">output</span>: { <span class="attr">manualChunks</span>: {
+    <span class="attr">vendor</span>: [<span class="string">'react'</span>, <span class="string">'react-dom'</span>]
+  }}}}
+}); <span class="comment">// Done. That's the whole config.</span>
+
+<span class="comment">// webpack.config.js — explicit pipeline</span>
+<span class="keyword">const</span> path = <span class="function">require</span>(<span class="string">'path'</span>);
+<span class="keyword">const</span> HtmlWebpackPlugin = <span class="function">require</span>(<span class="string">'html-webpack-plugin'</span>);
+
+<span class="keyword">module</span>.<span class="attr">exports</span> = {
+  <span class="attr">entry</span>: <span class="string">'./src/index.js'</span>,
+  <span class="attr">output</span>: { <span class="attr">path</span>: path.<span class="function">resolve</span>(__dirname, <span class="string">'dist'</span>), <span class="attr">filename</span>: <span class="string">'[name].[contenthash].js'</span> },
+  <span class="attr">resolve</span>: { <span class="attr">extensions</span>: [<span class="string">'.js'</span>, <span class="string">'.jsx'</span>] },
+  <span class="attr">module</span>: { <span class="attr">rules</span>: [
+    { <span class="attr">test</span>: <span class="regex">/\.jsx?$/</span>, <span class="attr">exclude</span>: <span class="regex">/node_modules/</span>, <span class="attr">use</span>: <span class="string">'babel-loader'</span> },
+    { <span class="attr">test</span>: <span class="regex">/\.css$/</span>, <span class="attr">use</span>: [<span class="string">'style-loader'</span>, <span class="string">'css-loader'</span>] },
+    { <span class="attr">test</span>: <span class="regex">/\.(png|svg)$/</span>, <span class="attr">type</span>: <span class="string">'asset/resource'</span> }
+  ]},
+  <span class="attr">plugins</span>: [<span class="keyword">new</span> <span class="function">HtmlWebpackPlugin</span>({ <span class="attr">template</span>: <span class="string">'./public/index.html'</span> })],
+  <span class="attr">cache</span>: { <span class="attr">type</span>: <span class="string">'filesystem'</span> }    <span class="comment">// Critical for DX parity with Vite on rebuilds</span>
+};</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>You don't have to choose — many teams run Vite for local dev and fall back to Webpack for production builds in CI if they need specific plugins. CRA (Create React App) has been deprecated; the React docs now recommend frameworks like Next.js, Remix, or Vite-based setups.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>How does Vite handle <code>node_modules</code> differently from <code>src</code> code?</li>
+      <li>Why can't Webpack adopt the ESM dev approach Vite uses?</li>
+      <li>What happens if a Vite dependency has a CommonJS module — can Vite handle it?</li>
+      <li>When would you use Webpack over Vite in a brand new project?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Webpack = bake the whole cake before serving. Vite = serve fresh slices on-demand. Webpack's persistent cache is the microwave reheat that almost catches up."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Vite = native ESM dev (near-instant), Rollup production, zero-config experience</li>
+      <li>Webpack = bundled dev (slower start), mature ecosystem, total customization</li>
+      <li>esbuild is the secret sauce for Vite's speed — Go-based, 100x faster than Babel</li>
+      <li>Production builds are comparable: Vite (Rollup) vs Webpack (own bundler)</li>
+      <li>For new projects: Vite. For existing with complex configs: accelerate Webpack with filesystem cache</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q2: Tree Shaking & Code Splitting -->
+<div class="question-card" id="q2">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">Tree Shaking and Code Splitting — How Do Bundlers Eliminate Dead Code?</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Tree shaking</strong> is dead code elimination at the module level — bundlers analyze the import/export graph and remove code that is never imported. It depends on ES Module static structure (imports/exports are known at parse time, unlike CommonJS <code>require()</code>). <strong>Code splitting</strong> is the deliberate separation of your bundle into smaller chunks that load on demand, typically at route boundaries or interaction points. Together they minimize both initial and total JavaScript shipped.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">How Tree Shaking Works</div>
+    <p><strong>1. Static analysis:</strong> The bundler parses your code, builds a dependency graph from <code>import</code>/<code>export</code> statements. Because ESM imports are static (no dynamic strings), the bundler knows exactly what's used before any code runs.</p>
+    <p><strong>2. Mark and sweep:</strong> Starting from the entry point, the bundler marks every imported function/variable/class as "used." After traversing the entire graph, any export that was never marked is "dead code" and is removed.</p>
+    <p><strong>3. The <code>sideEffects</code> flag:</strong> If your <code>package.json</code> declares <code>"sideEffects": false</code>, the bundler can safely delete entire files that export unused symbols. Without this flag, the bundler must be conservative — a module might execute side effects on import (like polyfills or CSS imports), so it cannot be removed even if no exports are used.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Code Splitting Strategies</div>
+    <table class="styled-table">
+      <thead><tr><th>Strategy</th><th>Example</th><th>When to Use</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Route-based</strong></td><td>React.lazy + Suspense on route components</td><td>Every SPA — the default starting point</td></tr>
+        <tr><td><strong>Component-based</strong></td><td>Lazy-load heavy chart library only when tab is opened</td><td>Components below the fold or behind interaction</td></tr>
+        <tr><td><strong>Vendor splitting</strong></td><td>Separate chunk for react + react-dom</td><td>Large dependencies that change infrequently</td></tr>
+        <tr><td><strong>Dynamic imports</strong></td><td><code>import('./locale/' + lang)</code></td><td>Conditional dependencies like locale files</td></tr>
+        <tr><td><strong>Boundary-based</strong></td><td>Suspense boundaries in critical rendering paths</td><td>Selective hydration, streaming SSR</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Why Tree Shaking Fails (and How to Fix It)</div>
+    <p><strong>1. CommonJS:</strong> <code>require()</code> calls are dynamic — the bundler cannot statically determine what's used. Use ESM everywhere. <strong>2. Side effects in modules:</strong> If <code>index.js</code> does <code>import './styles.css'</code>, that file has a side effect and cannot be shaken. Mark CSS imports as side effects in package.json. <strong>3. Barrel exports:</strong> <code>export * from './module'</code> forces all exports to be evaluated. Name your exports explicitly. <strong>4. Classes with decorators:</strong> Babel-compiled decorators often inject runtime helpers that defeat tree shaking. Use SWC or esbuild for cleaner output.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Tree Shaking Patterns vs Anti-patterns</div>
+    <pre><code><span class="comment">// BAD: Barrel re-exports — everything is imported even if unused</span>
+<span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">'./utils'</span>;     <span class="comment">// All utils pulled in</span>
+
+<span class="comment">// GOOD: Named imports — bundler sees exactly what's needed</span>
+<span class="keyword">export</span> { debounce, throttle } <span class="keyword">from</span> <span class="string">'./utils'</span>;
+
+<span class="comment">// BAD: Importing entire library</span>
+<span class="keyword">import</span> _ <span class="keyword">from</span> <span class="string">'lodash'</span>;
+_.<span class="function">debounce</span>(fn, <span class="number">300</span>);            <span class="comment">// Ships all 70+ KB of lodash</span>
+
+<span class="comment">// GOOD: Direct path import or tree-shakeable named import</span>
+<span class="keyword">import</span> debounce <span class="keyword">from</span> <span class="string">'lodash/debounce'</span>;
+<span class="comment">// or if using lodash-es (ESM build):</span>
+<span class="keyword">import</span> { debounce, throttle } <span class="keyword">from</span> <span class="string">'lodash-es'</span>;
+
+<span class="comment">// Route-based code splitting (React)</span>
+<span class="keyword">const</span> Dashboard = React.<span class="function">lazy</span>(() =&gt; <span class="keyword">import</span>(<span class="string">'./pages/Dashboard'</span>));
+<span class="keyword">const</span> Settings  = React.<span class="function">lazy</span>(() =&gt; <span class="keyword">import</span>(<span class="string">'./pages/Settings'</span>));
+
+<span class="comment">// Conditional dynamic import — locale files shipped on demand</span>
+<span class="keyword">async function</span> <span class="function">loadLocale</span>(lang) {
+  <span class="keyword">const</span> messages = <span class="keyword">await</span> <span class="keyword">import</span>(<span class="string">`./locales/${lang}.js`</span>);
+  <span class="keyword">return</span> messages.<span class="attr">default</span>;
+}
+
+<span class="comment">// package.json — tell the bundler this package has no side effects</span>
+{
+  <span class="string">"name"</span>: <span class="string">"my-library"</span>,
+  <span class="string">"sideEffects"</span>: <span class="number">false</span>
+  <span class="comment">// or: "sideEffects": ["*.css", "*.scss"] — CSS imports have side effects</span>
+}</code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Reality Check</div>
+    <p>At Netflix scale, the web app ships ~200KB gzipped JavaScript on initial load. Without tree shaking and code splitting, it would be 3-5MB. The technique isn't optional — it's the difference between a 10-second load and a 1-second load on 3G. Google ranks pages by Core Web Vitals; tree shaking and code splitting directly impact your LCP and TBT scores.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Why does CommonJS (<code>require</code>) break tree shaking? What makes ESM different?</li>
+      <li>How do code splitting and <code>React.Suspense</code> interact? What is the fallback pattern?</li>
+      <li>What is module concatenation (scope hoisting) and how does it complement tree shaking?</li>
+      <li>How do you verify tree shaking actually worked in your production build?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Tree shaking = dead leaves (unused exports) fall off. Code splitting = you only bring the branches you need for this page. sideEffects = telling the bundler which leaves might have bugs on them (don't shake those!)."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Tree shaking depends on ESM static imports — use ESM, avoid barrel files</li>
+      <li>Mark <code>"sideEffects": false</code> in package.json for library packages</li>
+      <li>Code splitting: route-based (every SPA), component-based (heavy widgets), vendor-based (caching)</li>
+      <li>Use bundle analyzer to verify tree shaking worked (don't trust, verify)</li>
+      <li>Dynamic <code>import()</code> creates a new split point — use it for conditional dependencies</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q3: Babel and SWC -->
+<div class="question-card" id="q3">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Babel and SWC — JavaScript Transpilation Explained</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Babel</strong> is a JavaScript-to-JavaScript compiler written in JavaScript. It uses a parse → transform → generate pipeline with a plugin architecture. <strong>SWC</strong> (Speedy Web Compiler) is a Rust-based transpiler that performs the same transformations but runs 20-70x faster because Rust compiles to native machine code. Both translate modern JS/TS into browser-compatible code, but SWC is increasingly becoming the default in performance-critical tooling (Next.js, Parcel, Deno).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Transpilation Exists</div>
+    <p>Browser vendors implement new JavaScript features at different paces. Your <code>const x = y?.z ?? 'default'</code> (optional chaining + nullish coalescing) crashes in Chrome 79. The transpiler converts this: Babel with <code>@babel/preset-env</code> reads your <strong>Browserslist</strong> config (<code>"last 2 versions, > 1%"</code>) and transforms only the features those targets don't support. It also handles JSX transformation (<code>&lt;div&gt; → React.createElement('div')</code> or the new JSX runtime <code>_jsx('div')</code>), TypeScript stripping, and polyfill injection.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Babel vs SWC vs esbuild vs tsc</div>
+    <table class="styled-table">
+      <thead><tr><th>Tool</th><th>Language</th><th>Speed</th><th>TypeScript</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Babel</strong></td><td>JavaScript</td><td>Baseline (1x)</td><td>Strip only (no type-checking)</td><td>Complex plugin chains, custom transforms</td></tr>
+        <tr><td><strong>SWC</strong></td><td>Rust</td><td>~20x faster</td><td>Strip only (no type-checking)</td><td>Next.js, replacing Babel in bundlers</td></tr>
+        <tr><td><strong>esbuild</strong></td><td>Go</td><td>~100x faster</td><td>Strip only (no type-checking)</td><td>Vite dev server, pre-bundling deps</td></tr>
+        <tr><td><strong>tsc</strong></td><td>TypeScript</td><td>Baseline (1x)</td><td>Full type-checking + emit</td><td>CI type-checking, library builds</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Critical distinction:</strong> SWC, esbuild, and Babel all <em>strip</em> TypeScript types without checking them. They treat <code>.ts</code> files as JavaScript with annotations removed at speed. For actual type checking, you still need <code>tsc --noEmit</code> — this is why most toolchains run <code>tsc --noEmit</code> in parallel with the bundler.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Why SWC is 20x Faster — The Real Reason</div>
+    <p>It's not just "Rust fast, JS slow" — though that's part of it. Babel operates on a full AST (Abstract Syntax Tree), allocating thousands of JavaScript objects per file. Each plugin traverses the entire tree independently. SWC processes files in a single pass and compiles directly to machine code. But the biggest factor: Babel's plugin system is inherently sequential — plugins transform the AST one at a time. SWC's transforms are composed at compile time (Rust macro composition), producing a single optimized transformation function with zero runtime overhead.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Babel Config vs SWC Config — Same Goal, Different Syntax</div>
+    <pre><code><span class="comment">// babel.config.js — plugin-based pipeline</span>
+<span class="keyword">module</span>.<span class="attr">exports</span> = {
+  <span class="attr">presets</span>: [
+    [<span class="string">'@babel/preset-env'</span>, {
+      <span class="attr">targets</span>: <span class="string">'> 0.5%, last 2 versions, not dead'</span>,
+      <span class="attr">useBuiltIns</span>: <span class="string">'usage'</span>,       <span class="comment">// Auto-import only needed polyfills</span>
+      <span class="attr">corejs</span>: <span class="number">3</span>
+    }],
+    [<span class="string">'@babel/preset-react'</span>, {
+      <span class="attr">runtime</span>: <span class="string">'automatic'</span>      <span class="comment">// New JSX transform (React 17+)</span>
+    }],
+    <span class="string">'@babel/preset-typescript'</span>
+  ],
+  <span class="attr">plugins</span>: [
+    <span class="string">'@babel/plugin-proposal-optional-chaining'</span>,
+    <span class="string">'lodash'</span>                    <span class="comment">// Tree-shake lodash imports</span>
+  ]
+};
+
+<span class="comment">// .swcrc — Rust-native config (Next.js default)</span>
+{
+  <span class="string">"jsc"</span>: {
+    <span class="string">"parser"</span>: {
+      <span class="string">"syntax"</span>: <span class="string">"typescript"</span>,
+      <span class="string">"tsx"</span>: <span class="number">true</span>,
+      <span class="string">"decorators"</span>: <span class="number">false</span>
+    },
+    <span class="string">"transform"</span>: {
+      <span class="string">"react"</span>: {
+        <span class="string">"runtime"</span>: <span class="string">"automatic"</span>
+      }
+    },
+    <span class="string">"target"</span>: <span class="string">"es2015"</span>,
+    <span class="string">"loose"</span>: <span class="number">true</span>              <span class="comment">// Faster, slightly less spec-compliant output</span>
+  },
+  <span class="string">"env"</span>: {
+    <span class="string">"targets"</span>: <span class="string">"> 0.5%"</span>,
+    <span class="string">"mode"</span>: <span class="string">"usage"</span>,
+    <span class="string">"coreJs"</span>: <span class="number">3</span>
+  }
+}
+
+<span class="comment">// Type-checking: always use tsc --noEmit regardless of transpiler</span>
+<span class="comment">// package.json scripts:</span>
+<span class="comment">// "typecheck": "tsc --noEmit",</span>
+<span class="comment">// "build": "tsc --noEmit && vite build"  // Check first, then build</span></code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Key Takeaway</div>
+    <p>You almost never need Babel in a new project. Vite uses esbuild for transforms. Next.js uses SWC. If you have a custom Babel plugin that hasn't been ported to SWC/esbuild, keep Babel for that specific transformation. Otherwise, let the native tools handle it — the speed difference is transformative for developer experience.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Why does Babel need <code>core-js</code> for polyfills? What does <code>useBuiltIns: 'usage'</code> do?</li>
+      <li>How does the new JSX transform (<code>runtime: 'automatic'</code>) differ from the classic <code>React.createElement</code>?</li>
+      <li>If SWC strips types but doesn't check them, how do you catch type errors in CI?</li>
+      <li>What is <code>Browserslist</code> and where can it be configured?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Babel = interpreter translating sentence by sentence. SWC = native speaker who already knows both languages. Both say the same thing — one just says it 20x faster."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Babel: JS-based, plugin ecosystem, flexible but slow — the legacy workhorse</li>
+      <li>SWC: Rust-based, 20x faster, Next.js default — the performance upgrade</li>
+      <li>Transpilation strips types; <code>tsc --noEmit</code> checks them — always do both</li>
+      <li>Browserslist controls which features get transpiled — centralize in package.json or .browserslistrc</li>
+      <li>New JSX runtime (<code>automatic</code>) eliminates the need to <code>import React</code> in every file</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q4: ESLint and Prettier -->
+<div class="question-card" id="q4">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">ESLint and Prettier — Static Analysis vs Formatting, and the CI Workflow</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>ESLint</strong> is a static analysis tool that finds problematic patterns in your code — unused variables, missing dependency arrays, accessibility violations, security issues. <strong>Prettier</strong> is an opinionated code formatter that rewrites your code with consistent spacing, quotes, line breaks, and semicolons. ESLint catches bugs and enforces conventions; Prettier makes code look uniform. They serve different purposes and complement each other when configured correctly.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">ESLint Deep Dive</div>
+    <p>ESLint parses your code into an AST and runs <strong>rules</strong> against it. Each rule is a visitor function that inspects specific AST nodes. Core rules catch logic errors (<code>no-unused-vars</code>, <code>no-constant-condition</code>). Plugin rules extend to framework-specific patterns (<code>react-hooks/exhaustive-deps</code>, <code>@typescript-eslint/no-unnecessary-type-assertion</code>). ESLint can also auto-fix certain rule violations, but the primary value is catching bugs before runtime.</p>
+    <p><strong>Flat config (eslint.config.js):</strong> ESLint v9+ uses the new flat config system — simpler, faster, and TypeScript-native. No more <code>.eslintrc</code> extends chains.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Prettier's Philosophy</div>
+    <p>Prettier is deliberately <strong>less configurable</strong> than ESLint. This is the point — it ends all bikeshedding about code style. The team picks a few options (tab width, semicolons, trailing commas) and Prettier enforces them uniformly. Prettier does not understand your code's logic — it only looks at characters and whitespace. This is why Prettier cannot detect bugs: it'll happily format <code>useEffect(async () => {}, [])</code> without knowing it's a React anti-pattern.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">ESLint Flat Config + Prettier Integration</div>
+    <pre><code><span class="comment">// eslint.config.js — ESLint v9+ flat config</span>
+<span class="keyword">import</span> js <span class="keyword">from</span> <span class="string">'@eslint/js'</span>;
+<span class="keyword">import</span> tseslint <span class="keyword">from</span> <span class="string">'typescript-eslint'</span>;
+<span class="keyword">import</span> reactHooks <span class="keyword">from</span> <span class="string">'eslint-plugin-react-hooks'</span>;
+<span class="keyword">import</span> prettierConfig <span class="keyword">from</span> <span class="string">'eslint-config-prettier'</span>;
+
+<span class="keyword">export default</span> [
+  js.<span class="attr">configs</span>.<span class="attr">recommended</span>,
+  ...tseslint.<span class="attr">configs</span>.<span class="attr">recommended</span>,
+  {
+    <span class="attr">plugins</span>: { <span class="string">'react-hooks'</span>: reactHooks },
+    <span class="attr">rules</span>: {
+      <span class="string">'react-hooks/rules-of-hooks'</span>: <span class="string">'error'</span>,
+      <span class="string">'react-hooks/exhaustive-deps'</span>: <span class="string">'warn'</span>,
+      <span class="string">'@typescript-eslint/no-unused-vars'</span>: [<span class="string">'error'</span>, {
+        <span class="attr">argsIgnorePattern</span>: <span class="string">'^_'</span>
+      }],
+      <span class="string">'no-console'</span>: <span class="string">'warn'</span>
+    }
+  },
+  prettierConfig <span class="comment">// Must be last — disables ESLint rules that conflict with Prettier</span>
+];
+
+<span class="comment">// .prettierrc — minimal, opinionated</span>
+{
+  <span class="string">"semi"</span>: <span class="number">true</span>,
+  <span class="string">"singleQuote"</span>: <span class="number">true</span>,
+  <span class="string">"tabWidth"</span>: <span class="number">2</span>,
+  <span class="string">"trailingComma"</span>: <span class="string">"all"</span>,
+  <span class="string">"printWidth"</span>: <span class="number">100</span>
+}</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">The #1 Mistake: Letting ESLint and Prettier Fight</div>
+    <p>ESLint has formatting rules. Prettier has formatting rules. If both try to control the same thing, you get conflicting fixes — format, lint, format, lint, infinite loop. The fix: <strong>use <code>eslint-config-prettier</code></strong>. This config disables all ESLint formatting rules, leaving formatting entirely to Prettier and logic/bug detection entirely to ESLint. The rule: "Prettier for how it looks, ESLint for what it does."</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">husky + lint-staged: The Gatekeeper</div>
+    <p>The problem with linting in CI is developer friction — a PR fails 10 minutes after push because of a trailing space. <strong>husky</strong> sets up Git hooks; <strong>lint-staged</strong> runs linters/formatters only on staged files. The pre-commit hook runs <code>eslint --fix</code> and <code>prettier --write</code> on changed files, ensuring nothing bad enters the repo. CI still runs the full check as a safety net, but the pre-commit hook catches 95% of issues instantly.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">husky + lint-staged Setup</div>
+    <pre><code><span class="comment">// .husky/pre-commit (generated by: npx husky init)</span>
+<span class="comment">// npx lint-staged</span>
+
+<span class="comment">// package.json or .lintstagedrc.json</span>
+{
+  <span class="string">"lint-staged"</span>: {
+    <span class="string">"*.{js,jsx,ts,tsx}"</span>: [
+      <span class="string">"eslint --fix --max-warnings 0"</span>,
+      <span class="string">"prettier --write"</span>
+    ],
+    <span class="string">"*.{css,md,json}"</span>: [
+      <span class="string">"prettier --write"</span>
+    ]
+  }
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tip</div>
+    <p>VS Code users: install the ESLint and Prettier extensions, enable <code>"editor.formatOnSave": true</code> and <code>"editor.codeActionsOnSave": { "source.fixAll.eslint": true }</code>. This makes formatting and basic lint fixes happen automatically on every save — you'll never think about semicolons again. But do NOT rely on editor-only fixes; the pre-commit hook is the safety net for team consistency.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is an ESLint AST visitor? How does it differ from a regex-based check?</li>
+      <li>Why does Prettier claim to be "opinionated" — and why is that a feature?</li>
+      <li>How does <code>eslint-config-prettier</code> prevent conflicts — what does it actually disable?</li>
+      <li>What happens if a developer skips the pre-commit hook with <code>--no-verify</code>?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "ESLint is the <strong>doctor</strong> (finds problems, some fixable). Prettier is the <strong>barber</strong> (makes everything look consistent). husky is the <strong>bouncer</strong> at the door — nothing ugly or broken gets in."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>ESLint = bug detection + code quality rules (static analysis)</li>
+      <li>Prettier = code formatting (visual consistency, no logic understanding)</li>
+      <li>Always use <code>eslint-config-prettier</code> to avoid rule conflicts</li>
+      <li>husky + lint-staged = pre-commit gate that catches issues before they reach CI</li>
+      <li>CI runs the same checks as a safety net — defense in depth</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q5: CI/CD Pipeline -->
+<div class="question-card" id="q5">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">CI/CD Pipeline for Frontend — Design a Production-Grade Workflow</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A frontend CI/CD pipeline is a series of automated checks and deployments that run on every push and PR. The canonical pipeline has 5 stages: <strong>lint</strong> (code quality), <strong>type-check</strong> (TypeScript), <strong>test</strong> (unit + integration), <strong>build</strong> (production bundle), and <strong>deploy</strong> (to preview/production). Each stage acts as a gate — if any fails, the pipeline stops and the PR cannot merge. The goal is to catch every possible failure before a human ever sees the preview URL.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Pipeline Architecture</div>
+    <p><strong>Stage 1 — Lint (30s):</strong> ESLint, Prettier check, commitlint. Catches style violations and code smells. Fastest stage — run it first because it catches the most common errors.</p>
+    <p><strong>Stage 2 — Type-check (60s):</strong> <code>tsc --noEmit</code>. Catches type errors that would be runtime crashes. Run in parallel with lint if using GitHub Actions matrix strategy.</p>
+    <p><strong>Stage 3 — Test (2-5 min):</strong> Vitest/Jest with coverage thresholds. Unit tests for utils/hooks, integration tests for pages, snapshot tests for components. Fail if coverage drops below 80% or any test fails.</p>
+    <p><strong>Stage 4 — Build (2-3 min):</strong> <code>vite build</code> / <code>next build</code>. Verifies the production bundle compiles. This catches import errors, broken dynamic imports, and CSS issues that tests might miss. Run Lighthouse CI here to assert performance budgets.</p>
+    <p><strong>Stage 5 — Deploy (1-2 min):</strong> Push to preview environment (Vercel/Netlify for PRs, S3+CloudFront for staging). On merge to main, deploy to production with a canary or blue-green strategy.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">GitHub Actions — Complete Frontend CI Pipeline</div>
+    <pre><code><span class="comment"># .github/workflows/ci.yml</span>
+<span class="attr">name</span>: <span class="string">CI Pipeline</span>
+
+<span class="attr">on</span>:
+  <span class="attr">push</span>:    { <span class="attr">branches</span>: [<span class="string">main</span>] }
+  <span class="attr">pull_request</span>: { <span class="attr">branches</span>: [<span class="string">main</span>] }
+
+<span class="attr">jobs</span>:
+  <span class="comment"># Stage 1+2: Fast checks running in parallel</span>
+  <span class="attr">lint</span>:
+    <span class="attr">name</span>: <span class="string">Lint &amp; Format</span>
+    <span class="attr">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="attr">steps</span>:
+      - <span class="attr">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="attr">uses</span>: <span class="string">actions/setup-node@v4</span>
+        <span class="attr">with</span>: { <span class="attr">node-version</span>: <span class="string">20</span>, <span class="attr">cache</span>: <span class="string">npm</span> }
+      - <span class="attr">run</span>: <span class="string">npm ci</span>
+      - <span class="attr">run</span>: <span class="string">npm run lint</span>
+
+  <span class="attr">typecheck</span>:
+    <span class="attr">name</span>: <span class="string">TypeScript Check</span>
+    <span class="attr">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="attr">steps</span>:
+      - <span class="attr">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="attr">uses</span>: <span class="string">actions/setup-node@v4</span>
+        <span class="attr">with</span>: { <span class="attr">node-version</span>: <span class="string">20</span>, <span class="attr">cache</span>: <span class="string">npm</span> }
+      - <span class="attr">run</span>: <span class="string">npm ci</span>
+      - <span class="attr">run</span>: <span class="string">npm run typecheck</span>
+
+  <span class="attr">test</span>:
+    <span class="attr">name</span>: <span class="string">Unit &amp; Integration Tests</span>
+    <span class="attr">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="attr">strategy</span>:
+      <span class="attr">matrix</span>: { <span class="attr">shard</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] }  <span class="comment"># Parallelize tests across shards</span>
+    <span class="attr">steps</span>:
+      - <span class="attr">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="attr">uses</span>: <span class="string">actions/setup-node@v4</span>
+        <span class="attr">with</span>: { <span class="attr">node-version</span>: <span class="string">20</span>, <span class="attr">cache</span>: <span class="string">npm</span> }
+      - <span class="attr">run</span>: <span class="string">npm ci</span>
+      - <span class="attr">run</span>: <span class="string">npm run test -- --shard=${{ matrix.shard }}/3</span>
+      - <span class="attr">uses</span>: <span class="string">actions/upload-artifact@v4</span>
+        <span class="attr">if</span>: <span class="string">failure()</span>
+        <span class="attr">with</span>: { <span class="attr">name</span>: <span class="string">test-results</span>, <span class="attr">path</span>: <span class="string">test-results/</span> }
+
+  <span class="comment"># Stage 3: Build — depends on lint+typecheck passing</span>
+  <span class="attr">build</span>:
+    <span class="attr">name</span>: <span class="string">Production Build</span>
+    <span class="attr">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="attr">needs</span>: [<span class="string">lint</span>, <span class="string">typecheck</span>, <span class="string">test</span>]
+    <span class="attr">steps</span>:
+      - <span class="attr">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="attr">uses</span>: <span class="string">actions/setup-node@v4</span>
+        <span class="attr">with</span>: { <span class="attr">node-version</span>: <span class="string">20</span>, <span class="attr">cache</span>: <span class="string">npm</span> }
+      - <span class="attr">run</span>: <span class="string">npm ci</span>
+      - <span class="attr">run</span>: <span class="string">npm run build</span>
+      - <span class="attr">uses</span>: <span class="string">actions/upload-artifact@v4</span>
+        <span class="attr">with</span>: { <span class="attr">name</span>: <span class="string">dist</span>, <span class="attr">path</span>: <span class="string">dist/</span> }
+
+  <span class="attr">lighthouse</span>:
+    <span class="attr">name</span>: <span class="string">Lighthouse Audit</span>
+    <span class="attr">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="attr">needs</span>: [<span class="string">build</span>]
+    <span class="attr">steps</span>:
+      - <span class="attr">uses</span>: <span class="string">actions/checkout@v4</span>
+      - <span class="attr">uses</span>: <span class="string">treosh/lighthouse-ci-action@v12</span>
+        <span class="attr">with</span>:
+          <span class="attr">urls</span>: <span class="string">${{ steps.deploy_preview.outputs.url }}</span>
+          <span class="attr">budgetPath</span>: <span class="string">./lighthouse-budget.json</span>
+          <span class="attr">serverBaseUrl</span>: <span class="string">${{ secrets.LHCI_SERVER }}</span></code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">FAANG Pipeline Patterns</div>
+    <p>At scale, the biggest optimization is <strong>dependency caching</strong>. Use <code>actions/setup-node</code> with <code>cache: 'npm'</code> to cache <code>node_modules</code> across runs, cutting install time from 3 minutes to 10 seconds. Use <strong>test sharding</strong> (shown above) to split test suites across parallel runners — 1500 tests that take 10 minutes sequentially finish in 2 minutes across 5 shards. Use <strong>remote caching</strong> (Nx Cloud, Turborepo) to skip builds entirely when the dependency tree hasn't changed.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is the difference between a preview deployment and a production deployment?</li>
+      <li>Why run lint and type-check in parallel rather than sequentially?</li>
+      <li>What is test sharding and when do you need it?</li>
+      <li>How would you implement a canary deployment for a frontend app?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Lint → Type → Test → Build → Deploy. Each stage is a gate. Fast checks first (parallel lint + type-check), slow checks later (build). Fail fast, fail early, never merge broken code."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>5-stage pipeline: lint, type-check, test, build, deploy — each must pass to proceed</li>
+      <li>Run lint + type-check in parallel as fast gates; test + build as slower verification</li>
+      <li>Cache node_modules (30s savings), shard tests (2-5x faster), remote cache builds (skip when possible)</li>
+      <li>Lighthouse CI enforces performance budgets — the build fails if LCP exceeds 2.5s</li>
+      <li>Preview deployments for every PR; production deployment only on main merge</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q6: Docker for Frontend -->
+<div class="question-card" id="q6">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">Docker for Frontend — Multi-Stage Builds, Nginx Serving, and Docker Compose Dev</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Docker</strong> packages your application into a lightweight, portable container that runs identically on any machine — your laptop, CI, staging, production. For frontend apps, the typical Dockerfile uses a <strong>multi-stage build</strong>: Stage 1 builds the static assets (Node.js + bundler), Stage 2 copies only the built output into a tiny Nginx image for serving. The final image weighs ~20MB instead of ~300MB because it excludes node_modules and the build toolchain.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Docker for a Static Site?</div>
+    <p>It sounds like overkill — serving HTML/CSS/JS from S3 is simpler. But Docker becomes essential when: (1) you need <strong>environment parity</strong> — your local dev, staging, and production must behave identically for SSR/API routes; (2) you're deploying to <strong>containerized infrastructure</strong> (Kubernetes, ECS, Cloud Run); (3) you need <strong>custom Nginx configuration</strong> for caching headers, gzip, compression, rate limiting, or reverse proxying API calls; (4) your app has <strong>runtime environment variables</strong> that must be injected at container startup, not build time.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Docker — Multi-Stage Build for a React/Vite SPA</div>
+    <pre><code><span class="comment"># Dockerfile — Multi-stage build for a Vite React app</span>
+<span class="comment"># Stage 1: Build the static assets</span>
+<span class="keyword">FROM</span> node:<span class="number">20</span>-alpine <span class="keyword">AS</span> builder
+<span class="keyword">WORKDIR</span> /app
+<span class="keyword">COPY</span> package*.json ./
+<span class="keyword">RUN</span> npm ci --only=production
+<span class="keyword">COPY</span> . .
+<span class="keyword">ARG</span> VITE_API_URL
+<span class="keyword">ENV</span> VITE_API_URL=$VITE_API_URL
+<span class="keyword">RUN</span> npm run build
+
+<span class="comment"># Stage 2: Serve via Nginx — tiny final image</span>
+<span class="keyword">FROM</span> nginx:<span class="number">1.25</span>-alpine
+<span class="keyword">COPY</span> --from=builder /app/dist /usr/share/nginx/html
+<span class="keyword">COPY</span> nginx.conf /etc/nginx/conf.d/default.conf
+<span class="keyword">EXPOSE</span> 80
+<span class="keyword">CMD</span> [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]
+
+<span class="comment"># nginx.conf — SPA routing + caching + compression</span>
+<span class="type">server</span> {
+    <span class="attr">listen</span> <span class="number">80</span>;
+    <span class="attr">server_name</span> _;
+    <span class="attr">root</span> /usr/share/nginx/html;
+    <span class="attr">index</span> index.html;
+
+    <span class="comment"># Brotli/gzip compression for text assets</span>
+    <span class="attr">gzip</span> <span class="number">on</span>;
+    <span class="attr">gzip_types</span> text/plain text/css application/json application/javascript text/xml;
+
+    <span class="comment"># Immutable caching for hashed assets (contenthash in filename)</span>
+    <span class="attr">location</span> /assets/ {
+        <span class="attr">expires</span> <span class="number">1y</span>;
+        <span class="attr">add_header</span> Cache-Control <span class="string">"public, immutable"</span>;
+    }
+
+    <span class="comment"># SPA routing — serve index.html for all non-file paths</span>
+    <span class="attr">location</span> / {
+        <span class="attr">try_files</span> $uri $uri/ /index.html;
+        <span class="attr">add_header</span> Cache-Control <span class="string">"no-cache, must-revalidate"</span>;
+    }
+}
+
+<span class="comment"># .dockerignore — keep the build context small and secure</span>
+node_modules
+dist
+.git
+.gitignore
+.env*
+README.md
+Dockerfile
+docker-compose.yml
+.vscode</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Docker Compose for Local Dev</div>
+    <p>For full-stack apps, Docker Compose orchestrates multiple services: your Next.js dev server, a PostgreSQL database, Redis cache, and maybe a local S3 emulator. Each service runs in its own container but shares a network. Hot reload works if you bind-mount the source directory — edit a file on your host, see the change instantly in the container.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Docker Compose — Full-Stack Dev Environment</div>
+    <pre><code><span class="comment"># docker-compose.yml — Local dev with hot reload</span>
+<span class="attr">version</span>: <span class="string">'3.8'</span>
+
+<span class="attr">services</span>:
+  <span class="attr">frontend</span>:
+    <span class="attr">build</span>:
+      <span class="attr">context</span>: <span class="string">.</span>
+      <span class="attr">target</span>: <span class="string">development</span>  <span class="comment"># Use dev stage from multi-stage Dockerfile</span>
+    <span class="attr">ports</span>:
+      - <span class="string">"3000:3000"</span>
+    <span class="attr">volumes</span>:
+      - <span class="string">.:/app</span>              <span class="comment"># Bind mount for hot reload</span>
+      - <span class="string">/app/node_modules</span>   <span class="comment"># Anonymous volume — don't override node_modules</span>
+    <span class="attr">environment</span>:
+      - <span class="string">NODE_ENV=development</span>
+      - <span class="string">API_URL=http://backend:4000</span>
+    <span class="attr">depends_on</span>:
+      - <span class="string">backend</span>
+
+  <span class="attr">backend</span>:
+    <span class="attr">image</span>: <span class="string">postgres:16-alpine</span>
+    <span class="attr">environment</span>:
+      - <span class="string">POSTGRES_DB=myapp</span>
+      - <span class="string">POSTGRES_PASSWORD=devpass</span>
+    <span class="attr">volumes</span>:
+      - <span class="string">pgdata:/var/lib/postgresql/data</span>
+
+<span class="attr">volumes</span>:
+  <span class="attr">pgdata</span>:</code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight: Build-Time vs Runtime ENV</div>
+    <p>Vite/Webpack inline environment variables at build time. If you change <code>VITE_API_URL</code> after the build, it won't take effect — the value is baked into the JavaScript bundle. This means you cannot use the same Docker image for staging and production with different env vars. The pattern at scale: <strong>inject runtime configuration via a <code>/config.js</code> file</strong> generated at container startup. Nginx serves it before your app bundle, and your app reads <code>window.__APP_CONFIG__</code>. This keeps the image identical across environments — true build-once-deploy-anywhere.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>Why use multi-stage builds? What's the size difference between single-stage and multi-stage?</li>
+      <li>How does <code>.dockerignore</code> improve build performance and security?</li>
+      <li>What is the difference between <code>COPY</code> and bind-mount <code>volumes</code> in Docker Compose?</li>
+      <li>How do you handle runtime env variables for SPAs in Docker?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Build stage = the factory (heavy machinery, Node.js, node_modules). Run stage = the delivery truck (tiny, only the finished product). Docker Compose = your local data center — each service in its own room, connected by internal network."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Multi-stage builds: build in Node.js, serve from Nginx — final image ~20MB</li>
+      <li>.dockerignore excludes node_modules, .git, and secrets from the build context</li>
+      <li>Docker Compose for local dev: bind mounts = hot reload, anonymous volumes = keep node_modules</li>
+      <li>SPA env vars are build-time — use /config.js pattern for runtime injection</li>
+      <li>Nginx config: SPA routing (try_files), asset caching (immutable), compression (gzip/brotli)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q7: Monorepo -->
+<div class="question-card" id="q7">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">Monorepo Architecture — Turborepo vs Nx, pnpm Workspaces, and Shared Packages</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A <strong>monorepo</strong> is a single repository containing multiple projects (apps and libraries) that share tooling, configuration, and dependencies. <strong>pnpm workspaces</strong> handle dependency linking between packages. <strong>Turborepo</strong> and <strong>Nx</strong> add build orchestration — caching, parallelization, and the ability to only rebuild/test what changed (affected commands). The key trade-off: monorepos eliminate version-sync headaches but require disciplined tooling to avoid slow CI and tangled dependencies.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Why Monorepo?</div>
+    <p>In a polyrepo setup, updating a shared UI component library means: PR in component repo → publish new version → update dependency in 3 consuming apps → 3 more PRs. In a monorepo: one PR changes the component and all consumers get the update immediately — tests run across all affected packages, nothing ships until everything passes. This <strong>atomic change across packages</strong> is the killer feature.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">pnpm Workspaces — The Foundation</div>
+    <p>pnpm uses a content-addressable store and hard links. When 10 apps depend on React 18, it's stored once on disk and linked into each project's <code>node_modules</code>. This eliminates "phantom dependencies" (accessing packages your package.json didn't declare) — pnpm enforces strict dependency resolution. The <code>pnpm-workspace.yaml</code> file defines which directories are workspace packages.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Monorepo Structure &amp; Configuration</div>
+    <pre><code><span class="comment"># pnpm-workspace.yaml</span>
+<span class="attr">packages</span>:
+  - <span class="string">"apps/*"</span>
+  - <span class="string">"packages/*"</span>
+
+<span class="comment">// Directory structure</span>
+monorepo/
+├── apps/
+│   ├── web/          <span class="comment">// Next.js dashboard — main consumer app</span>
+│   ├── mobile/       <span class="comment">// React Native — uses shared business logic</span>
+│   └── marketing/    <span class="comment">// Astro landing page — uses shared UI</span>
+├── packages/
+│   ├── ui/           <span class="comment">// Shared React component library (package.json name: @acme/ui)</span>
+│   ├── utils/        <span class="comment">// Shared utilities (package.json name: @acme/utils)</span>
+│   ├── config-eslint/<span class="comment">// Shared ESLint config across all packages</span>
+│   ├── config-ts/    <span class="comment">// Shared TypeScript config base</span>
+│   └── config-tailwind/<span class="comment">// Shared Tailwind preset</span>
+├── package.json      <span class="comment">// Root — workspace scripts only</span>
+└── turbo.json        <span class="comment">// Turborepo pipeline definition</span>
+
+<span class="comment">// Root package.json — scripts orchestrate workspaces</span>
+{
+  <span class="string">"scripts"</span>: {
+    <span class="string">"dev"</span>:     <span class="string">"turbo dev"</span>,
+    <span class="string">"build"</span>:   <span class="string">"turbo build"</span>,
+    <span class="string">"test"</span>:    <span class="string">"turbo test"</span>,
+    <span class="string">"lint"</span>:    <span class="string">"turbo lint"</span>,
+    <span class="string">"format"</span>:  <span class="string">"prettier --write ."</span>,
+    <span class="string">"publish"</span>: <span class="string">"pnpm -r publish"</span> <span class="comment">// -r = recursive across workspace</span>
+  }
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Turborepo vs Nx</div>
+    <table class="styled-table">
+      <thead><tr><th>Feature</th><th>Turborepo</th><th>Nx</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Approach</strong></td><td>Lightweight, works with existing scripts</td><td>All-in-one, plugins for every framework</td></tr>
+        <tr><td><strong>Configuration</strong></td><td>turbo.json — 20 lines</td><td>nx.json + project.json per package</td></tr>
+        <tr><td><strong>Caching</strong></td><td>Local + remote (Vercel, custom)</td><td>Local + Nx Cloud (proprietary)</td></tr>
+        <tr><td><strong>Dependency graph</strong></td><td>Inferred from package.json</td><td>Explicit + inferred, visualized in Nx Console</td></tr>
+        <tr><td><strong>Code generation</strong></td><td>Minimal (turbo gen)</td><td>Extensive generators + migrations</td></tr>
+        <tr><td><strong>Ecosystem</strong></td><td>Vercel ecosystem (Next.js native)</td><td>Framework-agnostic, monorepo veterans</td></tr>
+        <tr><td><strong>Best for</strong></td><td>Teams that want minimal config, modern JS</td><td>Large enterprises, polyglot repos, complex graphs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">turbo.json — Build Pipeline</div>
+    <pre><code>{
+  <span class="string">"$schema"</span>: <span class="string">"https://turbo.build/schema.json"</span>,
+  <span class="string">"tasks"</span>: {
+    <span class="string">"build"</span>: {
+      <span class="string">"dependsOn"</span>: [<span class="string">"^build"</span>],     <span class="comment">// ^ = build dependencies first</span>
+      <span class="string">"outputs"</span>: [<span class="string">"dist/**"</span>, <span class="string">".next/**"</span>],
+      <span class="string">"inputs"</span>: [<span class="string">"src/**"</span>, <span class="string">"tsconfig.json"</span>]
+    },
+    <span class="string">"test"</span>: {
+      <span class="string">"dependsOn"</span>: [<span class="string">"build"</span>],
+      <span class="string">"inputs"</span>: [<span class="string">"src/**"</span>, <span class="string">"test/**"</span>, <span class="string">"**/*.test.*"</span>]
+    },
+    <span class="string">"lint"</span>: {
+      <span class="string">"inputs"</span>: [<span class="string">"src/**"</span>]       <span class="comment">// No dependsOn — can run in parallel</span>
+    },
+    <span class="string">"dev"</span>: {
+      <span class="string">"cache"</span>: <span class="number">false</span>,              <span class="comment">// Dev servers shouldn't cache</span>
+      <span class="string">"persistent"</span>: <span class="number">true</span>           <span class="comment">// Long-running process</span>
+    }
+  }
+}</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">The "Affected" Superpower</div>
+    <p>Turborepo and Nx both understand the dependency graph. <code>turbo run test --filter=[HEAD^1]</code> runs tests only for packages that changed since the last commit — not the entire monorepo. In a repo with 50 packages where you changed only <code>@acme/utils</code>, only <code>@acme/utils</code> and packages that depend on it get tested. This keeps CI fast even as the monorepo grows to hundreds of packages.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What is a "phantom dependency" and how does pnpm prevent it?</li>
+      <li>How does Turborepo's caching work? When is a cache hit determined?</li>
+      <li>What is the difference between <code>"^build"</code> and <code>"build"</code> in Turborepo's dependsOn?</li>
+      <li>When would you choose a polyrepo over a monorepo?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Monorepo = one house, many rooms. pnpm = shared pantry (one copy of each ingredient). Turborepo = smart kitchen manager — only re-cooks what changed."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Monorepo: atomic changes across packages, single CI/CD, shared config — needs tooling discipline</li>
+      <li>pnpm workspaces: strict resolvers, disk efficient, enforces declared dependencies only</li>
+      <li>Turborepo: lightweight, caching + parallelization, great for JS monorepos</li>
+      <li>Nx: enterprise-grade, code generators, enforces module boundaries, polyglot support</li>
+      <li>Affected commands make CI scale — only rebuild/test what actually changed</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q8: Module Federation -->
+<div class="question-card" id="q8">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">Webpack Module Federation — Micro-Frontends at the Bundler Level</div>
+      <span class="q-badge badge-expert">Expert</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>Module Federation</strong> (Webpack 5) allows multiple separate webpack builds to share modules at runtime. A <strong>host</strong> application loads <strong>remote</strong> modules from other applications dynamically, without a network request for each component — the remote's chunk is fetched, executed, and integrated into the host's module graph. Unlike iframes, federated modules share the same React instance, context, and state. Unlike npm packages, they can be deployed independently — updating the remote's deployment updates all consuming hosts instantly.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Architecture</div>
+    <p><strong>Exposes (remote):</strong> The remote app declares which modules other apps can consume. Think of it as "public API" for your app.</p>
+    <p><strong>Remotes (host):</strong> The host declares which remote apps to load from, at which URL. The host fetches the remote's entry point (a tiny JS manifest) at runtime.</p>
+    <p><strong>Shared:</strong> Dependencies like <code>react</code>, <code>react-dom</code>, <code>react-router</code> are declared as shared — only one copy is loaded even if host and remote both use them. This is critical for React to work (only one React instance can own the DOM).</p>
+    <p><strong>The flow:</strong> User hits host app → host loads → host sees remote declaration → fetches remoteEntry.js → parses the exposed module list → when a component from the remote is needed, fetches just that component's chunk → renders it as if it were local.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Module Federation — Host and Remote Configuration</div>
+    <pre><code><span class="comment">// Remote app (dashboard-team) — webpack.config.js</span>
+<span class="keyword">const</span> { ModuleFederationPlugin } = <span class="function">require</span>(<span class="string">'webpack'</span>).<span class="attr">container</span>;
+
+<span class="comment">// Remote: exposes components for other apps to consume</span>
+<span class="keyword">new</span> <span class="function">ModuleFederationPlugin</span>({
+  <span class="attr">name</span>: <span class="string">'dashboard'</span>,             <span class="comment">// Global scope name (must match host's remote key)</span>
+  <span class="attr">filename</span>: <span class="string">'remoteEntry.js'</span>,     <span class="comment">// Manifest file hosts fetch</span>
+  <span class="attr">exposes</span>: {
+    <span class="string">'./DashboardApp'</span>: <span class="string">'./src/components/DashboardApp'</span>,
+    <span class="string">'./MetricsWidget'</span>: <span class="string">'./src/components/MetricsWidget'</span>,
+    <span class="string">'./Charts'</span>: <span class="string">'./src/charts'</span>
+  },
+  <span class="attr">shared</span>: {
+    <span class="attr">react</span>: { <span class="attr">singleton</span>: <span class="number">true</span>, <span class="attr">requiredVersion</span>: <span class="string">'^18.0.0'</span> },
+    <span class="string">'react-dom'</span>: { <span class="attr">singleton</span>: <span class="number">true</span> },
+    <span class="string">'react-router-dom'</span>: { <span class="attr">singleton</span>: <span class="number">true</span> }
+  }
+})
+
+<span class="comment">// Host app (shell) — webpack.config.js</span>
+<span class="keyword">new</span> <span class="function">ModuleFederationPlugin</span>({
+  <span class="attr">name</span>: <span class="string">'shell'</span>,
+  <span class="attr">remotes</span>: {
+    <span class="attr">dashboard</span>: <span class="string">'dashboard@http://localhost:3001/remoteEntry.js'</span>,
+    <span class="attr">checkout</span>:  <span class="string">'checkout@http://localhost:3002/remoteEntry.js'</span>,
+    <span class="attr">profile</span>:   <span class="string">'profile@http://localhost:3003/remoteEntry.js'</span>
+  },
+  <span class="attr">shared</span>: {
+    <span class="attr">react</span>: { <span class="attr">singleton</span>: <span class="number">true</span>, <span class="attr">eager</span>: <span class="number">true</span> }, <span class="comment">// eager = loaded immediately (host must provide React)</span>
+    <span class="string">'react-dom'</span>: { <span class="attr">singleton</span>: <span class="number">true</span>, <span class="attr">eager</span>: <span class="number">true</span> }
+  }
+})
+
+<span class="comment">// Host: consuming a remote module (React)</span>
+<span class="keyword">import</span> React, { Suspense, lazy } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">const</span> DashboardApp = <span class="function">lazy</span>(() =&gt; <span class="keyword">import</span>(<span class="string">'dashboard/DashboardApp'</span>));
+<span class="keyword">const</span> CheckoutApp  = <span class="function">lazy</span>(() =&gt; <span class="keyword">import</span>(<span class="string">'checkout/CheckoutApp'</span>));
+
+<span class="keyword">function</span> <span class="function">Shell</span>() {
+  <span class="keyword">return</span> (
+    <span class="xml">&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/dashboard/*" element={&lt;DashboardApp /&gt;} /&gt;
+        &lt;Route path="/checkout/*"  element={&lt;CheckoutApp /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;</span>
+  );
+}</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">The #1 Module Federation Mistake</div>
+    <p><strong>Version mismatch on shared dependencies.</strong> If the host has React 18.2 and a remote has React 18.0, and <code>singleton: true</code> forces one copy, which version wins? Webpack negotiates based on <code>requiredVersion</code>. If versions are incompatible, you get runtime errors — "Invalid hook call" is the classic symptom of two React copies on the page. Always: (1) pin shared dependency versions across all federated apps, (2) use <code>requiredVersion</code> strictly, (3) monitor with <code>shareScope</code> debugging.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Is Module Federation Worth It?</div>
+    <p>For 95% of teams, the answer is <strong>no</strong>. Module Federation solves the "multiple teams deploying to the same page independently" problem — if you have 10 teams working on different parts of one SPA, each wanting independent CI/CD, it's a legitimate solution. But it adds significant complexity: runtime dependency negotiation, shared scope debugging, orchestration layer. For most teams, a well-structured monorepo with code splitting achieves the same result with far less complexity. The Shopify model: start with a modular monolith, split into MF only when team autonomy at the deploy level becomes the bottleneck.</p>
+  </div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div>
+    <ol class="followup-list">
+      <li>What happens when two federated modules export the same component name?</li>
+      <li>How does Module Federation handle CSS? (CSS Modules, global styles)</li>
+      <li>What is the <code>shareScope</code> and how does it prevent multiple React instances?</li>
+      <li>How do you handle routing when host and remote both define routes?</li>
+    </ol>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Module Federation = npm at runtime. Remote publishes, host consumes, shared deps deduplicated. host = restaurant, remotes = food trucks that park outside and share the kitchen (React)."
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Host loads remotes at runtime via remoteEntry.js — no rebuild needed on remote update</li>
+      <li>Shared dependencies (React) are singleton — critical for hooks to work correctly</li>
+      <li>Module Federation solves independent deploy for micro-frontends at the bundler level</li>
+      <li>Preferred over iframes: shared context, shared state, shared React tree</li>
+      <li>Start with a monorepo; add MF only when team autonomy demands independent deploys</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<div class="section-divider">
+  <h2>P2 — Common Questions</h2>
+  <p>These come up often — especially in DevOps-heavy roles. Know the concepts and have an opinion.</p>
+</div>
+
+<div class="container">
+
+<!-- Q9: Bundle Analysis -->
+<div class="question-card" id="q9">
+  <div class="q-header">
+    <div class="q-number">09</div>
+    <div>
+      <div class="q-text">Bundle Analysis — How to Audit and Reduce Bundle Size</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p>Bundle analysis tools visualize what's inside your production JavaScript. <strong>webpack-bundle-analyzer</strong> and <strong>vite-bundle-visualizer</strong> (Rollup plugin) generate an interactive treemap where each rectangle represents a module — larger rectangles = bigger impact. You look for: (1) duplicate dependencies (two versions of lodash), (2) unexpectedly large modules (a 2MB locale file someone imported by accident), (3) un-minified code, (4) libraries that should be tree-shaken but aren't (moment.js, lodash without named imports). After identifying issues, fix them: replace moment with date-fns (tree-shakeable), use dynamic imports, enable compression in your CDN.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Bundle Analysis Commands</div>
+    <pre><code><span class="comment">// Webpack: add to webpack.config.js plugins</span>
+<span class="keyword">const</span> BundleAnalyzerPlugin = <span class="function">require</span>(<span class="string">'webpack-bundle-analyzer'</span>).<span class="attr">BundleAnalyzerPlugin</span>;
+<span class="attr">plugins</span>: [<span class="keyword">new</span> <span class="function">BundleAnalyzerPlugin</span>({ <span class="attr">analyzerMode</span>: <span class="string">'static'</span> })]
+
+<span class="comment">// Vite: use rollup-plugin-visualizer</span>
+<span class="comment">// npm run build -- --report   (if using vite-bundle-visualizer)</span>
+
+<span class="comment">// Quick size check without visualization</span>
+npx vite build &amp;&amp; du -sh dist/
+<span class="comment"># or on Windows:</span>
+npx vite build; <span class="keyword">if</span> ($?) { Get-ChildItem -Path dist -Recurse -File | Measure-Object Length -Sum }</code></pre>
+  </div>
+  <div class="q-section"><div class="q-section-title">Quick Wins to Reduce Bundle</div>
+    <ul class="summary-list">
+      <li>Replace moment.js (~72KB) with date-fns or dayjs (~2KB tree-shaken)</li>
+      <li>Use dynamic imports for heavy libraries (charting, rich text editors, maps)</li>
+      <li>Verify lodash is tree-shaken (<code>import { debounce } from 'lodash-es'</code> or use <code>lodash/debounce</code>)</li>
+      <li>Check for duplicate polyfills (core-js appearing in multiple chunks)</li>
+      <li>Ensure your CDN serves gzip/brotli compressed assets</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q10: Environment Variables -->
+<div class="question-card" id="q10">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Environment Variables — .env Files, CI Secrets, and the NEXT_PUBLIC_ Trap</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p>Environment variables configure your app differently across environments without code changes. <strong>.env files</strong> follow a priority chain: <code>.env.local</code> (highest, gitignored) → <code>.env.development</code> → <code>.env</code> (lowest, committed with defaults). <strong>CI secrets</strong> are injected into the build environment by the CI platform — they're never in the repo. The critical distinction for frontend: variables prefixed with <code>VITE_</code> (Vite) or <code>NEXT_PUBLIC_</code> (Next.js) are <strong>baked into the client bundle</strong> and visible to anyone who opens DevTools. Never put secrets (API keys, database URLs, tokens) in these — they must stay server-side. For runtime config that changes per deployment without rebuilding, use the <code>/config.js</code> pattern: a static JS file generated at startup that sets <code>window.__APP_CONFIG__</code>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Environment Variable Patterns</div>
+    <pre><code><span class="comment"># .env.local — developer-specific, gitignored</span>
+VITE_API_URL=http://localhost:4000
+VITE_FEATURE_FLAGS=beta,new-dashboard
+
+<span class="comment"># .env.production — committed, default prod values</span>
+VITE_API_URL=https://api.myapp.com
+
+<span class="comment"># NEVER do this in Vite/Next.js client vars:</span>
+<span class="comment"># VITE_SECRET_KEY=sk-abc123   ← EXPOSED in browser DevTools!</span>
+
+<span class="comment">// Runtime config pattern (public/config.js — served by Nginx before app bundle)</span>
+window.<span class="attr">__APP_CONFIG__</span> = {
+  <span class="attr">API_URL</span>: <span class="string">'https://api-{ENVIRONMENT}.myapp.com'</span>,
+  <span class="attr">ENVIRONMENT</span>: <span class="string">'{ENVIRONMENT}'</span>,  <span class="comment">// Replaced at container startup via sed/script</span>
+  <span class="attr">SENTRY_DSN</span>: <span class="string">'{SENTRY_DSN}'</span>
+};
+
+<span class="comment">// index.html — load config before app (SPA runtime injection)</span>
+<span class="xml">&lt;script src="/config.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/index.js"&gt;&lt;/script&gt;</span></code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">The NEXT_PUBLIC_/VITE_ Security Trap</div>
+    <p>I've seen teams commit Stripe secret keys with <code>NEXT_PUBLIC_STRIPE_KEY</code> — the prefix makes it available on <code>window</code>. If Next.js reads <code>process.env.STRIPE_SECRET</code> in <code>getServerSideProps</code>, it stays server-side. But <code>NEXT_PUBLIC_STRIPE_SECRET</code> is embedded in the client JS bundle — anyone can see it. Rule: <strong>only use NEXT_PUBLIC_/VITE_ prefixes for things you'd be comfortable printing on a billboard.</strong></p>
+  </div>
+</div>
+
+<!-- Q11: Deployment Platforms -->
+<div class="question-card" id="q11">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Deployment Platforms — Vercel, Netlify, AWS S3+CloudFront, Docker+ECS</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <table class="styled-table">
+      <thead><tr><th>Platform</th><th>Best For</th><th>Complexity</th><th>Key Features</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Vercel</strong></td><td>Next.js, SPAs, serverless functions</td><td>Low</td><td>Auto HTTPS, Edge Functions, preview per PR, ISR</td></tr>
+        <tr><td><strong>Netlify</strong></td><td>SPAs, static sites, Jamstack</td><td>Low</td><td>Git-based deploys, serverless functions, form handling</td></tr>
+        <tr><td><strong>AWS S3 + CloudFront</strong></td><td>High-traffic SPAs, cost-sensitive</td><td>Medium</td><td>Global CDN, pennies per GB, full AWS integration</td></tr>
+        <tr><td><strong>Docker + ECS/EKS</strong></td><td>SSR apps, complex backends, enterprise compliance</td><td>High</td><td>Full container orchestration, VPC control, audit logs</td></tr>
+      </tbody>
+    </table>
+    <p>Vercel/Netlify for speed to production. S3+CloudFront for cost at scale (Netflix uses this for static assets). Docker+ECS when you need infrastructure control or have compliance requirements. Vercel's Edge Network runs your code in 100+ locations worldwide — perfect for global apps. S3+CloudFront with Lambda@Edge gives similar capability but requires more setup.</p>
+  </div>
+</div>
+
+<!-- Q12: Preview Deployments -->
+<div class="question-card" id="q12">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Preview Deployments — Per-PR Environments in Vercel and Netlify</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p><strong>Preview deployments</strong> automatically deploy every PR to a unique URL, letting reviewers see the actual running app — not just code diffs. In Vercel, every PR gets a URL like <code>myapp-git-feat-abc.vercel.app</code> with a comment posted to the PR. This is transformative for frontend reviews: reviewers can click through the UI, test interactions, and verify visual changes. The workflow: push a branch → Vercel builds and deploys → bot comments the preview URL on the PR → reviewers interact with the live app → merge to main triggers production deploy. Netlify calls them "Deploy Previews" with the same flow. Key configuration: preview deployments should use the production API (or a staging API), not localhost, so they're fully functional.</p>
+  </div>
+</div>
+
+<!-- Q13: Lighthouse CI -->
+<div class="question-card" id="q13">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Lighthouse CI — Performance Budgets and Automated Audits</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p><strong>Lighthouse CI</strong> runs Lighthouse audits as part of your CI pipeline and asserts performance budgets. If a PR introduces a regression (LCP jumps from 1.8s to 3.2s, or the total bundle grows by 50KB), the CI run fails and the PR can't merge. The <code>lighthouse-budget.json</code> file defines thresholds: JavaScript size under 300KB, TBT under 200ms, LCP under 2.5s. LHCI can also upload results to a dashboard that tracks performance over time — essential for catching the slow degradation that happens when no one's watching. At scale, run LHCI on every PR against the preview URL and on main daily for trend tracking. The bot posts a diff comment showing what metrics changed compared to the main branch.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">lighthouse-budget.json — Performance Budget</div>
+    <pre><code>{
+  <span class="string">"budget"</span>: [
+    {
+      <span class="string">"resourceSizes"</span>: [
+        { <span class="string">"resourceType"</span>: <span class="string">"script"</span>, <span class="string">"budget"</span>: <span class="number">300</span> },  <span class="comment">// 300KB max JS</span>
+        { <span class="string">"resourceType"</span>: <span class="string">"stylesheet"</span>, <span class="string">"budget"</span>: <span class="number">50</span> },  <span class="comment">// 50KB max CSS</span>
+        { <span class="string">"resourceType"</span>: <span class="string">"image"</span>, <span class="string">"budget"</span>: <span class="number">500</span> }     <span class="comment">// 500KB max images</span>
+      ],
+      <span class="string">"timings"</span>: [
+        { <span class="string">"metric"</span>: <span class="string">"largest-contentful-paint"</span>, <span class="string">"budget"</span>: <span class="number">2500</span> },
+        { <span class="string">"metric"</span>: <span class="string">"total-blocking-time"</span>, <span class="string">"budget"</span>: <span class="number">200</span> },
+        { <span class="string">"metric"</span>: <span class="string">"cumulative-layout-shift"</span>, <span class="string">"budget"</span>: <span class="number">0.1</span> }
+      ]
+    }
+  ]
+}</code></pre>
+  </div>
+</div>
+
+<!-- Q14: pnpm vs npm vs yarn -->
+<div class="question-card" id="q14">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">pnpm vs npm vs yarn — Which Package Manager and Why?</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <table class="styled-table">
+      <thead><tr><th>Feature</th><th>npm</th><th>yarn (classic)</th><th>yarn (berry/modern)</th><th>pnpm</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Disk efficiency</strong></td><td>Copies (duplication)</td><td>Copies</td><td>Plug'n'Play (zero node_modules)</td><td>Hard links + content-addressable store</td></tr>
+        <tr><td><strong>Install speed</strong></td><td>Moderate (improved in v8+)</td><td>Fast</td><td>Very fast (no I/O for node_modules)</td><td>Fastest (links, not copies)</td></tr>
+        <tr><td><strong>Strict mode</strong></td><td>No (phantom deps work)</td><td>No</td><td>Yes (PnP enforces strict)</td><td>Yes (by default)</td></tr>
+        <tr><td><strong>Workspaces</strong></td><td>Basic (npm workspaces)</td><td>Basic (yarn workspaces)</td><td>Advanced (constraints, plugins)</td><td>Excellent (pnpm workspaces)</td></tr>
+        <tr><td><strong>Lockfile</strong></td><td>package-lock.json</td><td>yarn.lock</td><td>yarn.lock</td><td>pnpm-lock.yaml</td></tr>
+        <tr><td><strong>Monorepo fit</strong></td><td>Good for small monorepos</td><td>Good</td><td>Excellent but complex</td><td>Best — fast, strict, disk efficient</td></tr>
+      </tbody>
+    </table>
+    <p><strong>pnpm wins for monorepos</strong> because of strict resolution (you can't accidentally import packages your package.json didn't declare) and disk efficiency (10 projects using React = 1 copy on disk). <strong>npm</strong> is the safe default — installed everywhere, no surprises. <strong>yarn PnP</strong> is the fastest but breaks some tools that expect <code>node_modules</code> to exist on disk (Jest, ESLint older versions). Recommendation: npm for simple projects, pnpm for monorepos, yarn PnP only if your entire toolchain supports it.</p>
+  </div>
+</div>
+
+<!-- Q15: Turbopack -->
+<div class="question-card" id="q15">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">Turbopack — Rust-Based Next.js Bundler vs Vite and Webpack</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p><strong>Turbopack</strong> is Vercel's Rust-based incremental bundler, built by the creator of Webpack (Tobias Koppers). It's the spiritual successor to Webpack, learning from the lessons of 12 years of bundler development. Unlike esbuild (which is fast but single-pass and limited in transform capabilities), Turbopack handles the full bundling pipeline — transforms, module resolution, chunking, optimization — all in Rust with incremental computation at its core. In Next.js 13+, Turbopack replaces Webpack for development; production builds still use Webpack (as of 2024) while Turbopack production mode is under development. Benchmarks show Turbopack cold starts 700x faster than Webpack on large projects (1000+ modules). The key architectural insight: function-level caching. If you change one line in a module, Turbopack only re-runs functions whose inputs actually changed — not the entire module.</p>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Current Status (2025)</div>
+    <p>Turbopack is the default dev server in Next.js 15. It's stable for development. Production builds are coming. Vite remains the best choice outside the Next.js ecosystem. If you're starting a Next.js project today, you're already using Turbopack — and you'll never have to configure it.</p>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<div class="end-section">
+  <h2>Most Asked Build Tools Questions — Priority Matrix</h2>
+  <table class="styled-table">
+    <thead><tr><th>Question</th><th>Frequency</th><th>Difficulty</th><th>Company Size</th></tr></thead>
+    <tbody>
+      <tr><td>Vite vs Webpack — when to choose which</td><td class="priority-p1">Very High</td><td>Advanced</td><td>All sizes</td></tr>
+      <tr><td>Code splitting strategies + dynamic imports</td><td class="priority-p1">Very High</td><td>Intermediate</td><td>Mid-size, enterprise</td></tr>
+      <tr><td>CI/CD pipeline design for frontend</td><td class="priority-p2">High</td><td>Advanced</td><td>Mid-size, enterprise</td></tr>
+      <tr><td>Babel vs SWC — transpilation differences</td><td class="priority-p2">High</td><td>Intermediate</td><td>All sizes</td></tr>
+      <tr><td>ESLint + Prettier + husky setup</td><td class="priority-p3">Medium</td><td>Beginner</td><td>All sizes</td></tr>
+      <tr><td>Monorepo tools — Turborepo vs Nx</td><td class="priority-p3">Medium</td><td>Advanced</td><td>Enterprise</td></tr>
+      <tr><td>Module Federation for micro-frontends</td><td class="priority-p3">Medium</td><td>Expert</td><td>Enterprise, FAANG</td></tr>
+      <tr><td>Docker multi-stage builds for frontend</td><td class="priority-p3">Medium</td><td>Intermediate</td><td>Enterprise, DevOps roles</td></tr>
+      <tr><td>Bundle analysis — audit and reduce size</td><td class="priority-p3">Medium</td><td>Intermediate</td><td>Mid-size</td></tr>
+      <tr><td>Environment variable security (NEXT_PUBLIC_ trap)</td><td class="priority-p3">Medium</td><td>Beginner</td><td>All sizes</td></tr>
+      <tr><td>Deployment platform comparison</td><td class="priority-p3">Medium</td><td>Intermediate</td><td>Startup, mid-size</td></tr>
+      <tr><td>Package manager comparison (pnpm win)</td><td class="priority-p3">Medium</td><td>Beginner</td><td>Monorepo teams</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top: 2rem; color: var(--text-tertiary); font-size: 0.9rem;">
+    Study P1 questions first, then P2. For DevOps-focused roles, CI/CD and Docker move to P1.
+  </p>
+</div>
+
+</body>
+</html>

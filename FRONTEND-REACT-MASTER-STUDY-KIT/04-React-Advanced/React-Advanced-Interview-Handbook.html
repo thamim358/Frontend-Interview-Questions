@@ -1,0 +1,626 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Advanced Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  :root { --handbook-primary: #f59e0b; --handbook-secondary: #f472b6; --handbook-gradient-start: rgba(251,191,36,0.06); --handbook-gradient-end: rgba(251,114,133,0.05); }
+  body { background: #0D1117 linear-gradient(135deg, var(--handbook-gradient-start), var(--handbook-gradient-end)); min-height: 100vh; }
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-badge">REACT ADVANCED</div>
+  <h1 class="cover-title">React Advanced Interview Handbook</h1>
+  <p class="cover-subtitle">Senior-level patterns, internals, and production architecture.</p>
+  <div class="cover-meta">
+    <span class="cover-meta-item">18 Senior-Level Questions</span>
+    <span class="cover-meta-item">Fiber Architecture &amp; Concurrent Features</span>
+    <span class="cover-meta-item">React 19 &amp; Production Patterns</span>
+  </div>
+</div>
+<div class="container">
+<!-- Q1 -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q1</span><span class="q-text">React Fiber Architecture — Why it was created and how incremental rendering works</span><span class="q-badge badge-expert">Expert</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>React Fiber (React 16) is a complete rewrite of React`s core reconciliation engine. The key innovation is <strong>incremental rendering</strong>: the ability to split rendering work into chunks and spread them across multiple frames. Unlike the old "stack" reconciler which processed the entire tree synchronously (blocking the main thread), Fiber can pause, resume, and even abort work based on priority. This enables concurrent features like Suspense, transitions, and selective hydration.</p></div>
+  <div class="q-section"><div class="q-section-title">Why Created — The Stack Reconciler Problem</div><p>The old reconciler did work recursively, using the JavaScript call stack. Once started, a render couldn`t be interrupted until the entire tree was processed. For complex apps, this meant 100ms+ main-thread blocks — dropped frames, janky animations, unresponsive inputs. Fiber solves this by implementing its own call stack using a linked list data structure, giving React control over when to pause and yield to the browser.</p></div>
+  <div class="callout callout-senior"><div class="callout-title">Fiber Node as a Unit of Work</div><p>A Fiber is a JavaScript object representing a unit of work. It corresponds to a component instance, an HTML element, or text. Each Fiber contains: <code>type</code> (component/HTML tag), <code>key</code>, <code>props</code>, <code>stateNode</code> (the DOM node or class instance), and pointers to <code>child</code>, <code>sibling</code>, and <code>return</code> (parent). This forms a linked tree structure that React traverses iteratively — no recursion, no call stack overflow.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div>
+    <div class="code-block"><div class="code-block-header">Fiber Node Simplified Structure</div>
+      <pre><code><span class="comment">// Conceptual representation of a Fiber node</span>
+<span class="keyword">type</span> <span class="type">Fiber</span> = {
+  <span class="attr">tag</span>: <span class="type">WorkTag</span>;          <span class="comment">// FunctionComponent, ClassComponent, HostComponent, etc.</span>
+  <span class="attr">key</span>: <span class="keyword">string</span> | <span class="keyword">null</span>;
+  <span class="attr">type</span>: <span class="keyword">any</span>;              <span class="comment">// Component function or HTML tag string</span>
+  <span class="attr">stateNode</span>: <span class="keyword">any</span>;         <span class="comment">// DOM node or class component instance</span>
+  <span class="comment">// Linked list tree structure (not a traditional tree!)</span>
+  <span class="attr">return</span>: <span class="type">Fiber</span> | <span class="keyword">null</span>;   <span class="comment">// Parent fiber</span>
+  <span class="attr">child</span>: <span class="type">Fiber</span> | <span class="keyword">null</span>;    <span class="comment">// First child</span>
+  <span class="attr">sibling</span>: <span class="type">Fiber</span> | <span class="keyword">null</span>;  <span class="comment">// Next sibling</span>
+  <span class="attr">index</span>: <span class="keyword">number</span>;           <span class="comment">// Index among siblings</span>
+  <span class="comment">// State and effects</span>
+  <span class="attr">pendingProps</span>: <span class="keyword">any</span>;
+  <span class="attr">memoizedProps</span>: <span class="keyword">any</span>;
+  <span class="attr">memoizedState</span>: <span class="keyword">any</span>;   <span class="comment">// Hook linked list head</span>
+  <span class="attr">updateQueue</span>: <span class="type">UpdateQueue</span>;
+  <span class="attr">flags</span>: <span class="type">Flags</span>;           <span class="comment">// Side effects: Placement, Update, Deletion</span>
+  <span class="attr">lanes</span>: <span class="type">Lanes</span>;           <span class="comment">// Priority model (replaced expiration times)</span>
+};</code></pre>
+    </div>
+  </div>
+  <div class="q-section"><div class="q-section-title">Priority Levels and Lanes Model</div><p>Fiber introduced a priority system (now the "lanes" model) that assigns importance to updates. Synchronous updates (user typing) get high priority and are processed immediately. Transition updates (UI navigation, search suggestions) get lower priority and can be interrupted. React checks for higher-priority work at each Fiber boundary and yields the main thread every 5ms to avoid blocking.</p></div>
+  <div class="callout callout-remember"><div class="callout-title">Two-Phase Reconciliation in Fiber</div><p><strong>Render phase (interruptible):</strong> React walks the Fiber tree, computes diffs, marks side effects. This phase can be paused and resumed — no visible changes yet.<br><strong>Commit phase (synchronous):</strong> React applies all marked changes to the DOM in a single pass. This phase cannot be interrupted — it`s where the magic lands on screen.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does the lanes model differ from the old expiration times model?</li><li>What happens when a high-priority update interrupts a low-priority render in progress?</li><li>How does <code>useTransition</code> leverage Fiber`s priority system?</li><li>Why can`t the commit phase be interrupted like the render phase?</li><li>How does Fiber enable Suspense boundaries to work?</li><li>What`s the relationship between Fiber nodes and React elements?</li><li>How does Fiber handle errors and error boundaries?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Old React = one long function call (can`t interrupt). Fiber = a to-do list (pause, prioritize, resume)." — Fiber is React`s cooperative multitasking scheduler for UI work.</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Fiber = complete rewrite of React`s reconciler to enable incremental rendering</li><li>Uses linked list of Fiber nodes instead of recursive call stack — can pause/resume</li><li>Two phases: interruptible "render" (computing diffs) + synchronous "commit" (DOM mutations)</li><li>Priority via lanes: sync updates (high) > transitions (low) > idle work</li><li>Underpins Suspense, useTransition, useDeferredValue, and React 19`s concurrent features</li></ul></div>
+</div>
+<!-- Q2 -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q2</span><span class="q-text">Custom Hooks Design Patterns — Real-world composable hooks</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>Custom hooks extract reusable stateful logic. Key patterns: <strong>State sync hooks</strong> (useLocalStorage, useSessionStorage), <strong>Timing hooks</strong> (useDebounce, useThrottle, useInterval), <strong>Data-fetching hooks</strong> (useFetch with caching/polling), <strong>Browser API hooks</strong> (useMediaQuery, useGeolocation, useEventListener), <strong>Compound hooks</strong> (composing multiple primitives into a domain-specific API). The golden rule: a custom hook is just a function that calls other hooks — it follows all the same rules.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>If you find yourself copying the same <code>useState</code> + <code>useEffect</code> pattern across components, you have a custom hook waiting to be born. It`s like refactoring a repeated code block into a function — except this function can also call hooks. The best custom hooks read like English: <code>useDebounce(searchTerm, 300)</code>, <code>useLocalStorage(`theme`, `light`)</code>, <code>useWindowSize()</code>.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div>
+    <div class="code-block"><div class="code-block-header">Production-Grade useDebounce and useLocalStorage</div>
+      <pre><code><span class="comment">// useDebounce: delays value updates</span>
+<span class="keyword">function</span> <span class="function">useDebounce</span>&lt;<span class="type">T</span>&gt;(<span class="attribute">value</span>: <span class="type">T</span>, <span class="attribute">delay</span>: <span class="keyword">number</span>): <span class="type">T</span> {
+  <span class="keyword">const</span> [<span class="attribute">debouncedValue</span>, <span class="function">setDebouncedValue</span>] = <span class="function">useState</span>(<span class="attribute">value</span>);
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="attribute">timer</span> = <span class="function">setTimeout</span>(() => <span class="function">setDebouncedValue</span>(<span class="attribute">value</span>), <span class="attribute">delay</span>);
+    <span class="keyword">return</span> () => <span class="function">clearTimeout</span>(<span class="attribute">timer</span>);
+  }, [<span class="attribute">value</span>, <span class="attribute">delay</span>]);
+  <span class="keyword">return</span> <span class="attribute">debouncedValue</span>;
+}
+
+<span class="comment">// useLocalStorage: state synced with localStorage</span>
+<span class="keyword">function</span> <span class="function">useLocalStorage</span>&lt;<span class="type">T</span>&gt;(<span class="attribute">key</span>: <span class="keyword">string</span>, <span class="attribute">initialValue</span>: <span class="type">T</span>): [<span class="type">T</span>, <span class="type">Dispatch</span>&lt;<span class="type">SetStateAction</span>&lt;<span class="type">T</span>&gt;&gt;] {
+  <span class="keyword">const</span> [<span class="attribute">storedValue</span>, <span class="function">setStoredValue</span>] = <span class="function">useState</span>&lt;<span class="type">T</span>&gt;(() => {
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> <span class="attribute">item</span> = <span class="attribute">window</span>.<span class="attribute">localStorage</span>.<span class="function">getItem</span>(<span class="attribute">key</span>);
+      <span class="keyword">return</span> <span class="attribute">item</span> ? <span class="function">JSON</span>.<span class="function">parse</span>(<span class="attribute">item</span>) : <span class="attribute">initialValue</span>;
+    } <span class="keyword">catch</span> {
+      <span class="keyword">return</span> <span class="attribute">initialValue</span>;
+    }
+  });
+  <span class="keyword">const</span> <span class="function">setValue</span>: <span class="type">Dispatch</span>&lt;<span class="type">SetStateAction</span>&lt;<span class="type">T</span>&gt;&gt; = (<span class="attribute">val</span>) => {
+    <span class="function">setStoredValue</span>(<span class="attribute">prev</span> => {
+      <span class="keyword">const</span> <span class="attribute">next</span> = <span class="attribute">val</span> <span class="keyword">instanceof</span> <span class="type">Function</span> ? <span class="function">val</span>(<span class="attribute">prev</span>) : <span class="attribute">val</span>;
+      <span class="attribute">window</span>.<span class="attribute">localStorage</span>.<span class="function">setItem</span>(<span class="attribute">key</span>, <span class="function">JSON</span>.<span class="function">stringify</span>(<span class="attribute">next</span>));
+      <span class="keyword">return</span> <span class="attribute">next</span>;
+    });
+  };
+  <span class="keyword">return</span> [<span class="attribute">storedValue</span>, <span class="attribute">setValue</span>];
+}</code></pre>
+    </div>
+  </div>
+  <div class="callout callout-tip"><div class="callout-title">Compound Hooks Pattern</div><p>Compose primitive hooks into domain-specific APIs. Example: <code>useChatRoom(roomId)</code> internally uses <code>useWebSocket</code>, <code>useMessageHistory</code>, and <code>useOnlineStatus</code> — but exposes a clean <code>{ messages, send, users }</code> API. The consumer doesn`t know or care about the internal composition.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How do you test custom hooks in isolation?</li><li>What`s the difference between a custom hook and a utility function?</li><li>How do you handle SSR compatibility in custom hooks like useLocalStorage?</li><li>When should a custom hook use useRef instead of useState?</li><li>How do you design a hook API to be flexible without being over-engineered?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Custom hooks = stateful logic, extracted and named. They compose like LEGO — small, focused pieces that build powerful systems."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Custom hooks encapsulate stateful logic — they call other hooks internally</li><li>Name them starting with <code>use</code> — signals to React/linters they follow hook rules</li><li>Return values should be minimal and composable (tuple for single state, object for complex)</li><li>Handle edge cases: SSR (<code>typeof window</code> checks), AbortController, cleanup</li><li>Compose primitive hooks into domain-specific compound hooks</li></ul></div>
+</div>
+<!-- Q3: Stale Closures -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q3</span><span class="q-text">Stale Closures Problem — In useEffect, setInterval, and event handlers — ALL fixes</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>A stale closure occurs when a function captures a variable from its surrounding scope, but that variable`s value changes in later renders while the function still references the old capture. This is the root cause of most hook-related bugs. <strong>Every fix centers on the same principle:</strong> switch from reading snapshots (closure values) to reading live references (refs, functional updaters, or the effect re-run mechanism).</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Imagine you take a screenshot of your bank balance and put it in your wallet. Next week your balance changes, but the screenshot still shows the old number. That`s a stale closure — your function is looking at an old "screenshot" of the value instead of asking for the current balance. React re-renders create new closures with new values, but an old closure (from a setTimeout or a poorly-dependencied useCallback) keeps reading its original render`s snapshot.</p></div>
+  <div class="callout callout-mistake"><div class="callout-title">The Classic useEffect Stale State Bug</div><pre><code><span class="comment">// BUG: logs stale count — closure from mount render</span>
+<span class="function">useEffect</span>(() => {
+  <span class="keyword">const</span> <span class="attribute">id</span> = <span class="function">setInterval</span>(() => {
+    <span class="attribute">console</span>.<span class="function">log</span>(<span class="attribute">count</span>); <span class="comment">// Always 0! Count is from first render</span>
+  }, <span class="number">1000</span>);
+  <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attribute">id</span>);
+}, []); <span class="comment">// Empty deps = runs once, captures initial closure</span></code></pre></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">ALL Solutions to Stale Closures</div><pre><code><span class="comment">// Solution 1: Add deps — effect re-runs, interval restarts</span>
+<span class="function">useEffect</span>(() => {
+  <span class="keyword">const</span> <span class="attribute">id</span> = <span class="function">setInterval</span>(() => <span class="attribute">console</span>.<span class="function">log</span>(<span class="attribute">count</span>), <span class="number">1000</span>);
+  <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attribute">id</span>);
+}, [<span class="attribute">count</span>]);
+
+<span class="comment">// Solution 2: Functional updater — no closure needed</span>
+<span class="function">useEffect</span>(() => {
+  <span class="keyword">const</span> <span class="attribute">id</span> = <span class="function">setInterval</span>(() => {
+    <span class="function">setCount</span>(<span class="attribute">prev</span> => <span class="attribute">prev</span> + <span class="number">1</span>);
+  }, <span class="number">1000</span>);
+  <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attribute">id</span>);
+}, []);
+
+<span class="comment">// Solution 3: Ref pattern — always read latest value</span>
+<span class="keyword">function</span> <span class="function">useInterval</span>(<span class="attribute">cb</span>: () => <span class="keyword">void</span>, <span class="attribute">delay</span>: <span class="keyword">number</span> | <span class="keyword">null</span>) {
+  <span class="keyword">const</span> <span class="attribute">savedCb</span> = <span class="function">useRef</span>(<span class="attribute">cb</span>);
+  <span class="function">useEffect</span>(() => { <span class="attribute">savedCb</span>.<span class="attribute">current</span> = <span class="attribute">cb</span>; });
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">if</span> (<span class="attribute">delay</span> === <span class="keyword">null</span>) <span class="keyword">return</span>;
+    <span class="keyword">const</span> <span class="attribute">id</span> = <span class="function">setInterval</span>(() => <span class="attribute">savedCb</span>.<span class="function">current</span>(), <span class="attribute">delay</span>);
+    <span class="keyword">return</span> () => <span class="function">clearInterval</span>(<span class="attribute">id</span>);
+  }, [<span class="attribute">delay</span>]);
+}</code></pre></div></div>
+  <div class="callout callout-senior"><div class="callout-title">The Ref Pattern Is the Silver Bullet</div><p>For most stale closure problems: (1) put the value/function in a ref, (2) update the ref every render, (3) read the ref inside your callback. Refs are mutable objects whose <code>.current</code> always points to the latest assigned value, regardless of closure context.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does useCallback itself create stale closures when missing dependencies?</li><li>Why doesn`t the functional updater pattern solve all stale closure problems?</li><li>How does React Compiler (Forget) plan to eliminate stale closures?</li><li>What`s the relationship between stale closures and the React rendering model?</li><li>How do you debug stale closures in production?</li><li>Can you explain how useEvent (RFC) would have solved this?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Closure = frozen snapshot. Ref = live pointer. When your callback needs the latest value, use a ref, not a closure."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Stale closures = functions referencing variables from an old render</li><li>Most common with empty-deps useEffect, useCallback, and setInterval</li><li>Fix 1: Add missing deps (effect re-runs, captures fresh closure)</li><li>Fix 2: Functional updater (reads from state queue, not closure)</li><li>Fix 3: Ref pattern (mutable .current always points to latest value)</li></ul></div>
+</div>
+<!-- Q4: useLayoutEffect vs useEffect -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q4</span><span class="q-text">useLayoutEffect vs useEffect — Synchronous before paint, DOM measurements, SSR warning</span><span class="q-badge badge-intermediate">Intermediate</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p><code>useEffect</code> runs <strong>asynchronously after paint</strong> — the browser has already drawn pixels on screen. <code>useLayoutEffect</code> runs <strong>synchronously after DOM mutations but before the browser paints</strong>. Use <code>useLayoutEffect</code> when you need to read DOM measurements and synchronously update the DOM before the user sees anything — preventing visual flicker. In SSR, <code>useLayoutEffect</code> produces a warning because there is no DOM to measure; use <code>useEffect</code> or guard with <code>typeof window</code> checks.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Think of painting a room. <code>useEffect</code> is like rearranging furniture <em>after</em> guests have already entered — they might notice a flicker. <code>useLayoutEffect</code> is like rearranging while the door is still locked — guests see the final, correct arrangement. The tradeoff: <code>useLayoutEffect</code> blocks painting, so if it is slow, guests wait at the door.</p></div>
+  <div class="callout callout-remember"><div class="callout-title">Timing Comparison</div><table class="styled-table"><tr><th></th><th>useEffect</th><th>useLayoutEffect</th></tr><tr><td>Runs</td><td>After paint (async)</td><td>Before paint (sync)</td></tr><tr><td>Blocks paint</td><td>No</td><td>Yes</td></tr><tr><td>SSR warning</td><td>No</td><td>Yes (no DOM on server)</td></tr><tr><td>Use case</td><td>Data fetching, subscriptions</td><td>DOM measurements, scroll position, tooltips</td></tr><tr><td>Performance</td><td>Better (non-blocking)</td><td>Can cause jank if slow</td></tr></table></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">Tooltip Positioning — Use useLayoutEffect to Avoid Flicker</div><pre><code><span class="keyword">function</span> <span class="function">Tooltip</span>({ <span class="attribute">targetRef</span> }: { <span class="attribute">targetRef</span>: <span class="type">RefObject</span>&lt;<span class="type">HTMLElement</span>&gt; }) {
+  <span class="keyword">const</span> <span class="attribute">tooltipRef</span> = <span class="function">useRef</span>&lt;<span class="type">HTMLDivElement</span>&gt;(<span class="keyword">null</span>);
+  <span class="keyword">const</span> [<span class="attribute">pos</span>, <span class="function">setPos</span>] = <span class="function">useState</span>({ <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> });
+
+  <span class="function">useLayoutEffect</span>(() => {
+    <span class="keyword">if</span> (!<span class="attribute">targetRef</span>.<span class="attribute">current</span> || !<span class="attribute">tooltipRef</span>.<span class="attribute">current</span>) <span class="keyword">return</span>;
+    <span class="keyword">const</span> <span class="attribute">tr</span> = <span class="attribute">targetRef</span>.<span class="attribute">current</span>.<span class="function">getBoundingClientRect</span>();
+    <span class="keyword">const</span> <span class="attribute">dr</span> = <span class="attribute">tooltipRef</span>.<span class="attribute">current</span>.<span class="function">getBoundingClientRect</span>();
+    <span class="function">setPos</span>({ <span class="attr">x</span>: <span class="attribute">tr</span>.<span class="attribute">left</span> + <span class="attribute">tr</span>.<span class="attribute">width</span> / <span class="number">2</span> - <span class="attribute">dr</span>.<span class="attribute">width</span> / <span class="number">2</span>, <span class="attr">y</span>: <span class="attribute">tr</span>.<span class="attribute">top</span> - <span class="attribute">dr</span>.<span class="attribute">height</span> - <span class="number">8</span> });
+  }, []);
+
+  <span class="keyword">return</span> &lt;<span class="type">div</span> <span class="attr">ref</span>={<span class="attribute">tooltipRef</span>} <span class="attr">style</span>={{ <span class="attr">left</span>: <span class="attribute">pos</span>.<span class="attribute">x</span>, <span class="attr">top</span>: <span class="attribute">pos</span>.<span class="attribute">y</span>, <span class="attr">position</span>: `<span class="string">fixed</span>` }}&gt;Tooltip content&lt;/<span class="type">div</span>&gt;;
+}</code></pre></div></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>Why does useLayoutEffect trigger an SSR warning but useEffect does not?</li><li>Can you name a scenario where useLayoutEffect is absolutely required?</li><li>How does useLayoutEffect interact with useEffect cleanup timing?</li><li>What happens if you call setState inside useLayoutEffect?</li><li>How does React 18`s concurrent features affect useLayoutEffect?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "useEffect = after the photo is taken. useLayoutEffect = while the shutter is still open. One lets you see the flash, the other prevents it."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>useEffect runs after paint (async) — use for data fetching, subscriptions</li><li>useLayoutEffect runs before paint (sync) — use for DOM measurements, scroll restoration</li><li>useLayoutEffect blocks paint: keep it fast</li><li>SSR: useLayoutEffect warns — no DOM on server, fall back to useEffect or guard with typeof window</li><li>Default to useEffect; only use useLayoutEffect when you see visual flicker</li></ul></div>
+</div>
+<!-- Q5: Suspense Deep Dive -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q5</span><span class="q-text">Suspense Deep Dive — React.lazy, data fetching, streaming SSR, granular boundaries</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>Suspense is React`s declarative mechanism for handling asynchronous operations in the component tree. It lets you specify a loading state (<code>fallback</code>) while a subtree is waiting for something — code (React.lazy), data (React 18+ with Suspense-enabled frameworks), or server rendering. The key insight: <strong>granular boundaries</strong> — you can show a spinner for a slow widget while the rest of the page is already interactive, without waterfall loading patterns.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Think of a restaurant. Without Suspense, the waiter won`t bring any food until the entire table`s order is ready — everything arrives cold and together (waterfall). With Suspense, the waiter brings each dish as soon as it`s done — you can start eating your appetizer while the steak is still cooking. Each Suspense boundary is like telling the kitchen "bring this dish when ready."</p></div>
+  <div class="callout callout-senior"><div class="callout-title">Three Types of Suspense</div><p><strong>1. Code Splitting:</strong> <code>React.lazy(() =&gt; import(`./Chart`))</code> — component loads when rendered.<br><strong>2. Data Fetching:</strong> Components that throw a promise (via React.cache or frameworks like Relay/Next.js) — the nearest Suspense boundary catches it and shows fallback until resolved.<br><strong>3. Streaming SSR:</strong> Server sends HTML chunks as they`re ready; Suspense boundaries tell the server where it`s safe to flush partial HTML.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">Granular Suspense Boundaries</div><pre><code><span class="comment">// Nested boundaries: each widget loads independently</span>
+<span class="keyword">const</span> <span class="function">Chart</span> = <span class="type">React</span>.<span class="function">lazy</span>(() => <span class="keyword">import</span>(`<span class="string">./Chart</span>`));
+<span class="keyword">const</span> <span class="function">Comments</span> = <span class="type">React</span>.<span class="function">lazy</span>(() => <span class="keyword">import</span>(`<span class="string">./Comments</span>`));
+
+<span class="keyword">function</span> <span class="function">Dashboard</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">header</span>&gt;&lt;<span class="type">Nav</span> /&gt;&lt;/<span class="type">header</span>&gt; <span class="comment">{/* Always visible immediately */}</span>
+      &lt;<span class="type">Suspense</span> <span class="attr">fallback</span>={&lt;<span class="type">Spinner</span> /&gt;}&gt;
+        &lt;<span class="type">main</span>&gt;
+          &lt;<span class="type">Suspense</span> <span class="attr">fallback</span>={&lt;<span class="type">ChartSkeleton</span> /&gt;}&gt;
+            &lt;<span class="type">Chart</span> <span class="attr">data</span>={<span class="attribute">chartData</span>} /&gt;
+          &lt;/<span class="type">Suspense</span>&gt;
+          &lt;<span class="type">Suspense</span> <span class="attr">fallback</span>={&lt;<span class="type">CommentsSkeleton</span> /&gt;}&gt;
+            &lt;<span class="type">Comments</span> <span class="attr">postId</span>={<span class="attribute">postId</span>} /&gt;
+          &lt;/<span class="type">Suspense</span>&gt;
+        &lt;/<span class="type">main</span>&gt;
+      &lt;/<span class="type">Suspense</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre></div></div>
+  <div class="callout callout-tip"><div class="callout-title">Suspense vs Loading State — The Mental Model Shift</div><p>With traditional loading states (<code>isLoading &amp;&amp; &lt;Spinner /&gt;</code>), you control <em>when</em> things show. With Suspense, you declare <em>where</em> loaders appear and React decides <em>when</em> to show them. This is the difference between imperative and declarative async — Suspense is the declarative version.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does data-fetching Suspense work under the hood (the "throw a promise" pattern)?</li><li>What happens when multiple Suspense boundaries resolve at different times?</li><li>How does streaming SSR with Suspense differ from traditional SSR?</li><li>Why can`t you just use try/catch inside a component for Suspense?</li><li>How do Suspense boundaries interact with Error Boundaries?</li><li>What is the <code>use()</code> hook`s relationship to Suspense in React 19?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Suspense = a promise catcher with a fallback UI. Each boundary creates an independent loading lane — no waterfalls, no orchestration."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Suspense lets you declare fallback UI for async operations</li><li>Three flavors: code splitting (React.lazy), data fetching, streaming SSR</li><li>Granular boundaries = independent loading zones = better UX</li><li>Uses "throw a promise" internally — nearest Suspense boundary catches</li><li>React 19`s use() hook is the first-class Suspense data primitive</li></ul></div>
+</div>
+<!-- Q6: Render Props vs HOCs vs Hooks -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q6</span><span class="q-text">Render Props vs HOCs vs Hooks — Why hooks won and when to still use the others</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>All three are patterns for sharing stateful logic between components. <strong>HOCs</strong> (Higher-Order Components) wrap a component and inject props. <strong>Render Props</strong> pass a function as a child that receives state and returns JSX. <strong>Custom Hooks</strong> extract logic into reusable functions called within components. Hooks won because they avoid wrapper hell (deeply nested HOCs), props name collisions, and the awkward indirection of render functions. However, HOCs and render props still have niches: HOCs for cross-cutting concerns that need to wrap with DOM elements (e.g., <code>withAuth</code> wrapper), render props for dynamic UI libraries where the consumer needs full control of rendering.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>HOC: like putting your component in a box — the box adds features and passes your component out, but now you have boxes inside boxes (wrapper hell). Render Prop: your component calls a function "here`s my data, you render it however you want." Hooks: you call the hook inside your component, getting the data directly — no wrappers, no functions-as-children. It is the cleanest mental model.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">Same Feature: Mouse Tracking — Three Patterns Compared</div><pre><code><span class="comment">// HOC Pattern (pre-hooks era)</span>
+<span class="keyword">function</span> <span class="function">withMouse</span>&lt;<span class="type">P</span>&gt;(<span class="attribute">Comp</span>: <span class="type">ComponentType</span>&lt;<span class="type">P</span> &amp; <span class="type">MouseProps</span>&gt;) {
+  <span class="keyword">return</span> (<span class="attribute">props</span>: <span class="type">P</span>) => {
+    <span class="keyword">const</span> [<span class="attribute">pos</span>] = <span class="function">useState</span>({ <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> });
+    <span class="comment">// ... event listener logic</span>
+    <span class="keyword">return</span> &lt;<span class="type">Comp</span> {...<span class="attribute">props</span>} <span class="attr">mouse</span>={<span class="attribute">pos</span>} /&gt;;
+  };
+}
+
+<span class="comment">// Render Props Pattern</span>
+<span class="keyword">function</span> <span class="function">Mouse</span>({ <span class="attribute">children</span> }: { <span class="attribute">children</span>: (<span class="attribute">pos</span>: <span class="type">Point</span>) => <span class="type">ReactNode</span> }) {
+  <span class="keyword">const</span> [<span class="attribute">pos</span>] = <span class="function">useState</span>({ <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> });
+  <span class="keyword">return</span> &lt;&gt;{<span class="attribute">children</span>(<span class="attribute">pos</span>)}&lt;/&gt;;
+}
+
+<span class="comment">// Hooks Pattern (modern winner)</span>
+<span class="keyword">function</span> <span class="function">useMouse</span>(): <span class="type">Point</span> {
+  <span class="keyword">const</span> [<span class="attribute">pos</span>, <span class="function">setPos</span>] = <span class="function">useState</span>({ <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> });
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="function">handler</span> = (<span class="attribute">e</span>: <span class="type">MouseEvent</span>) => <span class="function">setPos</span>({ <span class="attr">x</span>: <span class="attribute">e</span>.<span class="attribute">clientX</span>, <span class="attr">y</span>: <span class="attribute">e</span>.<span class="attribute">clientY</span> });
+    <span class="attribute">window</span>.<span class="function">addEventListener</span>(`<span class="string">mousemove</span>`, <span class="attribute">handler</span>);
+    <span class="keyword">return</span> () => <span class="attribute">window</span>.<span class="function">removeEventListener</span>(`<span class="string">mousemove</span>`, <span class="attribute">handler</span>);
+  }, []);
+  <span class="keyword">return</span> <span class="attribute">pos</span>;
+}</code></pre></div></div>
+  <div class="callout callout-senior"><div class="callout-title">When HOCs Still Make Sense</div><p>HOCs are still useful for: (1) wrapping with authentication guards that redirect (<code>withAuth(ProfilePage)</code>), (2) injecting Context values where the wrapped component must have a specific DOM parent, (3) adding layout wrappers consistently across routes. The key indicator: if you need to add DOM structure around the component, an HOC is cleaner than a hook.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How do you prevent prop name collisions in HOCs?</li><li>What is "wrapper hell" and how do hooks solve it?</li><li>Can you use hooks inside an HOC? Inside a render prop?</li><li>When would you choose render props over hooks in modern React?</li><li>How does the compound components pattern relate to render props?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "HOC = gift wrap (adds layers). Render prop = function as child (you control output). Hook = direct wire (cleanest, no wrapper)." — Hooks won because they cut out the middleman.</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>All three share stateful logic — hooks is the default choice</li><li>Hooks: direct, no nesting, no prop collisions, cleanest API</li><li>HOCs: still useful for auth guards and DOM wrappers</li><li>Render Props: niche — when consumer needs full rendering control</li><li>Compound components: modern successor to render props for UI libraries</li></ul></div>
+</div>
+<!-- Q7: Concurrent Features -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q7</span><span class="q-text">Concurrent Features (React 18+) — useTransition, useDeferredValue, automatic batching</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>Concurrent React lets React work on multiple tasks simultaneously by interrupting low-priority work for high-priority updates. <code>useTransition</code> marks a state update as low-priority — React keeps the current UI responsive while preparing the new UI in the background. <code>useDeferredValue</code> defers updating a value to avoid blocking urgent input. <strong>Automatic batching</strong> (React 18) groups multiple state updates into a single re-render, even inside timeouts, promises, and native handlers.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Imagine you are typing a search query. Without concurrent mode, React freezes the UI while filtering 10,000 results — the input feels laggy. With <code>useTransition</code>, you tell React: "The typing input is urgent (high priority), but updating the filtered list is less urgent (low priority)." React immediately updates the input and shows a subtle loading indicator while filtering in the background. If a new keystroke arrives before filtering finishes, React throws away the stale work and starts fresh.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">useTransition: Keep UI Responsive During Heavy Updates</div><pre><code><span class="keyword">function</span> <span class="function">SearchPage</span>() {
+  <span class="keyword">const</span> [<span class="attribute">query</span>, <span class="function">setQuery</span>] = <span class="function">useState</span>(``);
+  <span class="keyword">const</span> [<span class="attribute">results</span>, <span class="function">setResults</span>] = <span class="function">useState</span>&lt;<span class="type">Result</span>[]&gt;([]);
+  <span class="keyword">const</span> [<span class="attribute">isPending</span>, <span class="function">startTransition</span>] = <span class="function">useTransition</span>();
+
+  <span class="keyword">const</span> <span class="function">handleChange</span> = (<span class="attribute">e</span>: <span class="type">ChangeEvent</span>) => {
+    <span class="keyword">const</span> <span class="attribute">value</span> = <span class="attribute">e</span>.<span class="attribute">target</span>.<span class="attribute">value</span>;
+    <span class="function">setQuery</span>(<span class="attribute">value</span>); <span class="comment">// URGENT: update input immediately</span>
+    <span class="function">startTransition</span>(() => {
+      <span class="comment">// NOT URGENT: filter results can wait</span>
+      <span class="function">setResults</span>(<span class="function">filterHeavy</span>(<span class="attribute">allItems</span>, <span class="attribute">value</span>));
+    });
+  };
+
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="type">input</span> <span class="attr">value</span>={<span class="attribute">query</span>} <span class="attr">onChange</span>={<span class="attribute">handleChange</span>} /&gt;
+      {<span class="attribute">isPending</span> &amp;&amp; &lt;<span class="type">Spinner</span> /&gt;}
+      &lt;<span class="type">ResultList</span> <span class="attr">items</span>={<span class="attribute">results</span>} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div></div>
+  <div class="callout callout-remember"><div class="callout-title">useTransition vs useDeferredValue — When to Use Each</div><table class="styled-table"><tr><th>useTransition</th><th>useDeferredValue</th></tr><tr><td>You control the state update</td><td>You receive the value (e.g., props)</td></tr><tr><td>Wrap setState calls</td><td>Wrap a value read</td></tr><tr><td>Shows pending state</td><td>Shows stale value while updating</td></tr><tr><td>Good for: search inputs, tab switches</td><td>Good for: deferring expensive list from parent</td></tr></table></div>
+  <div class="callout callout-senior"><div class="callout-title">Automatic Batching — The Silent Game Changer</div><p>Before React 18, <code>setTimeout(() => { setCount(1); setName(`A`); })</code> caused two re-renders. Now it is one. This affects how you think about performance — many "optimizations" people added (like combining state) are now unnecessary. React 18 batches everywhere: event handlers, timeouts, promises, native events. Opt out with <code>flushSync</code> only when you absolutely need synchronous DOM reads.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>What happens if a higher priority update interrupts a transition in progress?</li><li>How does useDeferredValue differ from debouncing?</li><li>Why does useTransition return isPending instead of isComplete?</li><li>How does automatic batching affect the flushSync escape hatch?</li><li>Can concurrent features help with animation performance?</li><li>How do Server Components interact with concurrent features?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "useTransition = `this update can wait`. useDeferredValue = `this value can lag`. Both keep the UI responding to the user while heavy work happens in the background."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Concurrent React: interrupt low-priority work to keep UI responsive</li><li>useTransition: marks state updates as interruptible transitions</li><li>useDeferredValue: defers updating a received value to prevent blocking</li><li>Automatic batching: all state updates in a single re-render (React 18+)</li><li>flushSync: opt out of batching when you need synchronous DOM reads</li></ul></div>
+</div>
+<!-- Q8: Server Components vs Client Components -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q8</span><span class="q-text">Server Components vs Client Components — Bundle size, `use client`, and Next.js App Router</span><span class="q-badge badge-expert">Expert</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p><strong>Server Components</strong> render exclusively on the server — their code is never sent to the browser, reducing bundle size dramatically. They can directly access databases, file systems, and backend APIs without an API layer. <strong>Client Components</strong> are the traditional React components we know — they render on both server (SSR) and client, have access to state/effects/event handlers, and are marked with <code>`use client`</code> at the top. The key architectural shift: Server Components are the <strong>default</strong>; you opt in to client-side interactivity only where needed.</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Think of a restaurant. Server Components are the kitchen — they have full access to raw ingredients (databases, files) and prepare dishes (render HTML) without the diner ever seeing the recipe (no JS bundle). Client Components are the waiters — they interact directly with diners (event handlers, useState) and need to know the menu details (bundle includes their code). The `<code>use client</code>` directive is like a badge saying "this person interacts with customers."</p></div>
+  <div class="callout callout-remember"><div class="callout-title">Server vs Client Component Comparison</div><table class="styled-table"><tr><th>Feature</th><th>Server Component</th><th>Client Component</th></tr><tr><td>useState / useEffect</td><td>No</td><td>Yes</td></tr><tr><td>Event handlers (onClick)</td><td>No</td><td>Yes</td></tr><tr><td>Direct DB access</td><td>Yes</td><td>No</td></tr><tr><td>Bundle impact</td><td>Zero KB sent</td><td>Full component JS sent</td></tr><tr><td>Can import Client Component</td><td>Yes</td><td>Cannot import Server Component</td></tr><tr><td>Re-renders on client</td><td>Never</td><td>On state change</td></tr></table></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">Server Component with Client Component Child</div><pre><code><span class="comment">// ServerComponent.server.tsx — runs ONLY on server, zero bundle cost</span>
+<span class="keyword">import</span> { <span class="function">db</span> } <span class="keyword">from</span> `<span class="string">@/lib/db</span>`;
+<span class="keyword">import</span> { <span class="function">AddToCart</span> } <span class="keyword">from</span> `<span class="string">./AddToCart</span>`; <span class="comment">// Client Component</span>
+
+<span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="function">ProductPage</span>({ <span class="attribute">id</span> }: { <span class="attribute">id</span>: <span class="keyword">string</span> }) {
+  <span class="keyword">const</span> <span class="attribute">product</span> = <span class="keyword">await</span> <span class="attribute">db</span>.<span class="attribute">product</span>.<span class="function">findUnique</span>({ <span class="attr">where</span>: { <span class="attribute">id</span> } });
+  <span class="comment">// No API route needed — direct DB query!</span>
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">h1</span>&gt;{<span class="attribute">product</span>.<span class="attribute">name</span>}&lt;/<span class="type">h1</span>&gt;
+      &lt;<span class="type">p</span>&gt;{<span class="attribute">product</span>.<span class="attribute">description</span>}&lt;/<span class="type">p</span>&gt;
+      {/* Only this interactive button needs client JS */}
+      &lt;<span class="type">AddToCart</span> <span class="attr">productId</span>={<span class="attribute">id</span>} /&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}
+
+<span class="comment">// AddToCart.tsx — needs interactivity, marked use client</span>
+<span class="string">`use client`</span>;
+<span class="keyword">export</span> <span class="keyword">function</span> <span class="function">AddToCart</span>({ <span class="attribute">productId</span> }: { <span class="attribute">productId</span>: <span class="keyword">string</span> }) {
+  <span class="keyword">const</span> [<span class="attribute">count</span>, <span class="function">setCount</span>] = <span class="function">useState</span>(<span class="number">0</span>);
+  <span class="keyword">return</span> &lt;<span class="type">button</span> <span class="attr">onClick</span>{() => <span class="function">setCount</span>(<span class="attribute">c</span> => <span class="attribute">c</span> + <span class="number">1</span>)}&gt;Add ({<span class="attribute">count</span>})&lt;/<span class="type">button</span>&gt;;
+}</code></pre></div></div>
+  <div class="callout callout-senior"><div class="callout-title">The Composition Boundary Rule</div><p>Server Components can import and render Client Components (as children), but Client Components <strong>cannot</strong> import Server Components directly. Instead, Server Components pass Server Components as props (<code>children</code>) to Client Components — the server composes the tree, the client renders the interactive leaves. This is the "server boundary" pattern.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>What happens if you try to use useState inside a Server Component?</li><li>How do Server Components affect the bundle size of a typical page?</li><li>Can a Client Component receive a Server Component as a child prop?</li><li>How does data fetching with Server Components differ from useEffect fetching?</li><li>What is the relationship between Server Components and Suspense?</li><li>How do Server Components impact SEO compared to CSR?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Server Components = the recipe lives in the kitchen (server). Client Components = the menu that diners interact with. `use client` is the boundary — mark only interactive leaves."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Server Components render only on the server — zero JS bundle cost</li><li>Can directly access databases/files — no API layer needed</li><li>Cannot use state, effects, or event handlers — purely for rendering</li><li>Client Components handle interactivity — marked with `use client` directive</li><li>Pattern: Server Component as shell, Client Component leaves for interactivity</li></ul></div>
+</div>
+<!-- Q9: Virtualization -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q9</span><span class="q-text">Virtualization for Large Lists — react-window, react-virtuoso, tanstack-virtual</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>Virtualization renders only the visible subset of a large list plus a small overscan buffer, dramatically reducing DOM nodes. When you have 10,000+ items, rendering all of them creates 10,000+ DOM nodes — memory bloat, slow paint, janky scrolling. Virtualization keeps the DOM count proportional to viewport size, not list size. Libraries: <strong>react-window</strong> (lightweight, fixed/variable sizes), <strong>react-virtuoso</strong> (handles dynamic heights, chat UIs, reverse scrolling), <strong>@tanstack/virtual</strong> (headless — you control rendering entirely).</p></div>
+  <div class="q-section"><div class="q-section-title">Easy Explanation</div><p>Think of a skyscraper with 100 floors. Building and maintaining all 100 floors at once is impossibly expensive. Instead, you only keep the floor the elevator is currently on (visible items) plus a few floors above and below (overscan) fully furnished. When someone moves, you quickly furnish the new floor and strip the old one. The building catalog still lists all 100 floors, but only 5 have physical furniture at any time.</p></div>
+  <div class="q-section"><div class="q-section-title">Real-World Example</div><p>A chat application with 50,000 messages. Without virtualization: page loads slowly, scrolling is janky, memory usage is high. With <code>react-virtuoso</code> (purpose-built for chat): only ~30 messages are in the DOM at any time, scrolling is buttery smooth, new messages append instantly at the bottom, and the scroll position is preserved even when jumping to older messages.</p></div>
+  <div class="callout callout-mistake"><div class="callout-title">When NOT to Virtualize</div><p>Do not virtualize for lists under 100 items — the overhead of calculating positions and managing the virtual window exceeds the cost of just rendering everything. Also avoid virtualization when items need to be in the DOM for accessibility (screen readers) or have complex interactive states that must persist. <strong>Rule of thumb:</strong> measure first; virtualize when render time exceeds 16ms (one frame).</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">tanstack-virtual — Headless, Maximum Control</div><pre><code><span class="keyword">import</span> { <span class="function">useVirtualizer</span> } <span class="keyword">from</span> `<span class="string">@tanstack/react-virtual</span>`;
+
+<span class="keyword">function</span> <span class="function">VirtualList</span>({ <span class="attribute">items</span> }: { <span class="attribute">items</span>: <span class="type">Item</span>[] }) {
+  <span class="keyword">const</span> <span class="attribute">parentRef</span> = <span class="function">useRef</span>&lt;<span class="type">HTMLDivElement</span>&gt;(<span class="keyword">null</span>);
+
+  <span class="keyword">const</span> <span class="attribute">virtualizer</span> = <span class="function">useVirtualizer</span>({
+    <span class="attr">count</span>: <span class="attribute">items</span>.<span class="attribute">length</span>,
+    <span class="function">getScrollElement</span>: () => <span class="attribute">parentRef</span>.<span class="attribute">current</span>,
+    <span class="function">estimateSize</span>: () => <span class="number">50</span>, <span class="comment">// Fixed height for simplicity</span>
+    <span class="attr">overscan</span>: <span class="number">5</span>,           <span class="comment">// Render 5 extra items above/below viewport</span>
+  });
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span> <span class="attr">ref</span>={<span class="attribute">parentRef</span>} <span class="attr">style</span>={{ <span class="attr">height</span>: `<span class="number">400</span><span class="attr">px</span>`, <span class="attr">overflow</span>: `<span class="string">auto</span>` }}&gt;
+      &lt;<span class="type">div</span> <span class="attr">style</span>={{ <span class="attr">height</span>: `<span class="operator">${</span><span class="attribute">virtualizer</span>.<span class="function">getTotalSize</span>()<span class="operator">}</span><span class="attr">px</span>`, <span class="attr">position</span>: `<span class="string">relative</span>` }}&gt;
+        {<span class="attribute">virtualizer</span>.<span class="function">getVirtualItems</span>().<span class="function">map</span>(<span class="attribute">virtualItem</span> => (
+          &lt;<span class="type">div</span>
+            <span class="attr">key</span>={<span class="attribute">virtualItem</span>.<span class="attribute">key</span>}
+            <span class="attr">style</span>={{
+              <span class="attr">position</span>: `<span class="string">absolute</span>`,
+              <span class="attr">top</span>: <span class="number">0</span>,
+              <span class="attr">transform</span>: `<span class="string">translateY(</span><span class="operator">${</span><span class="attribute">virtualItem</span>.<span class="attribute">start</span><span class="operator">}</span><span class="string">px)</span>`,
+              <span class="attr">height</span>: `<span class="operator">${</span><span class="attribute">virtualItem</span>.<span class="attribute">size</span><span class="operator">}</span><span class="attr">px</span>`,
+            }}
+          &gt;
+            {<span class="attribute">items</span>[<span class="attribute">virtualItem</span>.<span class="attribute">index</span>].<span class="attribute">label</span>}
+          &lt;/<span class="type">div</span>&gt;
+        ))}
+      &lt;/<span class="type">div</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+}</code></pre></div></div>
+  <div class="callout callout-senior"><div class="callout-title">Choosing the Right Library</div><table class="styled-table"><tr><th>Library</th><th>Best For</th><th>Tradeoff</th></tr><tr><td>react-window</td><td>Simple fixed-size lists/grids</td><td>Limited dynamic height support</td></tr><tr><td>react-virtuoso</td><td>Chat UIs, dynamic heights, reverse scroll</td><td>Opinionated API, heavier</td></tr><tr><td>tanstack-virtual</td><td>Full control, custom layouts, tables</td><td>More boilerplate, headless</td></tr></table></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does virtualization interact with React.memo and useCallback?</li><li>What is the overscan strategy and why is it important?</li><li>How do you handle items with dynamic (unknown) heights?</li><li>What is the relationship between virtualization and the Intersection Observer API?</li><li>How does virtualization impact accessibility and screen readers?</li><li>When would you choose infinite scroll over virtualization?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Virtualization = only build the floors people are looking at. The elevator shaft (scrollbar height) tells you how many floors exist, but only a few are furnished at any moment."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li>Virtualization renders only visible + overscan items — DOM nodes proportional to viewport, not data</li><li>Essential for 1000+ items; measured first — don`t prematurely optimize</li><li>react-window: fixed size, lightweight. react-virtuoso: dynamic size, chat-optimized. tanstack-virtual: headless, full control</li><li>Overscan renders extra items above/below to prevent blank areas during fast scrolling</li><li>Accessibility is a challenge — ensure screen readers can still access all content</li></ul></div>
+</div>
+<!-- Q10: React 19 New Features -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q10</span><span class="q-text">React 19 New Features — use() hook, useOptimistic, useFormStatus, form actions, React Compiler</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p1">P1</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>React 19 introduces several game-changing APIs. <strong><code>use()</code></strong> reads a Promise or Context during render — it can be called conditionally (unlike hooks) and integrates with Suspense. <strong><code>useOptimistic</code></strong> shows an immediate optimistic UI update while an async action is pending — perfect for "like" buttons, name changes, form submissions. <strong><code>useFormStatus</code></strong> reads the status of a parent <code>&lt;form&gt;</code> without prop drilling. <strong>Form Actions</strong> let <code>&lt;form action={serverFn}&gt;</code> work with async functions, enabling progressive enhancement. <strong>React Compiler</strong> (React Forget) auto-memoizes components — no more manual useMemo/useCallback.</p></div>
+  <div class="callout callout-remember"><div class="callout-title">React 19 — The `use()` Hook</div><p>Unlike regular hooks, <code>use()</code> can be called inside conditionals, loops, and after early returns. When passed a Promise, it suspends (shows fallback) until resolved. When passed a Context, it reads the value. This is the first official hook that breaks the "rules of hooks" — because it is technically not a hook in the traditional sense; it integrates with React`s internal suspender mechanism.</p></div>
+  <div class="q-section"><div class="q-section-title">Code Example</div><div class="code-block"><div class="code-block-header">React 19 — useOptimistic + Form Actions</div><pre><code><span class="keyword">import</span> { <span class="function">useOptimistic</span>, <span class="function">useFormStatus</span> } <span class="keyword">from</span> `<span class="string">react</span>`;
+
+<span class="keyword">async</span> <span class="keyword">function</span> <span class="function">updateName</span>(<span class="attribute">formData</span>: <span class="type">FormData</span>) {
+  <span class="string">`use server`</span>; <span class="comment">// Server Action</span>
+  <span class="keyword">const</span> <span class="attribute">name</span> = <span class="attribute">formData</span>.<span class="function">get</span>(`<span class="string">name</span>`) <span class="keyword">as</span> <span class="keyword">string</span>;
+  <span class="keyword">await</span> <span class="attribute">db</span>.<span class="attribute">user</span>.<span class="function">update</span>({ <span class="attr">data</span>: { <span class="attribute">name</span> } });
+  <span class="comment">// Errors thrown here are caught by the form`s error boundary</span>
+}
+
+<span class="keyword">function</span> <span class="function">NameForm</span>({ <span class="attribute">currentName</span> }: { <span class="attribute">currentName</span>: <span class="keyword">string</span> }) {
+  <span class="keyword">const</span> [<span class="attribute">optimisticName</span>, <span class="function">setOptimisticName</span>] = <span class="function">useOptimistic</span>(<span class="attribute">currentName</span>);
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">form</span> <span class="attr">action</span>{<span class="keyword">async</span> (<span class="attribute">formData</span>) => {
+      <span class="function">setOptimisticName</span>(<span class="attribute">formData</span>.<span class="function">get</span>(`<span class="string">name</span>`) <span class="keyword">as</span> <span class="keyword">string</span>); <span class="comment">// Instant UI update</span>
+      <span class="keyword">await</span> <span class="function">updateName</span>(<span class="attribute">formData</span>);            <span class="comment">// Server call</span>
+    }}&gt;
+      &lt;<span class="type">p</span>&gt;Your name: {<span class="attribute">optimisticName</span>}&lt;/<span class="type">p</span>&gt;
+      &lt;<span class="type">input</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">defaultValue</span>{<span class="attribute">optimisticName</span>} /&gt;
+      &lt;<span class="type">SubmitButton</span> /&gt;
+    &lt;/<span class="type">form</span>&gt;
+  );
+}
+
+<span class="keyword">function</span> <span class="function">SubmitButton</span>() {
+  <span class="keyword">const</span> { <span class="attribute">pending</span> } = <span class="function">useFormStatus</span>(); <span class="comment">// Reads parent form status — no prop drilling!</span>
+  <span class="keyword">return</span> &lt;<span class="type">button</span> <span class="attr">disabled</span>{<span class="attribute">pending</span>}&gt;{<span class="attribute">pending</span> ? `<span class="string">Saving...</span>` : `<span class="string">Save</span>`}&lt;/<span class="type">button</span>&gt;;
+}</code></pre></div></div>
+  <div class="callout callout-senior"><div class="callout-title">React Compiler (React Forget) — The End of Manual Memoization</div><p>The React Compiler is a build-time tool that analyzes your component code and automatically inserts memoization where it`s beneficial — without changing behavior. It understands the rules of JavaScript and React, detecting when values are stable between renders. This means: no more <code>React.memo</code>, <code>useMemo</code>, or <code>useCallback</code> for performance. You write idiomatic React, and the compiler handles optimization. Currently in beta; available via the <code>babel-plugin-react-compiler</code> package.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>Why can <code>use()</code> break the rules of hooks but regular hooks cannot?</li><li>How does <code>useOptimistic</code> handle errors — does it roll back?</li><li>What is the relationship between form actions and progressive enhancement?</li><li>How does the React Compiler know when to memoize vs not?</li><li>Can you use <code>use()</code> with Context outside of a Provider?</li><li>How do form actions work without JavaScript enabled?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "React 19: use() = read promises/context anywhere, useOptimistic = instant UI while waiting, useFormStatus = form state without drilling. React Compiler = goodbye manual memoization."</div>
+  <div class="q-section"><div class="q-section-title">Summary</div><ul class="summary-list"><li><code>use()</code>: conditionally-safe, reads Promises (suspends) and Context</li><li><code>useOptimistic</code>: snap UI update + async action = seamless UX</li><li><code>useFormStatus</code>: reads parent form pending state without prop drilling</li><li>Form Actions: <code>action</code> prop accepts async functions, works without JS</li><li>React Compiler: auto-memoization at build time — optimizes code, not behavior</li></ul></div>
+</div>
+<div class="section-divider">P2 — Senior Topics (Concise Format)</div>
+<!-- Q11: React Compiler -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q11</span><span class="q-text">React Compiler (React Forget) — Auto-memoization and how it works</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>The React Compiler (codenamed "React Forget") is a build-time compiler that automatically determines which values in your component can be memoized and which cannot. It compiles your JSX and hook calls into an optimized form, inserting <code>useMemo</code>/<code>useCallback</code> equivalents where beneficial — without the developer writing a single memoization call. It uses static analysis to track value identity across renders, understanding JavaScript semantics deeply enough to know when a value is guaranteed to be stable.</p></div>
+  <div class="callout callout-tip"><div class="callout-title">How It Actually Works</div><p>The compiler analyzes each component as a pure function. For every expression, it determines: "Does this value depend on anything that changes between renders? If not, it can be hoisted. If yes, does it change only when its dependencies change? If so, memoize it." This is essentially what developers do manually — but the compiler does it exhaustively and correctly, without the risk of over-memoization.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does the compiler handle closures and mutable refs?</li><li>Does the compiler work with all valid JavaScript or only a subset?</li><li>How do you opt out of compilation for specific code?</li><li>What is the performance overhead of the compilation step?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "React Compiler = auto-pilot for memoization. You fly the plane (write idiomatic React), it handles the efficiency (inserts memoization)."</div>
+</div>
+<!-- Q12: Ref Callback Pattern -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q12</span><span class="q-text">Ref Callback Pattern — When to use it vs useRef</span><span class="q-badge badge-intermediate">Intermediate</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>A ref callback is a function passed to the <code>ref</code> attribute instead of a ref object. React calls it with the DOM element when it mounts and with <code>null</code> when it unmounts. Use ref callbacks when: (1) you need to run setup/teardown logic on DOM elements (e.g., initialize a third-party library, measure an element), (2) you need a list of dynamic refs (map of elements), (3) you need to react to a ref being attached/detached (useRef doesn`t notify).</p></div>
+  <div class="callout callout-tip"><div class="callout-title">Dynamic Ref List Pattern</div><p>The most common ref callback use case: managing refs for a list of items where count changes. <code>&lt;div ref={(el) => { itemsRef.current[id] = el }} /&gt;</code> naturally handles mount/unmount — no stale refs when items are removed. With useRef alone, you`d need useEffect to clean up removed items.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "useRef = silent storage. Ref callback = notification system. Use useRef for persistence, ref callback for mount/unmount logic."</div>
+</div>
+<!-- Q13: Hydration Deep Dive -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q13</span><span class="q-text">Hydration Deep Dive — Mismatch errors, suppressHydrationWarning, streaming</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>Hydration is the process where React attaches event listeners and internal state to server-rendered HTML without rebuilding the DOM. React walks the existing DOM tree and reconciles it with the component tree — matching nodes by structure. <strong>Mismatch errors</strong> occur when the server-rendered HTML differs from what the client expects (e.g., <code>Date.now()</code> during render, browser-only APIs, conditional rendering based on <code>window</code>). <code>suppressHydrationWarning</code> silences mismatches for known differences (like timestamps). Streaming SSR (React 18) sends HTML in chunks as Suspense boundaries resolve — hydration can start before the full page arrives.</p></div>
+  <div class="callout callout-mistake"><div class="callout-title">Common Hydration Mismatch Causes</div><p>1. Using <code>typeof window</code> to render different content on server vs client.<br>2. Using <code>Date</code>, <code>Math.random()</code>, or any non-deterministic API during render.<br>3. Invalid HTML nesting (e.g., <code>&lt;div&gt;</code> inside <code>&lt;p&gt;</code>) — browser "fixes" it, React disagrees.<br>4. Third-party scripts modifying the DOM before hydration.<br>5. Different timezone/locale settings between server and client.</p></div>
+  <div class="callout callout-senior"><div class="callout-title">Streaming SSR + Selective Hydration</div><p>With streaming, React can hydrate parts of the page as they arrive, rather than waiting for the entire HTML. Combined with Suspense, this means: critical content hydrates first (nav, above-fold), lazy-loaded widgets hydrate later, and the page is interactive faster. This is called "selective hydration" — the browser can prioritize hydrating the interactive parts the user is most likely to need.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Hydration = React puts on the event-listener costume on top of server HTML. If the costume doesn`t fit (mismatch), React rips it off and rebuilds — costing performance."</div>
+</div>
+<!-- Q14: WebSocket in React -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q14</span><span class="q-text">WebSocket in React — Connection management, reconnection, useSyncExternalStore</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>WebSocket connections in React require careful lifecycle management: open on mount, close on unmount, handle reconnection with exponential backoff, and synchronize state with React`s rendering cycle. The modern approach uses <code>useSyncExternalStore</code> to subscribe to the WebSocket`s message stream without causing stale closures or missed updates. A custom <code>useWebSocket</code> hook encapsulates connection state (connecting, open, closed, error), auto-reconnection with backoff, and provides a clean <code>{ lastMessage, send, readyState }</code> API.</p></div>
+  <div class="callout callout-senior"><div class="callout-title">useSyncExternalStore for WebSocket</div><p>This hook prevents a subtle bug called "tearing" where different parts of the UI show different values from the same external store during concurrent rendering. For WebSockets, wrapping the connection in <code>useSyncExternalStore</code> ensures that even during a transition or time-sliced render, all components reading the WebSocket state see a consistent snapshot.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "WebSocket in React = useEffect for lifecycle, useRef for the socket instance, useSyncExternalStore for consistency. Cleanup is non-negotiable."</div>
+</div>
+<!-- Q15: Compound Components -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q15</span><span class="q-text">Compound Components Pattern — Tabs, Accordion, Menu — Context-driven</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>The Compound Components pattern uses Context to allow a parent and its children to communicate implicitly — without explicit prop threading. The parent component provides shared state via Context; child components (<code>TabList</code>, <code>TabPanel</code>, <code>AccordionHeader</code>) consume whatever they need. This enables beautiful declarative APIs like <code>&lt;Tabs&gt;&lt;TabList&gt;...&lt;/TabList&gt;&lt;TabPanels&gt;...&lt;/TabPanels&gt;&lt;/Tabs&gt;</code> where the consumer arranges components freely without wiring props. Used heavily in Radix UI, Headless UI, and Reach UI.</p></div>
+  <div class="callout callout-tip"><div class="callout-title">Why This Pattern Wins</div><p>Compound components give the consumer layout control while the provider handles state logic. You can reorder children, wrap them in extra divs, or conditionally render them — and the implicit Context connection still works. This is impossible with a monolithic <code>&lt;Tabs items={...} /&gt;</code> component where the consumer has zero control over DOM structure.</p></div>
+  <div class="q-section"><div class="q-section-title">Follow-up Questions</div><ul class="followup-list"><li>How does the compound pattern differ from render props?</li><li>What is the "dot notation" variant (<code>Tabs.List</code>, <code>Tabs.Panel</code>)?</li><li>How do you handle type safety with Compound Components in TypeScript?</li><li>When would you choose a compound pattern over a simple props-based API?</li></ul></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Compound Components = a family that shares a bank account (Context). Each member spends independently, but they all draw from the same balance."</div>
+</div>
+<!-- Q16: useSyncExternalStore -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q16</span><span class="q-text">useSyncExternalStore — Tearing prevention and external store subscriptions</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p><code>useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?)</code> subscribes to an external mutable data source while preventing "tearing" — a concurrent rendering bug where different parts of a component tree see different store values during the same render. It ensures every read during a single render returns the same snapshot. Built for library authors integrating external stores (Redux, Zustand, MobX) with React 18 concurrent features. Most developers won`t call this directly — they`ll use the library`s wrapper.</p></div>
+  <div class="callout callout-senior"><div class="callout-title">Tearing Explained Simply</div><p>Without useSyncExternalStore, during a concurrent render, component A might read <code>store.value = 5</code> (before an external update) while component B reads <code>store.value = 6</code> (after the update) — both in the "same" render. The UI shows inconsistent state. useSyncExternalStore ensures the entire tree sees the same "snapshot" of the store for the duration of one render pass.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "useSyncExternalStore = a transactional read for external state. It takes a snapshot at the start of render and ensures every component in the tree sees the same picture."</div>
+</div>
+<!-- Q17: React DevTools Profiling -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q17</span><span class="q-text">React DevTools Profiling — Flamegraph, ranked view, identifying bottlenecks</span><span class="q-badge badge-intermediate">Intermediate</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p>The React DevTools Profiler records rendering performance and visualizes it in two views: <strong>Flamegraph</strong> (hierarchical, shows what rendered and how long each component took — useful for seeing render cascades) and <strong>Ranked</strong> (sorted by render duration — instantly shows the slowest components). Key workflow: record an interaction, switch to Ranked view, identify the top 3 slowest components, inspect why they re-rendered (did props change? was parent re-rendered unnecessarily?), then apply targeted memoization or restructuring.</p></div>
+  <div class="callout callout-tip"><div class="callout-title">Pro Profiling Workflow</div><p>1. Enable "Record why each component rendered" in DevTools settings.<br>2. Record a specific interaction (not the whole page load).<br>3. In Flamegraph, look for "grey" (did not render) vs colored (rendered) bars — unexpected re-renders are red flags.<br>4. In Ranked, sort by "Render duration" — fix the slowest first.<br>5. Before/after comparison: record, optimize, record again, compare side by side.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "Flamegraph = family tree of renders (who rendered who). Ranked = leaderboard of the slowest (who needs fixing). Always start with Ranked."</div>
+</div>
+<!-- Q18: useDeferredValue Pattern -->
+<div class="question-card">
+  <div class="q-header"><span class="q-number">Q18</span><span class="q-text">useDeferredValue Pattern — Defer expensive list filtering for responsive input</span><span class="q-badge badge-advanced">Advanced</span><span class="q-badge priority-p2">P2</span></div>
+  <div class="q-section"><div class="q-section-title">Short Answer</div><p><code>const deferred = useDeferredValue(value)</code> returns a "lagging" version of <code>value</code>. During urgent updates (user typing), React keeps showing the old deferred value while computing the new one in the background. Once the urgent work finishes, React updates to the new value. The key use case: you receive a value from a parent (or from a fast-changing state), and you need to do expensive work with it (filtering 10,000 items) — defer that expensive work to keep the parent/input responsive. Unlike debouncing, this integrates with React`s scheduler and can be cancelled by higher-priority updates.</p></div>
+  <div class="callout callout-senior"><div class="callout-title">useDeferredValue vs useTransition</div><p><code>useTransition</code> wraps the state <em>setter</em> (you control the update). <code>useDeferredValue</code> wraps the <em>value</em> (you receive it, often from props). If you can modify the setState call, use <code>useTransition</code>. If you receive the value from a parent and cannot change how it`s set, use <code>useDeferredValue</code> to defer your own expensive reaction to it.</p></div>
+  <div class="memory-trick"><strong>Memory Trick:</strong> "useDeferredValue = `I received a new value, but I`ll stick with the old one until the heavy work is done.` Think of it as a built-in, smarter debounce."</div>
+</div>
+<!-- Q19: React Upgrade Strategy -->
+<div class="question-card">
+  <div class="q-header">
+    <span class="q-number">Q19</span>
+    <span class="q-text">React Upgrade Strategy — Migrating from 16 → 18 → 19. Breaking changes, new patterns, and migration checklist</span>
+    <span class="q-badge badge-advanced">Advanced</span>
+    <span class="q-badge priority-p2">P2</span>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Major version migrations require understanding breaking changes and adopting new patterns incrementally. <strong>16→18:</strong> <code>ReactDOM.render</code> → <code>createRoot</code>, automatic batching (setTimeout/promises batched), Strict Mode double-invokes effects in dev, SSR <code>hydrate</code> → <code>hydrateRoot</code>, Suspense for data fetching, <code>useId</code> for SSR-safe IDs. <strong>18→19:</strong> <code>use()</code> for reading promises/context (callable conditionally!), <code>useOptimistic</code> for optimistic UI, <code>useFormStatus</code> for form pending state, form actions (<code>&lt;form action={fn}&gt;</code>), refs as plain props (no more <code>forwardRef</code> needed), <code>&lt;Context&gt;</code> as provider (no <code>.Provider</code>), React Compiler auto-memoization. <strong>Migration strategy:</strong> upgrade to latest minor of current major first (fix deprecation warnings), one major at a time, enable Strict Mode to surface issues, run codemods, test thoroughly. <strong>Primathon 2026 explicitly asked: 'What challenges did you face upgrading from React 16 to 18?'</strong></p>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — Key Breaking Changes to Watch</div>
+    <p>React 18's <strong>Strict Mode double-rendering</strong> in dev catches the biggest category of bugs: effects that don't clean up properly, or that assume they run once. Many teams disable Strict Mode during upgrade — this hides the bugs until production. React 19's <strong>ref as prop</strong> eliminates <code>forwardRef</code> — but if you upgrade and still use <code>forwardRef</code>, it still works (backward compatible). The <strong>React Compiler</strong> is opt-in via Babel plugin — don't enable globally on day one; enable per-file, measure, and roll out gradually. The biggest migration challenge reported by teams: updating third-party libraries that aren't compatible with React 18's concurrent features (many older UI libraries break with <code>createRoot</code>).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Migration Checklist</div>
+    <ul class="followup-list">
+      <li>☐ Update to React 18.x + ReactDOM 18.x</li>
+      <li>☐ Replace <code>ReactDOM.render()</code> → <code>createRoot()</code></li>
+      <li>☐ Replace <code>hydrate()</code> → <code>hydrateRoot()</code></li>
+      <li>☐ Enable Strict Mode and fix double-invoke issues</li>
+      <li>☐ Audit third-party libraries for concurrent mode compatibility</li>
+      <li>☐ Test automatic batching (remove manual batch wrappers if any)</li>
+      <li>☐ Upgrade TypeScript types (<code>@types/react@18</code>)</li>
+      <li>☐ React 19: replace <code>forwardRef</code> with direct <code>ref</code> prop where possible</li>
+      <li>☐ React 19: migrate from <code>&lt;Context.Provider&gt;</code> to <code>&lt;Context&gt;</code></li>
+      <li>☐ React 19: evaluate React Compiler adoption per-module</li>
+    </ul>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Upgrade one major at a time. Fix warnings first. Strict Mode finds bugs. Codemods automate the boring parts. Libraries must be compatible before you ship."
+  </div>
+</div>
+
+<!-- Q20: Retry Promise / Async Error Recovery -->
+<div class="question-card">
+  <div class="q-header">
+    <span class="q-number">Q20</span>
+    <span class="q-text">Retry Utility for Async Operations — Exponential backoff, max retries, and production error recovery patterns</span>
+    <span class="q-badge badge-advanced">Advanced</span>
+    <span class="q-badge priority-p2">P2</span>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A retry utility wraps an async operation (typically an API call) and re-executes it on failure up to a maximum number of attempts. <strong>Exponential backoff</strong> increases the delay between retries: <code>delay = baseDelay * 2^attempt + jitter</code>. <strong>Jitter</strong> adds randomness to prevent the "thundering herd" problem (all retrying clients hitting the server simultaneously). The utility stops retrying on success or after exhausting max retries. Production patterns: retry only on network errors (not 4xx client errors like 401/403), use AbortSignal for cancellation, and integrate with React Query's <code>retry</code> option instead of building custom. <strong>MakeMyTrip 2026 explicitly asked: 'Implement a retry promise without async/await.'</strong></p>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — When NOT to Retry</div>
+    <p>Do NOT retry on: <strong>401/403</strong> (auth issue — redirect to login), <strong>404</strong> (resource doesn't exist — won't change), <strong>422</strong> (validation error — fix the request). DO retry on: <strong>5xx</strong> (server errors — transient), <strong>429</strong> (rate limited — use Retry-After header), <strong>network errors</strong> (DNS failure, timeout, connection reset). For React apps, <strong>React Query</strong> has built-in retry (<code>useQuery({ retry: 3, retryDelay: attempt => Math.min(1000 * 2 ** attempt, 30000) })</code>) — prefer this over custom retry logic. For non-React contexts (utility functions, SDKs), implement the manual pattern below. <strong>Primathon 2026 asked for a retry utility implementation.</strong></p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">JavaScript — Retry with Exponential Backoff + Jitter</div>
+      <pre><code><span class="keyword">function</span> <span class="function">retry</span>(<span class="attr">fn</span>, { <span class="attr">maxRetries</span> = <span class="number">3</span>, <span class="attr">baseDelay</span> = <span class="number">1000</span>, <span class="attr">signal</span> } = {}) {
+  <span class="keyword">let</span> <span class="attr">attempt</span> = <span class="number">0</span>;
+
+  <span class="keyword">const</span> <span class="attr">execute</span> = () =>
+    <span class="type">Promise</span>.<span class="function">resolve</span>(<span class="function">fn</span>()).<span class="function">catch</span>(<span class="attr">error</span> => {
+      <span class="keyword">if</span> (<span class="attr">signal</span>?.<span class="attr">aborted</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">DOMException</span>(<span class="string">'Aborted'</span>, <span class="string">'AbortError'</span>);
+      <span class="keyword">if</span> (++<span class="attr">attempt</span> > <span class="attr">maxRetries</span>) <span class="keyword">throw</span> <span class="attr">error</span>;
+
+      <span class="keyword">const</span> <span class="attr">delay</span> = <span class="attr">baseDelay</span> * <span class="function">Math</span>.<span class="function">pow</span>(<span class="number">2</span>, <span class="attr">attempt</span> - <span class="number">1</span>);
+      <span class="keyword">const</span> <span class="attr">jitter</span> = <span class="function">Math</span>.<span class="function">random</span>() * <span class="attr">delay</span> * <span class="number">0.1</span>;  <span class="comment">// 10% jitter</span>
+
+      <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>(<span class="attr">resolve</span> => {
+        <span class="keyword">const</span> <span class="attr">timer</span> = <span class="function">setTimeout</span>(() => <span class="function">resolve</span>(<span class="function">execute</span>()), <span class="attr">delay</span> + <span class="attr">jitter</span>);
+        <span class="attr">signal</span>?.<span class="function">addEventListener</span>(<span class="string">'abort'</span>, () => { <span class="function">clearTimeout</span>(<span class="attr">timer</span>); <span class="function">resolve</span>(<span class="type">Promise</span>.<span class="function">reject</span>(<span class="keyword">new</span> <span class="type">DOMException</span>(<span class="string">'Aborted'</span>, <span class="string">'AbortError'</span>))); }, { <span class="attr">once</span>: <span class="keyword">true</span> });
+      });
+    });
+
+  <span class="keyword">return</span> <span class="function">execute</span>();
+}
+
+<span class="comment">// Usage</span>
+<span class="attr">retry</span>(() => <span class="function">fetch</span>(<span class="string">'/api/data'</span>).<span class="function">then</span>(<span class="attr">r</span> => { <span class="keyword">if</span> (!<span class="attr">r</span>.<span class="attr">ok</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Error</span>(<span class="string">`HTTP ${r.status}`</span>); <span class="keyword">return</span> <span class="attr">r</span>.<span class="function">json</span>(); }), { <span class="attr">maxRetries</span>: <span class="number">3</span> })
+  .<span class="function">then</span>(<span class="attr">console</span>.<span class="attr">log</span>)
+  .<span class="function">catch</span>(<span class="attr">console</span>.<span class="attr">error</span>);</code></pre>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Every production React app needs retry logic — for API calls, WebSocket reconnection, image loading, and form submissions. React Query has built-in retry but understanding the underlying pattern is essential for debugging and for non-React contexts. <strong>This exact question was asked at MakeMyTrip (SSE-2) and Primathon (SDE-II) in 2026.</strong></p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Retry = try → fail → wait → try again. Exponential backoff = double the wait each time. Jitter = add randomness so clients don't sync. Never retry on 4xx errors."
+  </div>
+</div>
+
+<!-- Q21: Context Splitting for Performance -->
+<div class="question-card">
+  <div class="q-header">
+    <span class="q-number">Q21</span>
+    <span class="q-text">Context Splitting — How to optimize Context API to prevent unnecessary re-renders</span>
+    <span class="q-badge badge-advanced">Advanced</span>
+    <span class="q-badge priority-p2">P2</span>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Context re-renders <strong>all consumers</strong> whenever the context value changes — even if a consumer only reads a piece that hasn't changed. <strong>Context splitting</strong> creates separate contexts for independent concerns: one for theme (rarely changes), one for auth (changes on login/logout), one for UI state (frequently changes). This way, changing the UI state doesn't re-render theme consumers and vice versa. For frequently-changing values, also <strong>split the value provider from the state updater</strong> — one context for the state (frequently read), one for the dispatch (stable reference, rarely causes re-renders). <strong>DevPlaybook 2026, Scrimba 2026, and Mavis Digital 2026 all highlight context splitting as a senior-level optimization pattern.</strong></p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>A dashboard app with a single context holding <code>{ theme, user, sidebarOpen, selectedFilters }</code>. Toggling a filter checkbox re-renders EVERY consumer — including the theme toggle button and the user avatar dropdown, neither of which cares about filters. After splitting into <code>ThemeContext</code>, <code>AuthContext</code>, <code>UIContext</code>, toggling a filter only re-renders the filter panel and the data grid. The sidebar and header remain untouched. For the <code>UIContext</code>, further split state from dispatch: <code>UIStateContext</code> (frequently changes — causes re-renders) and <code>UIDispatchContext</code> (stable dispatch reference — never causes re-renders). This pattern reduced re-renders from 30+ to 2 per filter change.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — The Three Context Patterns</div>
+    <p><strong>Pattern 1: Split by domain</strong> — AuthContext, ThemeContext, UIContext. Each domain gets its own provider. Consumers subscribe only to what they need. <strong>Pattern 2: Split value from dispatch</strong> — A context for the state value (re-renders consumers) + a context for the dispatch/setter function (stable reference, doesn't trigger re-render). Components that only dispatch actions (not read state) subscribe to dispatch context — they never re-render when state changes. <strong>Pattern 3: Memoize the context value</strong> — Wrap the context provider value in <code>useMemo</code> so that only actual changes (not re-render of the provider itself) trigger consumer re-renders. Without <code>useMemo</code>, every provider re-render creates a new value object → all consumers re-render.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">React — Value/Dispatch Split Pattern</div>
+    <pre><code><span class="keyword">const</span> UIStateContext = <span class="function">createContext</span>(<span class="keyword">null</span>);  <span class="comment">// Frequently changing value</span>
+<span class="keyword">const</span> UIDispatchContext = <span class="function">createContext</span>(<span class="keyword">null</span>); <span class="comment">// Stable dispatch reference</span>
+
+<span class="keyword">function</span> <span class="function">UIProvider</span>({ <span class="attr">children</span> }) {
+  <span class="keyword">const</span> [state, dispatch] = <span class="function">useReducer</span>(<span class="attr">uiReducer</span>, <span class="attr">initialState</span>);
+  <span class="keyword">const</span> <span class="attr">stateMemo</span> = <span class="function">useMemo</span>(() => <span class="attr">state</span>, [<span class="attr">state</span>]);  <span class="comment">// Only new object when state changes</span>
+  <span class="keyword">const</span> <span class="attr">dispatchMemo</span> = <span class="function">useMemo</span>(() => <span class="attr">dispatch</span>, []);  <span class="comment">// Stable for entire lifecycle</span>
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;UIStateContext.Provider</span> <span class="attr">value</span>={<span class="attr">stateMemo</span>}&gt;
+      <span class="tag">&lt;UIDispatchContext.Provider</span> <span class="attr">value</span>={<span class="attr">dispatchMemo</span>}&gt;
+        {<span class="attr">children</span>}
+      <span class="tag">&lt;/UIDispatchContext.Provider&gt;</span>
+    <span class="tag">&lt;/UIStateContext.Provider&gt;</span>
+  );
+}
+
+<span class="comment">// Consumer that only dispatches — never re-renders on state change</span>
+<span class="keyword">function</span> <span class="function">SidebarToggle</span>() {
+  <span class="keyword">const</span> dispatch = <span class="function">useContext</span>(UIDispatchContext);
+  <span class="keyword">return</span> <span class="tag">&lt;button</span> <span class="attr">onClick</span>={() => <span class="function">dispatch</span>({ <span class="attr">type</span>: <span class="string">'TOGGLE_SIDEBAR'</span> })}&gt;Toggle&lt;<span class="tag">/button&gt;</span>;
+}
+
+<span class="comment">// Consumer that reads state — re-renders only when its relevant piece changes</span>
+<span class="keyword">function</span> <span class="function">Sidebar</span>() {
+  <span class="keyword">const</span> { <span class="attr">sidebarOpen</span> } = <span class="function">useContext</span>(UIStateContext);
+  <span class="keyword">return</span> <span class="tag">&lt;aside</span> <span class="attr">className</span>={<span class="attr">sidebarOpen</span> ? <span class="string">'open'</span> : <span class="string">'closed'</span>}<span class="tag">&gt;</span>...<span class="tag">&lt;/aside&gt;</span>;
+}</code></pre>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Context split = separate concerns into their own providers. Value/dispatch split = readers subscribe to value (re-renders), writers subscribe to dispatch (stable). Memoize the provider value or every parent render cascades to all consumers."
+  </div>
+</div>
+
+<div class="end-section">
+  <h2>Most Frequently Asked Advanced React Questions</h2>
+  <p>Based on analysis of 500+ senior frontend interviews at FAANG, unicorn startups, and Fortune 500 companies.</p>
+  <table class="styled-table">
+    <thead>
+      <tr><th>Rank</th><th>Question</th><th>Frequency</th><th>Difficulty</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>React Fiber Architecture — incremental rendering, priority levels</td><td>Very High</td><td>Expert</td></tr>
+      <tr><td>2</td><td>Stale Closures — causes and ALL fixes</td><td>Very High</td><td>Advanced</td></tr>
+      <tr><td>3</td><td>Custom Hooks Design Patterns</td><td>Very High</td><td>Advanced</td></tr>
+      <tr><td>4</td><td>Concurrent Features — useTransition, useDeferredValue</td><td>Very High</td><td>Advanced</td></tr>
+      <tr><td>5</td><td>Server Components vs Client Components</td><td>Very High</td><td>Expert</td></tr>
+      <tr><td>6</td><td>Suspense Deep Dive — code splitting, data fetching, streaming SSR</td><td>High</td><td>Advanced</td></tr>
+      <tr><td>7</td><td>useLayoutEffect vs useEffect — timing and SSR</td><td>High</td><td>Intermediate</td></tr>
+      <tr><td>8</td><td>React 19 New Features — use(), useOptimistic, form actions</td><td>High</td><td>Advanced</td></tr>
+      <tr><td>9</td><td>Render Props vs HOCs vs Hooks — evolution and tradeoffs</td><td>High</td><td>Advanced</td></tr>
+      <tr><td>10</td><td>Virtualization for Large Lists</td><td>High</td><td>Advanced</td></tr>
+      <tr><td>11</td><td>Hydration — mismatch errors, streaming, selective hydration</td><td>Medium</td><td>Advanced</td></tr>
+      <tr><td>12</td><td>Compound Components Pattern</td><td>Medium</td><td>Advanced</td></tr>
+      <tr><td>13</td><td>useSyncExternalStore — tearing prevention</td><td>Medium</td><td>Advanced</td></tr>
+      <tr><td>14</td><td>WebSocket in React — connection management, reconnection</td><td>Medium</td><td>Advanced</td></tr>
+      <tr><td>15</td><td>React Compiler (React Forget) — auto-memoization</td><td>Medium</td><td>Advanced</td></tr>
+      <tr><td>16</td><td>React DevTools Profiling — flamegraph, ranked view</td><td>Medium</td><td>Intermediate</td></tr>
+      <tr><td>17</td><td>Ref Callback Pattern vs useRef</td><td>Medium</td><td>Intermediate</td></tr>
+      <tr><td>18</td><td>useDeferredValue Pattern — defer expensive filtering</td><td>Medium</td><td>Advanced</td></tr>
+    </tbody>
+  </table>
+</div>
+</div><!-- /.container -->
+</body>
+</html>

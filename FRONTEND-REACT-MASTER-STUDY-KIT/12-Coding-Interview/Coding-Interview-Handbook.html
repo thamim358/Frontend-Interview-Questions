@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(251,191,36,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(245,158,11,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(251,191,36,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #FBBF24 50%, #F59E0B 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-badge">CODING HANDBOOK</div>
+  <h1 class="cover-title">Coding Interview Handbook</h1>
+  <p class="cover-subtitle">27 Must-Know Problems for Frontend Interviews — algorithms, polyfills, and practical coding challenges with production-quality solutions.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P1 — Full Format</span></div>
+    <div class="cover-meta-item"><span class="number">8</span><span class="label">P2 — Concise</span></div>
+    <div class="cover-meta-item"><span class="number">9</span><span class="label">P3 — Good to Know</span></div>
+    <div class="cover-meta-item"><span class="number">27</span><span class="label">Total Problems</span></div>
+    <div class="cover-meta-item"><span class="number">O(n)</span><span class="label">Optimized</span></div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>P1 — Full Format Problems (10)</h2>
+  <p>Each problem includes: approach explanation, production-quality solution, complexity analysis, and frontend relevance.</p>
+</div>
+<div class="container">
+
+<!-- Problem 1: Two Sum -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">Two Sum — Find two numbers that add to target</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers that add up to target. Assume exactly one solution, and you may not use the same element twice.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p><strong>Hash Map (Optimal):</strong> Single pass. For each number, compute its complement (<code>target - num</code>). If the complement exists in the hash map, we have our pair. Otherwise, store the current number and its index. This avoids the O(n²) nested loop approach.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Two Sum (O(n) Time, O(n) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">twoSum</span>(<span class="attr">nums</span>, <span class="attr">target</span>) {
+  <span class="keyword">const</span> <span class="attr">map</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>; <span class="attr">i</span> < <span class="attr">nums</span>.<span class="attr">length</span>; <span class="attr">i</span>++) {
+    <span class="keyword">const</span> <span class="attr">complement</span> = <span class="attr">target</span> - <span class="attr">nums</span>[<span class="attr">i</span>];
+
+    <span class="keyword">if</span> (<span class="attr">map</span>.<span class="function">has</span>(<span class="attr">complement</span>)) {
+      <span class="keyword">return</span> [<span class="attr">map</span>.<span class="function">get</span>(<span class="attr">complement</span>), <span class="attr">i</span>];
+    }
+
+    <span class="attr">map</span>.<span class="function">set</span>(<span class="attr">nums</span>[<span class="attr">i</span>], <span class="attr">i</span>);
+  }
+
+  <span class="keyword">return</span> [];  <span class="comment">// Per problem constraints, will always find a solution</span>
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Complexity</div>
+    <table class="styled-table">
+      <thead><tr><th>Metric</th><th>Value</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Time</td><td>O(n)</td><td>Single pass through the array</td></tr>
+        <tr><td>Space</td><td>O(n)</td><td>Hash map stores up to n entries in worst case</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>The hash map pattern appears everywhere: memoization caches, dependency tracking in React's hooks (the hooks linked list is essentially a positional map), deduplication, and event delegation lookups. This pattern is the foundation for <strong>Memoize</strong> (Problem 10).</p>
+  </div>
+</div>
+
+<!-- Problem 2: Valid Parentheses -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">Valid Parentheses — Check bracket matching</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Given a string containing just <code>( ) { } [ ]</code>, determine if the input string is valid — open brackets must be closed by the same type, in the correct order.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p><strong>Stack:</strong> Push opening brackets onto a stack. For each closing bracket, pop the stack — the popped element must be the matching opening bracket. If the stack is empty at the end, the string is valid. This is the same algorithm a browser's HTML parser uses to match tags.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Valid Parentheses (O(n) Time, O(n) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">isValid</span>(<span class="attr">s</span>) {
+  <span class="keyword">const</span> <span class="attr">stack</span> = [];
+  <span class="keyword">const</span> <span class="attr">pairs</span> = {
+    <span class="string">')'</span>: <span class="string">'('</span>,
+    <span class="string">'}'</span>: <span class="string">'{'</span>,
+    <span class="string">']'</span>: <span class="string">'['</span>,
+  };
+
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">char</span> <span class="keyword">of</span> <span class="attr">s</span>) {
+    <span class="keyword">if</span> (<span class="attr">char</span> <span class="keyword">in</span> <span class="attr">pairs</span>) {
+      <span class="keyword">if</span> (<span class="attr">stack</span>.<span class="function">pop</span>() !== <span class="attr">pairs</span>[<span class="attr">char</span>]) <span class="keyword">return</span> <span class="keyword">false</span>;
+    } <span class="keyword">else</span> {
+      <span class="attr">stack</span>.<span class="function">push</span>(<span class="attr">char</span>);
+    }
+  }
+
+  <span class="keyword">return</span> <span class="attr">stack</span>.<span class="attr">length</span> === <span class="number">0</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>This is literally how browsers parse HTML/JSX. When React reconciles the Virtual DOM, it uses stack-based diffing. The <code>{'{'}...{'}'}</code> nesting in JSX follows the same validation logic. Babel and ESLint parsers use stack-based bracket matching internally.</p>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Interview Tip</div>
+    <p>If asked about HTML/JSX parsing, mention this algorithm. "A valid HTML document is just a valid parentheses problem with angle brackets." Interviewers love when you connect CS fundamentals to frontend.</p>
+  </div>
+</div>
+
+<!-- Problem 3: Implement Debounce -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Implement Debounce — with leading/trailing edge and cancel</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement a debounce function that delays invoking <code>fn</code> until after <code>delay</code> milliseconds have elapsed since the last invocation. Support: (1) <code>leading</code> — invoke on the leading edge, (2) <code>trailing</code> — invoke on the trailing edge (default), (3) <code>cancel</code> — cancel pending invocations, (4) <code>flush</code> — immediately invoke any pending call.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p>Use <code>setTimeout</code> with a closure over a <code>timerId</code>. Each call clears the previous timer and sets a new one. For leading edge, invoke immediately and block subsequent calls for the delay period. For cancel, call <code>clearTimeout</code>. Return the debounced function with <code>.cancel()</code> and <code>.flush()</code> methods attached.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Production Debounce</div>
+    <pre><code><span class="keyword">function</span> <span class="function">debounce</span>(<span class="attr">fn</span>, <span class="attr">delay</span>, <span class="attr">options</span> = {}) {
+  <span class="keyword">const</span> { <span class="attr">leading</span> = <span class="keyword">false</span>, <span class="attr">trailing</span> = <span class="keyword">true</span> } = <span class="attr">options</span>;
+  <span class="keyword">let</span> <span class="attr">timerId</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastArgs</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastCallTime</span> = <span class="number">0</span>;
+
+  <span class="keyword">function</span> <span class="function">invoke</span>() {
+    <span class="attr">fn</span>.<span class="function">apply</span>(<span class="attr">lastThis</span>, <span class="attr">lastArgs</span>);
+    <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+  }
+
+  <span class="keyword">function</span> <span class="function">debounced</span>(...<span class="attr">args</span>) {
+    <span class="attr">lastArgs</span> = <span class="attr">args</span>;
+    <span class="attr">lastThis</span> = <span class="keyword">this</span>;
+    <span class="keyword">const</span> <span class="attr">now</span> = <span class="function">Date</span>.<span class="function">now</span>();
+    <span class="keyword">const</span> <span class="attr">elapsed</span> = <span class="attr">now</span> - <span class="attr">lastCallTime</span>;
+
+    <span class="keyword">if</span> (<span class="attr">timerId</span>) <span class="function">clearTimeout</span>(<span class="attr">timerId</span>);
+
+    <span class="keyword">if</span> (<span class="attr">leading</span> && <span class="attr">elapsed</span> >= <span class="attr">delay</span>) {
+      <span class="function">invoke</span>();
+    } <span class="keyword">else</span> <span class="keyword">if</span> (<span class="attr">trailing</span>) {
+      <span class="attr">timerId</span> = <span class="function">setTimeout</span>(() => {
+        <span class="function">invoke</span>();
+        <span class="attr">timerId</span> = <span class="keyword">null</span>;
+      }, <span class="attr">delay</span>);
+    }
+
+    <span class="attr">lastCallTime</span> = <span class="attr">now</span>;
+  }
+
+  <span class="attr">debounced</span>.<span class="attr">cancel</span> = () => {
+    <span class="keyword">if</span> (<span class="attr">timerId</span>) <span class="function">clearTimeout</span>(<span class="attr">timerId</span>);
+    <span class="attr">timerId</span> = <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+  };
+
+  <span class="attr">debounced</span>.<span class="attr">flush</span> = () => {
+    <span class="keyword">if</span> (<span class="attr">timerId</span>) { <span class="function">clearTimeout</span>(<span class="attr">timerId</span>); <span class="function">invoke</span>(); }
+    <span class="attr">timerId</span> = <span class="keyword">null</span>;
+  };
+
+  <span class="keyword">return</span> <span class="attr">debounced</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Complexity</div>
+    <table class="styled-table">
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Time per call</td><td>O(1) — just clearing/setting a timeout</td></tr>
+        <tr><td>Space</td><td>O(1) — constant state (timerId, lastArgs)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Search inputs, window resize handlers, save-as-you-type (Think Medium, Google Docs). Leading-edge debounce is used for button clicks (prevent double-submit). Trailing-edge for search autocomplete. The <code>cancel</code> method is critical in React — you must cancel pending debounces on component unmount to avoid state updates on unmounted components.</p>
+  </div>
+</div>
+
+<!-- Problem 4: Implement Throttle -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">Implement Throttle — Rate-limit function calls</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement a throttle function that ensures <code>fn</code> is called at most once every <code>delay</code> milliseconds. If calls arrive during the cooldown period, schedule one trailing call.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p>Track <code>lastCallTime</code>. On each invocation, if enough time has elapsed since the last call, invoke immediately. Otherwise, schedule a trailing call with <code>setTimeout</code> for the remaining wait time. Ensure only one pending trailing call exists at a time.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Throttle with Trailing Edge</div>
+    <pre><code><span class="keyword">function</span> <span class="function">throttle</span>(<span class="attr">fn</span>, <span class="attr">delay</span>) {
+  <span class="keyword">let</span> <span class="attr">lastCallTime</span> = <span class="number">0</span>;
+  <span class="keyword">let</span> <span class="attr">timerId</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastArgs</span> = <span class="keyword">null</span>;
+  <span class="keyword">let</span> <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+
+  <span class="keyword">return</span> <span class="keyword">function</span> <span class="function">throttled</span>(...<span class="attr">args</span>) {
+    <span class="attr">lastArgs</span> = <span class="attr">args</span>;
+    <span class="attr">lastThis</span> = <span class="keyword">this</span>;
+    <span class="keyword">const</span> <span class="attr">now</span> = <span class="function">Date</span>.<span class="function">now</span>();
+    <span class="keyword">const</span> <span class="attr">elapsed</span> = <span class="attr">now</span> - <span class="attr">lastCallTime</span>;
+
+    <span class="keyword">if</span> (<span class="attr">elapsed</span> >= <span class="attr">delay</span>) {
+      <span class="attr">fn</span>.<span class="function">apply</span>(<span class="attr">lastThis</span>, <span class="attr">lastArgs</span>);
+      <span class="attr">lastCallTime</span> = <span class="attr">now</span>;
+      <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+    } <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="attr">timerId</span>) {
+      <span class="attr">timerId</span> = <span class="function">setTimeout</span>(() => {
+        <span class="attr">fn</span>.<span class="function">apply</span>(<span class="attr">lastThis</span>, <span class="attr">lastArgs</span>);
+        <span class="attr">lastCallTime</span> = <span class="function">Date</span>.<span class="function">now</span>();
+        <span class="attr">timerId</span> = <span class="attr">lastArgs</span> = <span class="attr">lastThis</span> = <span class="keyword">null</span>;
+      }, <span class="attr">delay</span> - <span class="attr">elapsed</span>);
+    }
+  };
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Scroll event handlers (infinite scroll, parallax effects), window resize observers, game loops (requestAnimationFrame throttled at 60fps), tracking user mouse movement for heatmaps, and API rate limiting on the client side.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> <strong>Debounce</strong> = "wait until they stop" (search input). <strong>Throttle</strong> = "at most once every X ms" (scroll handler). Debounce resets the timer; throttle enforces a cooldown.
+  </div>
+</div>
+
+<!-- Problem 5: Implement Promise.all -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">Implement Promise.all — Parallel execution with order preservation</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement <code>Promise.myAll(promises)</code> that takes an iterable of promises and returns a single promise that resolves to an array of results (in input order) or rejects with the first rejection.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p>Track resolved count and use the index to place results in the correct position (not push order — promises may resolve in any order). Reject immediately on first error. Handle the empty array edge case (resolve immediately with empty array). Accept both promises and plain values (wrap non-promises with <code>Promise.resolve</code>).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Promise.myAll</div>
+    <pre><code><span class="keyword">Promise</span>.<span class="attr">myAll</span> = <span class="keyword">function</span> (<span class="attr">promises</span>) {
+  <span class="keyword">const</span> <span class="attr">items</span> = <span class="function">Array</span>.<span class="function">from</span>(<span class="attr">promises</span>);
+  <span class="keyword">const</span> <span class="attr">total</span> = <span class="attr">items</span>.<span class="attr">length</span>;
+
+  <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>((<span class="attr">resolve</span>, <span class="attr">reject</span>) => {
+    <span class="keyword">if</span> (<span class="attr">total</span> === <span class="number">0</span>) <span class="keyword">return</span> <span class="function">resolve</span>([]);
+
+    <span class="keyword">const</span> <span class="attr">results</span> = <span class="keyword">new</span> <span class="function">Array</span>(<span class="attr">total</span>);
+    <span class="keyword">let</span> <span class="attr">resolved</span> = <span class="number">0</span>;
+
+    <span class="attr">items</span>.<span class="function">forEach</span>((<span class="attr">item</span>, <span class="attr">index</span>) => {
+      <span class="function">Promise</span>.<span class="function">resolve</span>(<span class="attr">item</span>)
+        .<span class="function">then</span>(<span class="attr">value</span> => {
+          <span class="attr">results</span>[<span class="attr">index</span>] = <span class="attr">value</span>;
+          <span class="attr">resolved</span>++;
+
+          <span class="keyword">if</span> (<span class="attr">resolved</span> === <span class="attr">total</span>) <span class="function">resolve</span>(<span class="attr">results</span>);
+        })
+        .<span class="function">catch</span>(<span class="attr">reject</span>);
+    });
+  });
+};</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Critical Details</div>
+    <table class="styled-table">
+      <thead><tr><th>Detail</th><th>Why It Matters</th></tr></thead>
+      <tbody>
+        <tr><td>Use <code>results[index]</code> not <code>push</code></td><td>Preserves input order regardless of resolution order</td></tr>
+        <tr><td>Wrap with <code>Promise.resolve(item)</code></td><td>Accepts plain values (not just promises)</td></tr>
+        <tr><td>Empty array → resolve immediately</td><td>Matches native <code>Promise.all([])</code> behavior</td></tr>
+        <tr><td>Reject on first error</td><td>Fail-fast behavior — matches the spec</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Parallel API calls on page load (fetch user profile + settings + notifications simultaneously). React's <code>Suspense</code> with multiple data sources. <code>Promise.allSettled</code> variant shows all results (successes + failures) — useful for dashboards where one failing widget shouldn't break the entire page.</p>
+  </div>
+</div>
+
+<!-- Problem 6: Deep Clone -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">Deep Clone Object — Handle circular refs, Date, Map, Set</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement a deep clone function that creates a complete independent copy of any JavaScript value. Must handle: objects, arrays, Date, RegExp, Map, Set, nested structures, and circular references. Do not use <code>structuredClone</code> or <code>JSON.parse(JSON.stringify())</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Approach</div>
+    <p>Use a <code>WeakMap</code> to track visited objects (handles circular refs). For each value type: primitives return directly, Date/RegExp construct new instances, Map/Set iterate entries recursively, arrays and plain objects create new containers and recurse. The <code>WeakMap</code> ensures each source object maps to exactly one clone — breaking circular chains.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Deep Clone with Circular Reference Handling</div>
+    <pre><code><span class="keyword">function</span> <span class="function">deepClone</span>(<span class="attr">value</span>, <span class="attr">cache</span> = <span class="keyword">new</span> <span class="function">WeakMap</span>()) {
+  <span class="comment">// Primitives and functions (return as-is; functions are shared, not cloned)</span>
+  <span class="keyword">if</span> (<span class="attr">value</span> === <span class="keyword">null</span> || <span class="keyword">typeof</span> <span class="attr">value</span> !== <span class="string">'object'</span>) <span class="keyword">return</span> <span class="attr">value</span>;
+
+  <span class="comment">// Circular reference: return cached clone</span>
+  <span class="keyword">if</span> (<span class="attr">cache</span>.<span class="function">has</span>(<span class="attr">value</span>)) <span class="keyword">return</span> <span class="attr">cache</span>.<span class="function">get</span>(<span class="attr">value</span>);
+
+  <span class="comment">// Date</span>
+  <span class="keyword">if</span> (<span class="attr">value</span> <span class="keyword">instanceof</span> <span class="type">Date</span>) {
+    <span class="keyword">const</span> <span class="attr">clone</span> = <span class="keyword">new</span> <span class="function">Date</span>(<span class="attr">value</span>.<span class="function">getTime</span>());
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+    <span class="keyword">return</span> <span class="attr">clone</span>;
+  }
+
+  <span class="comment">// RegExp</span>
+  <span class="keyword">if</span> (<span class="attr">value</span> <span class="keyword">instanceof</span> <span class="type">RegExp</span>) {
+    <span class="keyword">const</span> <span class="attr">clone</span> = <span class="keyword">new</span> <span class="function">RegExp</span>(<span class="attr">value</span>.<span class="attr">source</span>, <span class="attr">value</span>.<span class="attr">flags</span>);
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+    <span class="keyword">return</span> <span class="attr">clone</span>;
+  }
+
+  <span class="comment">// Map</span>
+  <span class="keyword">if</span> (<span class="attr">value</span> <span class="keyword">instanceof</span> <span class="type">Map</span>) {
+    <span class="keyword">const</span> <span class="attr">clone</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+    <span class="attr">value</span>.<span class="function">forEach</span>((<span class="attr">v</span>, <span class="attr">k</span>) => <span class="attr">clone</span>.<span class="function">set</span>(<span class="function">deepClone</span>(<span class="attr">k</span>, <span class="attr">cache</span>), <span class="function">deepClone</span>(<span class="attr">v</span>, <span class="attr">cache</span>)));
+    <span class="keyword">return</span> <span class="attr">clone</span>;
+  }
+
+  <span class="comment">// Set</span>
+  <span class="keyword">if</span> (<span class="attr">value</span> <span class="keyword">instanceof</span> <span class="type">Set</span>) {
+    <span class="keyword">const</span> <span class="attr">clone</span> = <span class="keyword">new</span> <span class="function">Set</span>();
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+    <span class="attr">value</span>.<span class="function">forEach</span>(<span class="attr">v</span> => <span class="attr">clone</span>.<span class="function">add</span>(<span class="function">deepClone</span>(<span class="attr">v</span>, <span class="attr">cache</span>)));
+    <span class="keyword">return</span> <span class="attr">clone</span>;
+  }
+
+  <span class="comment">// Array</span>
+  <span class="keyword">if</span> (<span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">value</span>)) {
+    <span class="keyword">const</span> <span class="attr">clone</span> = [];
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+    <span class="attr">value</span>.<span class="function">forEach</span>((<span class="attr">item</span>, <span class="attr">i</span>) => { <span class="attr">clone</span>[<span class="attr">i</span>] = <span class="function">deepClone</span>(<span class="attr">item</span>, <span class="attr">cache</span>); });
+    <span class="keyword">return</span> <span class="attr">clone</span>;
+  }
+
+  <span class="comment">// Plain Object</span>
+  <span class="keyword">const</span> <span class="attr">clone</span> = {};
+  <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">value</span>, <span class="attr">clone</span>);
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">key</span> <span class="keyword">of</span> <span class="function">Object</span>.<span class="function">keys</span>(<span class="attr">value</span>)) {
+    <span class="attr">clone</span>[<span class="attr">key</span>] = <span class="function">deepClone</span>(<span class="attr">value</span>[<span class="attr">key</span>], <span class="attr">cache</span>);
+  }
+  <span class="keyword">return</span> <span class="attr">clone</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Immutable state updates in Redux (you must clone before mutating), creating snapshots for undo/redo, form draft saving, and copying complex state trees without shared references. The <code>cache</code> WeakMap is also how <code>structuredClone</code> handles circular refs internally.</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Use <code>structuredClone(value)</code> in production (Node 17+, all modern browsers). But you must be able to implement it from scratch — this question tests recursion, type checking, and circular reference handling in one problem.</p>
+  </div>
+</div>
+
+<!-- Problem 7: Array.map Polyfill -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">Implement Array.map Polyfill — with thisArg and sparse arrays</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement <code>Array.prototype.myMap</code> that behaves exactly like the native <code>Array.prototype.map</code> — including correct <code>this</code> binding, skipping holes in sparse arrays, and passing the correct arguments (element, index, array) to the callback.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Array.map Polyfill</div>
+    <pre><code><span class="keyword">Array</span>.<span class="attr">prototype</span>.<span class="attr">myMap</span> = <span class="keyword">function</span> (<span class="attr">callback</span>, <span class="attr">thisArg</span>) {
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="attr">callback</span> !== <span class="string">'function'</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">TypeError</span>(<span class="string">'callback must be a function'</span>);
+  }
+
+  <span class="keyword">const</span> <span class="attr">length</span> = <span class="keyword">this</span>.<span class="attr">length</span>;
+  <span class="keyword">const</span> <span class="attr">result</span> = <span class="keyword">new</span> <span class="function">Array</span>(<span class="attr">length</span>);
+
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>; <span class="attr">i</span> < <span class="attr">length</span>; <span class="attr">i</span>++) {
+    <span class="comment">// Skip holes in sparse arrays (hasOwnProperty check)</span>
+    <span class="keyword">if</span> (<span class="attr">i</span> <span class="keyword">in</span> <span class="keyword">this</span>) {
+      <span class="attr">result</span>[<span class="attr">i</span>] = <span class="attr">callback</span>.<span class="function">call</span>(<span class="attr">thisArg</span>, <span class="keyword">this</span>[<span class="attr">i</span>], <span class="attr">i</span>, <span class="keyword">this</span>);
+    }
+    <span class="comment">// Holes remain as empty slots (not undefined)</span>
+  }
+
+  <span class="keyword">return</span> <span class="attr">result</span>;
+};</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Critical Details</div>
+    <p>(1) <code>i in this</code> checks for holes in sparse arrays (e.g., <code>new Array(5)</code> has length 5 but no indices). The native <code>.map</code> skips these. (2) <code>callback.call(thisArg, ...)</code> passes the correct <code>this</code> context. (3) The result array is pre-allocated with <code>new Array(length)</code> to preserve sparse slots.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Understanding <code>.map</code>'s internals helps you avoid the common bug of using it where <code>.forEach</code> is needed (when you don't need the returned array). The <code>thisArg</code> parameter is often forgotten — but React class components originally relied on <code>.map(this.renderItem, this)</code> pattern.</p>
+  </div>
+</div>
+
+<!-- Problem 8: Function.bind Polyfill -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">Implement Function.bind Polyfill — Partial application + new keyword</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement <code>Function.prototype.myBind</code> that returns a new function with a bound <code>this</code> and optionally preset arguments. The bound function must work correctly when called with the <code>new</code> keyword (in which case, the bound <code>this</code> is ignored and the newly created object is used).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Function.bind Polyfill</div>
+    <pre><code><span class="keyword">Function</span>.<span class="attr">prototype</span>.<span class="attr">myBind</span> = <span class="keyword">function</span> (<span class="attr">context</span>, ...<span class="attr">boundArgs</span>) {
+  <span class="keyword">const</span> <span class="attr">originalFn</span> = <span class="keyword">this</span>;
+
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="attr">originalFn</span> !== <span class="string">'function'</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">TypeError</span>(<span class="string">'Function.prototype.bind called on non-function'</span>);
+  }
+
+  <span class="keyword">function</span> <span class="function">boundFn</span>(...<span class="attr">callArgs</span>) {
+    <span class="comment">// If called with 'new', `this` is the newly created instance</span>
+    <span class="comment">// Use instanceof to detect 'new' calls</span>
+    <span class="keyword">const</span> <span class="attr">isNewCall</span> = <span class="keyword">this</span> <span class="keyword">instanceof</span> <span class="attr">boundFn</span>;
+    <span class="keyword">const</span> <span class="attr">finalContext</span> = <span class="attr">isNewCall</span> ? <span class="keyword">this</span> : <span class="attr">context</span>;
+
+    <span class="keyword">return</span> <span class="attr">originalFn</span>.<span class="function">apply</span>(<span class="attr">finalContext</span>, [...<span class="attr">boundArgs</span>, ...<span class="attr">callArgs</span>]);
+  }
+
+  <span class="comment">// Preserve prototype chain for instanceof checks</span>
+  <span class="keyword">if</span> (<span class="attr">originalFn</span>.<span class="attr">prototype</span>) {
+    <span class="attr">boundFn</span>.<span class="attr">prototype</span> = <span class="function">Object</span>.<span class="function">create</span>(<span class="attr">originalFn</span>.<span class="attr">prototype</span>);
+  }
+
+  <span class="keyword">return</span> <span class="attr">boundFn</span>;
+};</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Critical Details</div>
+    <p>The <code>new</code> keyword handling is the trickiest part. When <code>new boundFn()</code> is called, the engine creates a new object whose <code>__proto__</code> points to <code>boundFn.prototype</code>. Inside the call, <code>this instanceof boundFn</code> is <code>true</code> — we must use <code>this</code> (the new instance) instead of the bound <code>context</code>. We also preserve the original prototype so <code>new boundFn() instanceof originalClass</code> works.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>React class components used <code>.bind(this)</code> extensively before hooks. Even today, event handlers sometimes need bound <code>this</code> (e.g., when passing callbacks to third-party libraries that call them with a different context). Understanding bind is essential for debounce/throttle implementations that need to preserve <code>this</code>.</p>
+  </div>
+</div>
+
+<!-- Problem 9: Flatten Nested Array -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">09</div>
+    <div>
+      <div class="q-text">Flatten Nested Array — Recursive + iterative with depth</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement <code>Array.prototype.myFlat(depth = 1)</code> that flattens a nested array up to the specified depth. <code>depth = Infinity</code> should flatten completely.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Flatten (Recursive + Iterative)</div>
+    <pre><code><span class="comment">// Recursive — cleaner, intuitive</span>
+<span class="keyword">Array</span>.<span class="attr">prototype</span>.<span class="attr">myFlatRecursive</span> = <span class="keyword">function</span> (<span class="attr">depth</span> = <span class="number">1</span>) {
+  <span class="keyword">const</span> <span class="attr">result</span> = [];
+
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">item</span> <span class="keyword">of</span> <span class="keyword">this</span>) {
+    <span class="keyword">if</span> (<span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">item</span>) && <span class="attr">depth</span> > <span class="number">0</span>) {
+      <span class="attr">result</span>.<span class="function">push</span>(...<span class="attr">item</span>.<span class="function">myFlatRecursive</span>(<span class="attr">depth</span> - <span class="number">1</span>));
+    } <span class="keyword">else</span> {
+      <span class="attr">result</span>.<span class="function">push</span>(<span class="attr">item</span>);
+    }
+  }
+
+  <span class="keyword">return</span> <span class="attr">result</span>;
+};
+
+<span class="comment">// Iterative (stack-based) — no recursion limit, handles Infinity depth</span>
+<span class="keyword">Array</span>.<span class="attr">prototype</span>.<span class="attr">myFlatIterative</span> = <span class="keyword">function</span> (<span class="attr">depth</span> = <span class="number">1</span>) {
+  <span class="keyword">const</span> <span class="attr">stack</span> = [...<span class="keyword">this</span>];
+  <span class="keyword">const</span> <span class="attr">result</span> = [];
+
+  <span class="keyword">while</span> (<span class="attr">stack</span>.<span class="attr">length</span>) {
+    <span class="keyword">const</span> <span class="attr">item</span> = <span class="attr">stack</span>.<span class="function">shift</span>();
+
+    <span class="keyword">if</span> (<span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">item</span>) && <span class="attr">depth</span> > <span class="number">0</span>) {
+      <span class="attr">stack</span>.<span class="function">unshift</span>(...<span class="attr">item</span>);  <span class="comment">// Implicitly we need depth tracking</span>
+    } <span class="keyword">else</span> {
+      <span class="attr">result</span>.<span class="function">push</span>(<span class="attr">item</span>);
+    }
+  }
+
+  <span class="comment">// Better iterative: push items with their depth</span>
+  <span class="comment">// Stack entries: [item, currentDepth]</span>
+};</code></pre>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Depth-Aware Iterative Flatten</div>
+    <pre><code><span class="keyword">Array</span>.<span class="attr">prototype</span>.<span class="attr">myFlat</span> = <span class="keyword">function</span> (<span class="attr">depth</span> = <span class="number">1</span>) {
+  <span class="keyword">const</span> <span class="attr">result</span> = [];
+  <span class="comment">// Stack stores [arraySlice, remainingDepth]</span>
+  <span class="keyword">const</span> <span class="attr">stack</span> = [[<span class="keyword">this</span>, <span class="attr">depth</span>]];
+
+  <span class="keyword">while</span> (<span class="attr">stack</span>.<span class="attr">length</span>) {
+    <span class="keyword">const</span> [<span class="attr">arr</span>, <span class="attr">currentDepth</span>] = <span class="attr">stack</span>.<span class="function">pop</span>();
+
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">item</span> <span class="keyword">of</span> <span class="attr">arr</span>) {
+      <span class="keyword">if</span> (<span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">item</span>) && <span class="attr">currentDepth</span> > <span class="number">0</span>) {
+        <span class="attr">stack</span>.<span class="function">push</span>([<span class="attr">item</span>, <span class="attr">currentDepth</span> - <span class="number">1</span>]);
+      } <span class="keyword">else</span> {
+        <span class="attr">result</span>.<span class="function">push</span>(<span class="attr">item</span>);
+      }
+    }
+  }
+
+  <span class="keyword">return</span> <span class="attr">result</span>;
+};</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Flattening nested menu structures (sidebar nav), processing hierarchical component trees (recursively extracting all leaf components), and normalizing deeply nested API responses into flat lists for virtualized rendering. React's <code>React.Children.toArray</code> effectively flattens nested children.</p>
+  </div>
+</div>
+
+<!-- Problem 10: Memoize -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Implement Memoize — Cache with Map, JSON keys, and TTL</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement a general-purpose <code>memoize(fn, options?)</code> that caches function results based on arguments. Support: (1) custom key resolver (default: <code>JSON.stringify</code>), (2) <code>Map</code>-based cache with LRU eviction, (3) optional TTL (time-to-live) for entries.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Memoize with TTL and Resolver</div>
+    <pre><code><span class="keyword">function</span> <span class="function">memoize</span>(<span class="attr">fn</span>, <span class="attr">options</span> = {}) {
+  <span class="keyword">const</span> {
+    <span class="attr">resolver</span> = (...<span class="attr">args</span>) => <span class="function">JSON</span>.<span class="function">stringify</span>(<span class="attr">args</span>),
+    <span class="attr">ttl</span> = <span class="keyword">Infinity</span>,        <span class="comment">// Time-to-live in ms (default: no expiry)</span>
+    <span class="attr">maxSize</span> = <span class="keyword">Infinity</span>,     <span class="comment">// Max cache entries (default: unlimited)</span>
+  } = <span class="attr">options</span>;
+
+  <span class="keyword">const</span> <span class="attr">cache</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+
+  <span class="keyword">function</span> <span class="function">memoized</span>(...<span class="attr">args</span>) {
+    <span class="keyword">const</span> <span class="attr">key</span> = <span class="function">resolver</span>(...<span class="attr">args</span>);
+    <span class="keyword">const</span> <span class="attr">entry</span> = <span class="attr">cache</span>.<span class="function">get</span>(<span class="attr">key</span>);
+
+    <span class="comment">// Cache hit + not expired</span>
+    <span class="keyword">if</span> (<span class="attr">entry</span> && (<span class="attr">ttl</span> === <span class="keyword">Infinity</span> || <span class="function">Date</span>.<span class="function">now</span>() - <span class="attr">entry</span>.<span class="attr">timestamp</span> &lt; <span class="attr">ttl</span>)) {
+      <span class="keyword">return</span> <span class="attr">entry</span>.<span class="attr">value</span>;
+    }
+
+    <span class="comment">// Cache miss or expired — compute and store</span>
+    <span class="keyword">const</span> <span class="attr">value</span> = <span class="attr">fn</span>.<span class="function">apply</span>(<span class="keyword">this</span>, <span class="attr">args</span>);
+
+    <span class="comment">// LRU eviction: if at capacity, delete oldest entry</span>
+    <span class="keyword">if</span> (<span class="attr">cache</span>.<span class="attr">size</span> >= <span class="attr">maxSize</span>) {
+      <span class="keyword">const</span> <span class="attr">oldestKey</span> = <span class="attr">cache</span>.<span class="function">keys</span>().<span class="function">next</span>().<span class="attr">value</span>;
+      <span class="attr">cache</span>.<span class="function">delete</span>(<span class="attr">oldestKey</span>);
+    }
+
+    <span class="attr">cache</span>.<span class="function">set</span>(<span class="attr">key</span>, { <span class="attr">value</span>, <span class="attr">timestamp</span>: <span class="function">Date</span>.<span class="function">now</span>() });
+    <span class="keyword">return</span> <span class="attr">value</span>;
+  }
+
+  <span class="comment">// Utility methods</span>
+  <span class="attr">memoized</span>.<span class="attr">cache</span> = <span class="attr">cache</span>;
+  <span class="attr">memoized</span>.<span class="attr">clear</span> = () => <span class="attr">cache</span>.<span class="function">clear</span>();
+
+  <span class="keyword">return</span> <span class="attr">memoized</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>This is exactly how <code>React.useMemo</code> and <code>React.useCallback</code> work conceptually (though React uses a simple dependency array comparison, not a full cache). Libraries like <code>reselect</code> for Redux use memoization to avoid recomputing derived data. <code>React.memo</code> memoizes component renders. The TTL pattern is used in React Query's <code>staleTime</code> and <code>cacheTime</code>.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END P1 ============ -->
+
+<!-- ============ P2 - CONCISE FORMAT ============ -->
+<div class="section-divider">
+  <h2>P2 — Concise Format Problems (8)</h2>
+  <p>Problem statement + solution + frontend context. Dense and direct.</p>
+</div>
+<div class="container">
+
+<!-- P2-11: Event Emitter -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Event Emitter / Pub-Sub — subscribe, emit, unsubscribe</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement a pub-sub <code>EventEmitter</code> class with <code>on(event, callback)</code> (subscribe), <code>emit(event, ...args)</code> (publish), <code>off(event, callback)</code> (unsubscribe), and <code>once(event, callback)</code> (subscribe for one invocation).</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Event Emitter</div>
+    <pre><code><span class="keyword">class</span> <span class="type">EventEmitter</span> {
+  <span class="function">constructor</span>() {
+    <span class="keyword">this</span>.<span class="attr">_events</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+  }
+
+  <span class="function">on</span>(<span class="attr">event</span>, <span class="attr">callback</span>) {
+    <span class="keyword">if</span> (!<span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">has</span>(<span class="attr">event</span>)) {
+      <span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">set</span>(<span class="attr">event</span>, <span class="keyword">new</span> <span class="function">Set</span>());
+    }
+    <span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">get</span>(<span class="attr">event</span>).<span class="function">add</span>(<span class="attr">callback</span>);
+    <span class="keyword">return</span> <span class="keyword">this</span>;  <span class="comment">// Chaining support</span>
+  }
+
+  <span class="function">off</span>(<span class="attr">event</span>, <span class="attr">callback</span>) {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">has</span>(<span class="attr">event</span>)) {
+      <span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">get</span>(<span class="attr">event</span>).<span class="function">delete</span>(<span class="attr">callback</span>);
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+
+  <span class="function">emit</span>(<span class="attr">event</span>, ...<span class="attr">args</span>) {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">has</span>(<span class="attr">event</span>)) {
+      <span class="keyword">this</span>.<span class="attr">_events</span>.<span class="function">get</span>(<span class="attr">event</span>).<span class="function">forEach</span>(<span class="attr">cb</span> => <span class="attr">cb</span>(...<span class="attr">args</span>));
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+
+  <span class="function">once</span>(<span class="attr">event</span>, <span class="attr">callback</span>) {
+    <span class="keyword">const</span> <span class="attr">wrapper</span> = (...<span class="attr">args</span>) => {
+      <span class="attr">callback</span>(...<span class="attr">args</span>);
+      <span class="keyword">this</span>.<span class="function">off</span>(<span class="attr">event</span>, <span class="attr">wrapper</span>);
+    };
+    <span class="keyword">return</span> <span class="keyword">this</span>.<span class="function">on</span>(<span class="attr">event</span>, <span class="attr">wrapper</span>);
+  }
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Node.js <code>EventEmitter</code>, browser <code>addEventListener</code>/<code>removeEventListener</code>, React's synthetic event system, Redux middleware, WebSocket message routing, and custom event buses for cross-component communication in micro-frontend architectures. This is the Observer pattern — one of the Gang of Four patterns every senior frontend engineer should know.</p>
+  </div>
+</div>
+
+<!-- P2-12: Promise.race -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Implement Promise.race — with timeout pattern</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Promise.race + timeout utility</div>
+    <pre><code><span class="keyword">Promise</span>.<span class="attr">myRace</span> = <span class="keyword">function</span> (<span class="attr">promises</span>) {
+  <span class="keyword">const</span> <span class="attr">items</span> = <span class="function">Array</span>.<span class="function">from</span>(<span class="attr">promises</span>);
+
+  <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>((<span class="attr">resolve</span>, <span class="attr">reject</span>) => {
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">item</span> <span class="keyword">of</span> <span class="attr">items</span>) {
+      <span class="function">Promise</span>.<span class="function">resolve</span>(<span class="attr">item</span>).<span class="function">then</span>(<span class="attr">resolve</span>, <span class="attr">reject</span>);
+    }
+  });
+};
+
+<span class="comment">// Common frontend use: API call with timeout</span>
+<span class="keyword">function</span> <span class="function">fetchWithTimeout</span>(<span class="attr">url</span>, <span class="attr">options</span> = {}, <span class="attr">timeoutMs</span> = <span class="number">5000</span>) {
+  <span class="keyword">const</span> <span class="attr">fetchPromise</span> = <span class="function">fetch</span>(<span class="attr">url</span>, <span class="attr">options</span>);
+  <span class="keyword">const</span> <span class="attr">timeoutPromise</span> = <span class="keyword">new</span> <span class="function">Promise</span>((<span class="attr">_</span>, <span class="attr">reject</span>) =>
+    <span class="function">setTimeout</span>(() => <span class="function">reject</span>(<span class="keyword">new</span> <span class="keyword">Error</span>(<span class="string">`Request timed out after ${timeoutMs}ms`</span>)), <span class="attr">timeoutMs</span>)
+  );
+  <span class="keyword">return</span> <span class="function">Promise</span>.<span class="function">race</span>([<span class="attr">fetchPromise</span>, <span class="attr">timeoutPromise</span>]);
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>API timeouts, loading state race conditions (cancel slow requests when a faster one arrives), and <code>Promise.race</code> is the underlying primitive for <code>AbortController</code> + <code>fetch</code> timeout patterns. React Query and SWR use similar patterns internally for request deduplication.</p>
+  </div>
+</div>
+
+<!-- P2-13: Deep Equality -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">Deep Equality Check — Used in React.memo comparison</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Deep Equality</div>
+    <pre><code><span class="keyword">function</span> <span class="function">deepEqual</span>(<span class="attr">a</span>, <span class="attr">b</span>) {
+  <span class="comment">// Same reference or both NaN</span>
+  <span class="keyword">if</span> (<span class="attr">a</span> === <span class="attr">b</span>) <span class="keyword">return</span> <span class="keyword">true</span>;
+
+  <span class="comment">// Null/undefined check + type mismatch</span>
+  <span class="keyword">if</span> (<span class="attr">a</span> == <span class="keyword">null</span> || <span class="attr">b</span> == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="attr">a</span> === <span class="attr">b</span>;
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="attr">a</span> !== <span class="keyword">typeof</span> <span class="attr">b</span>) <span class="keyword">return</span> <span class="keyword">false</span>;
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="attr">a</span> !== <span class="string">'object'</span>) <span class="keyword">return</span> <span class="attr">a</span> === <span class="attr">b</span>;
+
+  <span class="comment">// Date</span>
+  <span class="keyword">if</span> (<span class="attr">a</span> <span class="keyword">instanceof</span> <span class="type">Date</span> && <span class="attr">b</span> <span class="keyword">instanceof</span> <span class="type">Date</span>) {
+    <span class="keyword">return</span> <span class="attr">a</span>.<span class="function">getTime</span>() === <span class="attr">b</span>.<span class="function">getTime</span>();
+  }
+
+  <span class="comment">// RegExp</span>
+  <span class="keyword">if</span> (<span class="attr">a</span> <span class="keyword">instanceof</span> <span class="type">RegExp</span> && <span class="attr">b</span> <span class="keyword">instanceof</span> <span class="type">RegExp</span>) {
+    <span class="keyword">return</span> <span class="attr">a</span>.<span class="attr">source</span> === <span class="attr">b</span>.<span class="attr">source</span> && <span class="attr">a</span>.<span class="attr">flags</span> === <span class="attr">b</span>.<span class="attr">flags</span>;
+  }
+
+  <span class="comment">// Arrays</span>
+  <span class="keyword">if</span> (<span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">a</span>) && <span class="function">Array</span>.<span class="function">isArray</span>(<span class="attr">b</span>)) {
+    <span class="keyword">if</span> (<span class="attr">a</span>.<span class="attr">length</span> !== <span class="attr">b</span>.<span class="attr">length</span>) <span class="keyword">return</span> <span class="keyword">false</span>;
+    <span class="keyword">return</span> <span class="attr">a</span>.<span class="function">every</span>((<span class="attr">item</span>, <span class="attr">i</span>) => <span class="function">deepEqual</span>(<span class="attr">item</span>, <span class="attr">b</span>[<span class="attr">i</span>]));
+  }
+
+  <span class="comment">// Objects</span>
+  <span class="keyword">const</span> <span class="attr">keysA</span> = <span class="function">Object</span>.<span class="function">keys</span>(<span class="attr">a</span>);
+  <span class="keyword">const</span> <span class="attr">keysB</span> = <span class="function">Object</span>.<span class="function">keys</span>(<span class="attr">b</span>);
+  <span class="keyword">if</span> (<span class="attr">keysA</span>.<span class="attr">length</span> !== <span class="attr">keysB</span>.<span class="attr">length</span>) <span class="keyword">return</span> <span class="keyword">false</span>;
+
+  <span class="keyword">return</span> <span class="attr">keysA</span>.<span class="function">every</span>(<span class="attr">key</span> =>
+    <span class="function">Object</span>.<span class="attr">prototype</span>.<span class="attr">hasOwnProperty</span>.<span class="function">call</span>(<span class="attr">b</span>, <span class="attr">key</span>) && <span class="function">deepEqual</span>(<span class="attr">a</span>[<span class="attr">key</span>], <span class="attr">b</span>[<span class="attr">key</span>])
+  );
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p><code>React.memo</code> uses shallow equality by default — you can provide a custom <code>areEqual</code> function using this logic. Jest's <code>.toEqual()</code> uses a similar deep equality algorithm. Redux selectors use shallow or deep equality to determine if state has changed.</p>
+  </div>
+</div>
+
+<!-- P2-14: LRU Cache -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">LRU Cache — O(1) get/put with capacity</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution — Using JavaScript Map's Insertion Order</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — LRU Cache (Map-based, O(1))</div>
+    <pre><code><span class="keyword">class</span> <span class="type">LRUCache</span> {
+  <span class="function">constructor</span>(<span class="attr">capacity</span>) {
+    <span class="keyword">this</span>.<span class="attr">capacity</span> = <span class="attr">capacity</span>;
+    <span class="keyword">this</span>.<span class="attr">map</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+  }
+
+  <span class="function">get</span>(<span class="attr">key</span>) {
+    <span class="keyword">if</span> (!<span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">has</span>(<span class="attr">key</span>)) <span class="keyword">return</span> -<span class="number">1</span>;
+    <span class="comment">// Move to end (most recently used) by delete + re-set</span>
+    <span class="keyword">const</span> <span class="attr">value</span> = <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">get</span>(<span class="attr">key</span>);
+    <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">delete</span>(<span class="attr">key</span>);
+    <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">set</span>(<span class="attr">key</span>, <span class="attr">value</span>);
+    <span class="keyword">return</span> <span class="attr">value</span>;
+  }
+
+  <span class="function">put</span>(<span class="attr">key</span>, <span class="attr">value</span>) {
+    <span class="comment">// If key exists, delete first (will re-insert as fresh)</span>
+    <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">has</span>(<span class="attr">key</span>)) <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">delete</span>(<span class="attr">key</span>);
+    <span class="comment">// Evict oldest: JS Map's .keys().next() is first-inserted key</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="attr">map</span>.<span class="attr">size</span> === <span class="keyword">this</span>.<span class="attr">capacity</span>) {
+      <span class="keyword">const</span> <span class="attr">lruKey</span> = <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">keys</span>().<span class="function">next</span>().<span class="attr">value</span>;
+      <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">delete</span>(<span class="attr">lruKey</span>);
+    }
+    <span class="keyword">this</span>.<span class="attr">map</span>.<span class="function">set</span>(<span class="attr">key</span>, <span class="attr">value</span>);
+  }
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Browser HTTP cache, React Query's garbage collection, image lazy-loading caches, virtual list rendered item caches, and service worker caching strategies. The <code>Map</code> trick is JavaScript-specific — leverages the fact that <code>Map.keys()</code> preserves insertion order, making LRU O(1) without a doubly-linked list.</p>
+  </div>
+</div>
+
+<!-- P2-15: Valid Palindrome -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">Valid Palindrome — Two pointers, ignore non-alphanumeric</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Valid Palindrome O(n)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">isPalindrome</span>(<span class="attr">s</span>) {
+  <span class="attr">s</span> = <span class="attr">s</span>.<span class="function">toLowerCase</span>().<span class="function">replace</span>(<span class="regexp">/[^a-z0-9]/g</span>, <span class="string">''</span>);
+  <span class="keyword">let</span> <span class="attr">left</span> = <span class="number">0</span>, <span class="attr">right</span> = <span class="attr">s</span>.<span class="attr">length</span> - <span class="number">1</span>;
+
+  <span class="keyword">while</span> (<span class="attr">left</span> < <span class="attr">right</span>) {
+    <span class="keyword">if</span> (<span class="attr">s</span>[<span class="attr">left</span>] !== <span class="attr">s</span>[<span class="attr">right</span>]) <span class="keyword">return</span> <span class="keyword">false</span>;
+    <span class="attr">left</span>++; <span class="attr">right</span>--;
+  }
+  <span class="keyword">return</span> <span class="keyword">true</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Two-pointer pattern is the foundation for virtualized list viewport calculations, text selection ranges, and CSS flexbox/grid visual ordering algorithms. Also used in diff algorithms (like React's reconciliation — comparing old and new fiber trees from both ends).</p>
+  </div>
+</div>
+
+<!-- P2-16: Maximum Subarray -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">16</div>
+    <div>
+      <div class="q-text">Maximum Subarray — Kadane's Algorithm</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Kadane's Algorithm O(n)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">maxSubArray</span>(<span class="attr">nums</span>) {
+  <span class="keyword">let</span> <span class="attr">maxEndingHere</span> = <span class="attr">nums</span>[<span class="number">0</span>];
+  <span class="keyword">let</span> <span class="attr">maxSoFar</span> = <span class="attr">nums</span>[<span class="number">0</span>];
+
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">i</span> = <span class="number">1</span>; <span class="attr">i</span> < <span class="attr">nums</span>.<span class="attr">length</span>; <span class="attr">i</span>++) {
+    <span class="attr">maxEndingHere</span> = <span class="function">Math</span>.<span class="function">max</span>(<span class="attr">nums</span>[<span class="attr">i</span>], <span class="attr">maxEndingHere</span> + <span class="attr">nums</span>[<span class="attr">i</span>]);
+    <span class="attr">maxSoFar</span> = <span class="function">Math</span>.<span class="function">max</span>(<span class="attr">maxSoFar</span>, <span class="attr">maxEndingHere</span>);
+  }
+
+  <span class="keyword">return</span> <span class="attr">maxSoFar</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>The "running maximum/sum" pattern applies to: measuring cumulative layout shift (CLS) scores, tracking the largest frame in Performance Observer, calculating maximum concurrent WebSocket connections for capacity planning, and computing sliding window aggregates in data visualization dashboards.</p>
+  </div>
+</div>
+
+<!-- P2-17: Array.reduce Polyfill -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">17</div>
+    <div>
+      <div class="q-text">Implement Array.reduce Polyfill — Initial value handling</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Array.reduce Polyfill</div>
+    <pre><code><span class="keyword">Array</span>.<span class="attr">prototype</span>.<span class="attr">myReduce</span> = <span class="keyword">function</span> (<span class="attr">callback</span>, <span class="attr">initialValue</span>) {
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="attr">callback</span> !== <span class="string">'function'</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">TypeError</span>(<span class="string">'callback must be a function'</span>);
+  }
+
+  <span class="keyword">const</span> <span class="attr">length</span> = <span class="keyword">this</span>.<span class="attr">length</span>;
+  <span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>;
+  <span class="keyword">let</span> <span class="attr">accumulator</span>;
+
+  <span class="comment">// If no initialValue, use first element (skip holes)</span>
+  <span class="keyword">if</span> (<span class="attr">arguments</span>.<span class="attr">length</span> < <span class="number">2</span>) {
+    <span class="keyword">while</span> (<span class="attr">i</span> < <span class="attr">length</span> && !(<span class="attr">i</span> <span class="keyword">in</span> <span class="keyword">this</span>)) <span class="attr">i</span>++;
+    <span class="keyword">if</span> (<span class="attr">i</span> >= <span class="attr">length</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">TypeError</span>(<span class="string">'Reduce of empty array with no initial value'</span>);
+    <span class="attr">accumulator</span> = <span class="keyword">this</span>[<span class="attr">i</span>++];
+  } <span class="keyword">else</span> {
+    <span class="attr">accumulator</span> = <span class="attr">initialValue</span>;
+    <span class="comment">// Skip holes to find first iteration starting point</span>
+  }
+
+  <span class="keyword">for</span> (; <span class="attr">i</span> < <span class="attr">length</span>; <span class="attr">i</span>++) {
+    <span class="keyword">if</span> (<span class="attr">i</span> <span class="keyword">in</span> <span class="keyword">this</span>) {
+      <span class="attr">accumulator</span> = <span class="attr">callback</span>.<span class="function">call</span>(<span class="keyword">undefined</span>, <span class="attr">accumulator</span>, <span class="keyword">this</span>[<span class="attr">i</span>], <span class="attr">i</span>, <span class="keyword">this</span>);
+    }
+  }
+
+  <span class="keyword">return</span> <span class="attr">accumulator</span>;
+};</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Pipeline/chain patterns (compose, pipe), Redux reducers are <code>reduce</code> over actions, computing aggregate values from data (total cart price, grouped-by-category), and transforming state trees functionally. Understanding <code>reduce</code> deeply unlocks functional programming patterns.</p>
+  </div>
+</div>
+
+<!-- P2-18: Currying -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">18</div>
+    <div>
+      <div class="q-text">Currying — sum(1)(2)(3) and infinite currying</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — sum(1)(2)(3) and infinite sum(...)(...)</div>
+    <pre><code><span class="comment">// Fixed arity: sum(1)(2)(3) → 6</span>
+<span class="keyword">function</span> <span class="function">sum</span>(<span class="attr">a</span>) {
+  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="attr">b</span>) {
+    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="attr">c</span>) {
+      <span class="keyword">return</span> <span class="attr">a</span> + <span class="attr">b</span> + <span class="attr">c</span>;
+    };
+  };
+}
+
+<span class="comment">// Generic curry: converts f(a,b,c) into f(a)(b)(c)</span>
+<span class="keyword">function</span> <span class="function">curry</span>(<span class="attr">fn</span>) {
+  <span class="keyword">return</span> <span class="keyword">function</span> <span class="function">curried</span>(...<span class="attr">args</span>) {
+    <span class="keyword">if</span> (<span class="attr">args</span>.<span class="attr">length</span> >= <span class="attr">fn</span>.<span class="attr">length</span>) {
+      <span class="keyword">return</span> <span class="attr">fn</span>.<span class="function">apply</span>(<span class="keyword">this</span>, <span class="attr">args</span>);
+    }
+    <span class="keyword">return</span> (...<span class="attr">nextArgs</span>) => <span class="function">curried</span>(...<span class="attr">args</span>, ...<span class="attr">nextArgs</span>);
+  };
+}
+
+<span class="comment">// Infinite currying: sum(1)(2)(3)() or implicit toString/valueOf</span>
+<span class="keyword">function</span> <span class="function">infiniteSum</span>(<span class="attr">a</span>) {
+  <span class="keyword">const</span> <span class="attr">fn</span> = (<span class="attr">b</span>) => <span class="function">infiniteSum</span>(<span class="attr">a</span> + <span class="attr">b</span>);
+  <span class="attr">fn</span>.<span class="attr">valueOf</span> = <span class="attr">fn</span>.<span class="attr">toString</span> = () => <span class="attr">a</span>;
+  <span class="keyword">return</span> <span class="attr">fn</span>;
+}
+<span class="comment">// infiniteSum(1)(2)(3) == 6  // true (coerced via valueOf)</span>
+<span class="comment">// +infiniteSum(1)(2)(3)       // 6 (explicit coercion)</span></code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Redux middleware chain (<code>store => next => action => {}</code>) is curried. React's <code>connect(mapState, mapDispatch)(Component)</code> is curried. Event handler factories: <code>handleClick(id)(event)</code>. CSS-in-JS tagged template literals are partial application. Currying enables function composition — a core functional programming concept that makes React code more testable and composable.</p>
+  </div>
+</div>
+
+</div>
+<!-- ============ END P2 ============ -->
+
+<!-- ============ P3 - GOOD TO KNOW ============ -->
+<div class="section-divider">
+  <h2>P3 — Good to Know Problems (9)</h2>
+  <p>Additional classic problems from the Frontend Coding Interview Questions reference. Less frequently asked, but still important for comprehensive preparation.</p>
+</div>
+<div class="container">
+
+<!-- P3-19: Longest Substring Without Repeating Characters -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">19</div>
+    <div>
+      <div class="q-text">Longest Substring Without Repeating Characters — Sliding Window</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Given a string, find the length of the longest substring without repeating characters. <code>Input: "abcabcbb" → Output: 3 ("abc")</code>. <code>Input: "bbbbb" → Output: 1 ("b")</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Sliding Window (O(n) Time, O(min(m,n)) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">lengthOfLongestSubstring</span>(<span class="attr">s</span>) {
+  <span class="keyword">let</span> <span class="attr">maxLen</span> = <span class="number">0</span>, <span class="attr">start</span> = <span class="number">0</span>;
+  <span class="keyword">const</span> <span class="attr">charMap</span> = <span class="keyword">new</span> <span class="function">Map</span>();
+
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">end</span> = <span class="number">0</span>; <span class="attr">end</span> < <span class="attr">s</span>.<span class="attr">length</span>; <span class="attr">end</span>++) {
+    <span class="keyword">const</span> <span class="attr">char</span> = <span class="attr">s</span>[<span class="attr">end</span>];
+    <span class="keyword">if</span> (<span class="attr">charMap</span>.<span class="function">has</span>(<span class="attr">char</span>)) {
+      <span class="attr">start</span> = <span class="function">Math</span>.<span class="function">max</span>(<span class="attr">start</span>, <span class="attr">charMap</span>.<span class="function">get</span>(<span class="attr">char</span>) + <span class="number">1</span>);
+    }
+    <span class="attr">charMap</span>.<span class="function">set</span>(<span class="attr">char</span>, <span class="attr">end</span>);
+    <span class="attr">maxLen</span> = <span class="function">Math</span>.<span class="function">max</span>(<span class="attr">maxLen</span>, <span class="attr">end</span> - <span class="attr">start</span> + <span class="number">1</span>);
+  }
+  <span class="keyword">return</span> <span class="attr">maxLen</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Sliding window pattern for form input validation, real-time search parsing, and dynamic text pattern matching in rich text editors. Essential for understanding the classic "window" optimization — shrink when constraint is violated, expand when it's satisfied.</p>
+  </div>
+</div>
+
+<!-- P3-20: Valid Anagram -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">20</div>
+    <div>
+      <div class="q-text">Valid Anagram — Frequency Counter Pattern</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Given two strings, determine if they are anagrams (contain the same characters in the same frequency). <code>Input: "anagram", "nagaram" → true</code>. <code>Input: "rat", "car" → false</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Frequency Counter (O(n) Time, O(1) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">isAnagram</span>(<span class="attr">s</span>, <span class="attr">t</span>) {
+  <span class="keyword">if</span> (<span class="attr">s</span>.<span class="attr">length</span> !== <span class="attr">t</span>.<span class="attr">length</span>) <span class="keyword">return</span> <span class="keyword">false</span>;
+  <span class="keyword">const</span> <span class="attr">count</span> = {};
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">char</span> <span class="keyword">of</span> <span class="attr">s</span>) <span class="attr">count</span>[<span class="attr">char</span>] = (<span class="attr">count</span>[<span class="attr">char</span>] || <span class="number">0</span>) + <span class="number">1</span>;
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">char</span> <span class="keyword">of</span> <span class="attr">t</span>) {
+    <span class="keyword">if</span> (!<span class="attr">count</span>[<span class="attr">char</span>]) <span class="keyword">return</span> <span class="keyword">false</span>;
+    <span class="attr">count</span>[<span class="attr">char</span>]--;
+  }
+  <span class="keyword">return</span> <span class="keyword">true</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Hash map frequency counting is fundamental for comparing data sets in React state, verifying filter/search results, and analyzing user input patterns. The pattern scales to any "does set A equal set B" problem.</p>
+  </div>
+</div>
+
+<!-- P3-21: Product of Array Except Self -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">21</div>
+    <div>
+      <div class="q-text">Product of Array Except Self — Prefix/Suffix Pattern</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Return an array where each element is the product of all other elements in the original array (without using division). <code>Input: [1,2,3,4] → Output: [24,12,8,6]</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Prefix/Suffix (O(n) Time, O(1) Extra Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">productExceptSelf</span>(<span class="attr">nums</span>) {
+  <span class="keyword">const</span> <span class="attr">result</span> = <span class="keyword">new</span> <span class="function">Array</span>(<span class="attr">nums</span>.<span class="attr">length</span>).<span class="function">fill</span>(<span class="number">1</span>);
+  <span class="keyword">let</span> <span class="attr">left</span> = <span class="number">1</span>;
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>; <span class="attr">i</span> < <span class="attr">nums</span>.<span class="attr">length</span>; <span class="attr">i</span>++) {
+    <span class="attr">result</span>[<span class="attr">i</span>] = <span class="attr">left</span>; <span class="attr">left</span> *= <span class="attr">nums</span>[<span class="attr">i</span>];
+  }
+  <span class="keyword">let</span> <span class="attr">right</span> = <span class="number">1</span>;
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">i</span> = <span class="attr">nums</span>.<span class="attr">length</span> - <span class="number">1</span>; <span class="attr">i</span> >= <span class="number">0</span>; <span class="attr">i</span>--) {
+    <span class="attr">result</span>[<span class="attr">i</span>] *= <span class="attr">right</span>; <span class="attr">right</span> *= <span class="attr">nums</span>[<span class="attr">i</span>];
+  }
+  <span class="keyword">return</span> <span class="attr">result</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Prefix/suffix pattern is crucial for computing accumulated values in tables, running totals in financial dashboards, and pre-computing derived data for React performance. The "two-pass" technique solves many array problems that seem to need O(n²).</p>
+  </div>
+</div>
+
+<!-- P3-22: Reverse a Linked List -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">22</div>
+    <div>
+      <div class="q-text">Reverse a Linked List — Pointer Manipulation</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Reverse a singly linked list. <code>Input: 1 → 2 → 3 → 4 → 5 → null → Output: 5 → 4 → 3 → 2 → 1 → null</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Iterative (O(n) Time, O(1) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">reverseList</span>(<span class="attr">head</span>) {
+  <span class="keyword">let</span> <span class="attr">prev</span> = <span class="keyword">null</span>, <span class="attr">curr</span> = <span class="attr">head</span>;
+  <span class="keyword">while</span> (<span class="attr">curr</span>) {
+    <span class="keyword">const</span> <span class="attr">next</span> = <span class="attr">curr</span>.<span class="attr">next</span>;
+    <span class="attr">curr</span>.<span class="attr">next</span> = <span class="attr">prev</span>;
+    <span class="attr">prev</span> = <span class="attr">curr</span>;
+    <span class="attr">curr</span> = <span class="attr">next</span>;
+  }
+  <span class="keyword">return</span> <span class="attr">prev</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Pointer manipulation tests fundamentals of working with linked data structures. The pattern of traversing and transforming data applies to immutable state updates, linked UI navigation flows (breadcrumbs, steppers), and undo/redo chains. Common in senior frontend loops.</p>
+  </div>
+</div>
+
+<!-- P3-23: Maximum Depth of Binary Tree -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">23</div>
+    <div>
+      <div class="q-text">Maximum Depth of Binary Tree — DFS/BFS Traversal</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Find the maximum depth (height) of a binary tree. <code>Input: [3,9,20,null,null,15,7] → Output: 3</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Recursive DFS (O(n) Time, O(h) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">maxDepth</span>(<span class="attr">root</span>) {
+  <span class="keyword">if</span> (!<span class="attr">root</span>) <span class="keyword">return</span> <span class="number">0</span>;
+  <span class="keyword">return</span> <span class="function">Math</span>.<span class="function">max</span>(<span class="function">maxDepth</span>(<span class="attr">root</span>.<span class="attr">left</span>), <span class="function">maxDepth</span>(<span class="attr">root</span>.<span class="attr">right</span>)) + <span class="number">1</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Tree traversal fundamentals directly apply to React's component tree — understanding the component hierarchy, rendering nested comment threads, implementing recursive tree menus (sidebar navigation), and navigating file explorers. Recursive components (a component that renders itself) use this pattern.</p>
+  </div>
+</div>
+
+<!-- P3-24: Min Stack -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">24</div>
+    <div>
+      <div class="q-text">Min Stack — Auxiliary Data Structure</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Design a stack that supports push, pop, top, and retrieving the minimum element in O(1) time. <code>MinStack() → push(-2), push(0), push(-3), getMin() → -3, pop(), top() → 0, getMin() → -2</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Min Stack with Auxiliary Stack (O(1) All Operations)</div>
+    <pre><code><span class="keyword">class</span> <span class="type">MinStack</span> {
+  <span class="function">constructor</span>() {
+    <span class="keyword">this</span>.<span class="attr">stack</span> = [];
+    <span class="keyword">this</span>.<span class="attr">minStack</span> = [];
+  }
+  <span class="function">push</span>(<span class="attr">val</span>) {
+    <span class="keyword">this</span>.<span class="attr">stack</span>.<span class="function">push</span>(<span class="attr">val</span>);
+    <span class="keyword">if</span> (!<span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="attr">length</span> || <span class="attr">val</span> <= <span class="keyword">this</span>.<span class="attr">minStack</span>[<span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="attr">length</span> - <span class="number">1</span>]) {
+      <span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="function">push</span>(<span class="attr">val</span>);
+    }
+  }
+  <span class="function">pop</span>() {
+    <span class="keyword">const</span> <span class="attr">val</span> = <span class="keyword">this</span>.<span class="attr">stack</span>.<span class="function">pop</span>();
+    <span class="keyword">if</span> (<span class="attr">val</span> === <span class="keyword">this</span>.<span class="attr">minStack</span>[<span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="attr">length</span> - <span class="number">1</span>]) {
+      <span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="function">pop</span>();
+    }
+  }
+  <span class="function">top</span>() { <span class="keyword">return</span> <span class="keyword">this</span>.<span class="attr">stack</span>[<span class="keyword">this</span>.<span class="attr">stack</span>.<span class="attr">length</span> - <span class="number">1</span>]; }
+  <span class="function">getMin</span>() { <span class="keyword">return</span> <span class="keyword">this</span>.<span class="attr">minStack</span>[<span class="keyword">this</span>.<span class="attr">minStack</span>.<span class="attr">length</span> - <span class="number">1</span>]; }
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Auxiliary data structure pattern: "track the min alongside the main data." Useful for monitoring React state values, tracking min/max in analytics dashboards, and managing undo/redo history with memory-efficient state snapshots. The "two stacks" pattern appears in many form state management libraries.</p>
+  </div>
+</div>
+
+<!-- P3-25: Implement Promise.allSettled -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">25</div>
+    <div>
+      <div class="q-text">Implement Promise.allSettled — Wait for All, Handle All Outcomes</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Implement <code>Promise.allSettled</code> — resolves after all promises settle (resolve or reject), returning an array of <code>{ status: "fulfilled", value }</code> or <code>{ status: "rejected", reason }</code> objects.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Promise.allSettled (O(n) Time)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">promiseAllSettled</span>(<span class="attr">promises</span>) {
+  <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>(<span class="attr">resolve</span> => {
+    <span class="keyword">const</span> <span class="attr">results</span> = [], <span class="attr">items</span> = <span class="type">Array</span>.<span class="function">from</span>(<span class="attr">promises</span>);
+    <span class="keyword">if</span> (!<span class="attr">items</span>.<span class="attr">length</span>) <span class="keyword">return</span> <span class="function">resolve</span>([]);
+    <span class="keyword">let</span> <span class="attr">done</span> = <span class="number">0</span>;
+    <span class="keyword">const</span> <span class="attr">onSettle</span> = (<span class="attr">i</span>, <span class="attr">status</span>, <span class="attr">val</span>) => {
+      <span class="attr">results</span>[<span class="attr">i</span>] = { <span class="attr">status</span>, [<span class="attr">status</span> === <span class="string">'fulfilled'</span> ? <span class="string">'value'</span> : <span class="string">'reason'</span>]: <span class="attr">val</span> };
+      <span class="keyword">if</span> (++<span class="attr">done</span> === <span class="attr">items</span>.<span class="attr">length</span>) <span class="function">resolve</span>(<span class="attr">results</span>);
+    };
+    <span class="attr">items</span>.<span class="function">forEach</span>((<span class="attr">p</span>, <span class="attr">i</span>) =>
+      <span class="type">Promise</span>.<span class="function">resolve</span>(<span class="attr">p</span>).<span class="function">then</span>(<span class="attr">v</span> => <span class="function">onSettle</span>(<span class="attr">i</span>, <span class="string">'fulfilled'</span>, <span class="attr">v</span>), <span class="attr">r</span> => <span class="function">onSettle</span>(<span class="attr">i</span>, <span class="string">'rejected'</span>, <span class="attr">r</span>))
+    );
+  });
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Fire multiple API requests and handle both successes and failures individually — loading independent dashboard widgets where one failure shouldn't block others. Unlike <code>Promise.all</code> (fail-fast), <code>allSettled</code> guarantees every promise completes before resolving.</p>
+  </div>
+</div>
+
+<!-- P3-26: Remove Duplicates from Sorted Array -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">26</div>
+    <div>
+      <div class="q-text">Remove Duplicates from Sorted Array — Two Pointers (In-Place)</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Remove duplicates in-place from a sorted array and return the new length. <code>Input: [0,0,1,1,1,2,2,3,3,4] → Output: 5, nums = [0,1,2,3,4,...]</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Two Pointers (O(n) Time, O(1) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">removeDuplicates</span>(<span class="attr">nums</span>) {
+  <span class="keyword">if</span> (!<span class="attr">nums</span>.<span class="attr">length</span>) <span class="keyword">return</span> <span class="number">0</span>;
+  <span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>;
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="attr">j</span> = <span class="number">1</span>; <span class="attr">j</span> < <span class="attr">nums</span>.<span class="attr">length</span>; <span class="attr">j</span>++) {
+    <span class="keyword">if</span> (<span class="attr">nums</span>[<span class="attr">j</span>] !== <span class="attr">nums</span>[<span class="attr">i</span>]) {
+      <span class="attr">i</span>++; <span class="attr">nums</span>[<span class="attr">i</span>] = <span class="attr">nums</span>[<span class="attr">j</span>];
+    }
+  }
+  <span class="keyword">return</span> <span class="attr">i</span> + <span class="number">1</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>In-place array manipulation with two-pointer technique. Directly applicable to deduplicating API response data, cleaning up user-submitted lists, and optimizing data before rendering in React components. The "slow/fast pointer" pattern appears in many array problems.</p>
+  </div>
+</div>
+
+<!-- P3-27 (bonus): Contains Duplicate -->
+<div class="question-card">
+  <div class="q-header">
+    <div class="q-number">27</div>
+    <div>
+      <div class="q-text">Contains Duplicate — Hash Set Lookup</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p3">P3</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Problem</div>
+    <p>Given an array, return true if any value appears at least twice. <code>Input: [1,2,3,1] → true</code>. <code>Input: [1,2,3,4] → false</code>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Solution</div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">JavaScript — Hash Set (O(n) Time, O(n) Space)</div>
+    <pre><code><span class="keyword">function</span> <span class="function">containsDuplicate</span>(<span class="attr">nums</span>) {
+  <span class="keyword">const</span> <span class="attr">seen</span> = <span class="keyword">new</span> <span class="function">Set</span>();
+  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="attr">n</span> <span class="keyword">of</span> <span class="attr">nums</span>) {
+    <span class="keyword">if</span> (<span class="attr">seen</span>.<span class="function">has</span>(<span class="attr">n</span>)) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="attr">seen</span>.<span class="function">add</span>(<span class="attr">n</span>);
+  }
+  <span class="keyword">return</span> <span class="keyword">false</span>;
+}</code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Frontend Relevance</div>
+    <p>Hash set is the simplest "have I seen this before" tool. Directly applicable to checking for duplicate React keys, ensuring unique items in sorted/filtered views, and validating unique constraints in form submissions.</p>
+  </div>
+</div>
+
+</div>
+
+<!-- ============ END P3 ============ -->
+
+<!-- ============ PATTERN SUMMARY ============ -->
+<div class="section-divider">
+  <h2>Pattern Summary — Your Mental Model for Coding Interviews</h2>
+  <p>Every problem maps to a pattern. Recognize the pattern, implement the solution.</p>
+</div>
+<div class="container">
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>When to Use</th>
+      <th>Problems in This Handbook</th>
+      <th>Time Complexity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Hash Map / Set</strong></td>
+      <td>Lookup, dedup, complement tracking, frequency counting</td>
+      <td>Two Sum, Memoize, LRU Cache</td>
+      <td>O(1) lookup, O(n) space</td>
+    </tr>
+    <tr>
+      <td><strong>Two Pointers</strong></td>
+      <td>Sorted arrays, palindrome, pair sum, partition</td>
+      <td>Valid Palindrome</td>
+      <td>O(n), O(1) space</td>
+    </tr>
+    <tr>
+      <td><strong>Sliding Window</strong></td>
+      <td>Subarray/substring with condition, max sum, min length</td>
+      <td>Maximum Subarray (Kadane's — dynamic window)</td>
+      <td>O(n), O(1) space</td>
+    </tr>
+    <tr>
+      <td><strong>Stack</strong></td>
+      <td>Nesting, matching pairs, undo/redo, parsing</td>
+      <td>Valid Parentheses, Flatten (stack-based)</td>
+      <td>O(n), O(n) space</td>
+    </tr>
+    <tr>
+      <td><strong>Recursion + Memoization</strong></td>
+      <td>Tree traversal, backtracking, DP subproblems</td>
+      <td>Deep Clone, Deep Equal, Flatten (recursive)</td>
+      <td>Varies, O(n) space for call stack</td>
+    </tr>
+    <tr>
+      <td><strong>Closure + Higher-Order Functions</strong></td>
+      <td>State encapsulation, currying, function factories</td>
+      <td>Debounce, Throttle, Memoize, Curry, Bind</td>
+      <td>O(1) per call</td>
+    </tr>
+    <tr>
+      <td><strong>Promise / Async Patterns</strong></td>
+      <td>Orchestration, race conditions, error handling</td>
+      <td>Promise.all, Promise.race, Timeout</td>
+      <td>O(n) to settle all</td>
+    </tr>
+    <tr>
+      <td><strong>Polyfill / Spec Implementation</strong></td>
+      <td>Deep JS understanding, edge-case handling</td>
+      <td>Array.map, Array.reduce, Function.bind, EventEmitter</td>
+      <td>Matches native spec</td>
+    </tr>
+    <tr>
+      <td><strong>Object Traversal / Cloning</strong></td>
+      <td>Deep operations on nested structures</td>
+      <td>Deep Clone, Deep Equal, Flatten</td>
+      <td>O(n), O(d) space where d = depth</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-faang">
+  <div class="callout-title">Interview Strategy</div>
+  <p>When you hear a problem, ask yourself: "Which bucket does this fall into?" The bucket gives you the approach. 90% of frontend coding problems are Hash Map, Closure, or Polyfill. If you know how to implement debounce, Promise.all, and deep clone from scratch, you're prepared for most loops.</p>
+</div>
+
+<div class="memory-trick">
+  <strong>Memory Trick: "HATS OFF CP"</strong> — <strong>H</strong>ash Map, <strong>A</strong>rray methods (polyfills), <strong>T</strong>wo Pointers, <strong>S</strong>tack, <strong>O</strong>bject traversal, <strong>F</strong>unction utilities (debounce/throttle/bind/curry), <strong>F</strong>latten, <strong>C</strong>losure patterns, <strong>P</strong>romises. These 9 categories cover 95% of frontend coding interview questions.
+</div>
+
+</div>
+
+<div class="end-section">
+  <h2>27 Problems Solved. Go Build.</h2>
+  <p class="cover-subtitle" style="margin:0 auto;text-align:center;">Practice these until you can write them from memory. Then practice explaining them aloud. That's the difference between "I know the answer" and "I got the offer."</p>
+</div>
+
+</body>
+</html>

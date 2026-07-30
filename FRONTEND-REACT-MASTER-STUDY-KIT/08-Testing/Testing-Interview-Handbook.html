@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing Interview Handbook</title>
+<link rel="stylesheet" href="../assets/css/premium-handbook.css">
+<style>
+  .cover-page::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(63,185,80,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(52,211,153,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(63,185,80,0.04) 0%, transparent 50%);
+  }
+  .cover-title {
+    background: linear-gradient(135deg, var(--text-primary) 0%, #3FB950 50%, #34D399 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cover-meta-item .number {
+    background: linear-gradient(135deg, #3FB950 0%, #34D399 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover-page">
+  <div class="cover-badge">TESTING HANDBOOK</div>
+  <h1 class="cover-title">Testing Interview Handbook</h1>
+  <p class="cover-subtitle">15 Essential Questions on Frontend Testing — from Jest and RTL to Playwright, MSW, and E2E patterns. Not just what to test, but <em>how</em> to think about testing.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="number">10</span><span class="label">P1 — Full Format</span></div>
+    <div class="cover-meta-item"><span class="number">5</span><span class="label">P2 — Concise</span></div>
+    <div class="cover-meta-item"><span class="number">15</span><span class="label">Total Questions</span></div>
+    <div class="cover-meta-item"><span class="number">40+</span><span class="label">Code Snippets</span></div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <h2>P1 — Must Know Questions</h2>
+  <p>These topics come up in every testing interview. Master these 10 and you'll have confident answers for 90% of questions.</p>
+</div>
+
+<div class="container">
+
+<!-- Q1: Testing Pyramid vs Trophy -->
+<div class="question-card" id="q1">
+  <div class="q-header">
+    <div class="q-number">01</div>
+    <div>
+      <div class="q-text">Testing Pyramid vs Testing Trophy — Unit vs Integration vs E2E. What should you actually prioritize?</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>The <strong>Testing Pyramid</strong> (Mike Cohn, 2009) is the classic model: lots of cheap unit tests at the bottom, fewer integration tests in the middle, and a handful of E2E tests at the top. The <strong>Testing Trophy</strong> (Kent C. Dodds, 2018) is the modern frontend version: <strong>static analysis</strong> at the base, then <strong>unit tests</strong>, then <strong>integration tests</strong> (the biggest slice — because that's where most frontend bugs live), then <strong>E2E</strong>, with a small <strong>UI snapshot</strong> layer. The Trophy reflects the reality that frontend apps are mostly about how components and APIs <em>integrate</em>.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Which Should You Prioritize?</div>
+    <p><strong>Integration tests</strong> give the highest confidence-to-cost ratio: they test real user interactions with real DOM but run fast (milliseconds). A single integration test that renders a form, types into it, and submits it replaces 5 unit tests for individual functions. <strong>E2E tests</strong> give the highest confidence but are slow and flaky — use them for critical flows only (signup, checkout, login). <strong>Unit tests</strong> are for pure business logic (date formatting, tax calculation, validation rules) — not for component rendering.</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Layer</th><th>Speed</th><th>Confidence</th><th>Flakiness</th><th>When to write</th></tr></thead>
+    <tbody>
+      <tr><td>Static Analysis</td><td>Instant</td><td>Low (surface)</td><td>Zero</td><td>Always — TypeScript, ESLint</td></tr>
+      <tr><td>Unit</td><td>~1 ms</td><td>Medium</td><td>Very low</td><td>Pure logic, utils, hooks</td></tr>
+      <tr><td>Integration</td><td>~50 ms</td><td>High</td><td>Low</td><td>Components, forms, flows</td></tr>
+      <tr><td>E2E</td><td>~5-30 s</td><td>Very high</td><td>Medium-High</td><td>Critical user journeys</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>The metaphor matters less than the principle: <strong>write tests at the level where the bug is most likely to be found and fixed fastest.</strong> A rendering bug? Integration test. A calculation bug? Unit test. A race condition? E2E. Don't follow dogma — follow failure patterns. If your app's bugs are mostly integration issues, write more integration tests regardless of what shape the pyramid has.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Worshipping the pyramid and writing 300 unit tests for trivial getters and UI rendering while having zero integration tests. A button component unit test that checks "onClick is called" is nearly worthless — the user doesn't care if onClick fires, they care that clicking the button does the right thing. Test behavior, not wiring.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Unit for logic. Integration for UX. E2E for flows." Don't test a line of code — test a behavior. If you can't describe what user action it covers, don't write it.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Testing Trophy: Static → Unit → <strong>Integration (biggest)</strong> → E2E</li>
+      <li>Integration tests give the best ROI for frontend apps</li>
+      <li>E2E for critical paths only — they're slow and expensive to maintain</li>
+      <li>Write tests at the level where bugs actually occur, not where dogma dictates</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q2: React Testing Library Philosophy -->
+<div class="question-card" id="q2">
+  <div class="q-header">
+    <div class="q-number">02</div>
+    <div>
+      <div class="q-text">React Testing Library Philosophy — "Test behavior, not implementation." Query priority and guiding principles.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>React Testing Library (RTL)</strong> is built on the philosophy: <strong>test your app the way a user uses it</strong>, not how it's implemented. This means: query by accessible roles/text/labels (not CSS classes or test IDs), interact via userEvent (not direct prop calls), assert on visible output (not internal state), and avoid testing implementation details like component names, state values, or method calls. If you refactor the component but the user experience stays the same, your tests should still pass.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Query Priority (from RTL docs)</div>
+    <ol class="followup-list">
+      <li><strong>getByRole</strong> — always first choice (mirrors ARIA, accessible by default)</li>
+      <li><strong>getByLabelText</strong> — great for form fields</li>
+      <li><strong>getByPlaceholderText</strong> — useful but not accessible-first</li>
+      <li><strong>getByText</strong> — for non-interactive elements (divs, spans, paragraphs)</li>
+      <li><strong>getByDisplayValue</strong> — for filled form fields</li>
+      <li><strong>getByAltText</strong> — for images</li>
+      <li><strong>getByTitle</strong> — not visible to screen readers, last resort</li>
+      <li><strong>getByTestId</strong> — absolutely last resort (no user can see data-testid)</li>
+    </ol>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — RTL query priority in practice</div>
+    <pre><code><span class="keyword">import</span> { render, screen } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> userEvent <span class="keyword">from</span> <span class="string">'@testing-library/user-event'</span>;
+<span class="keyword">import</span> <span class="string">LoginForm</span> <span class="keyword">from</span> <span class="string">'./LoginForm'</span>;
+
+<span class="function">test</span>(<span class="string">'submits email and password'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="keyword">const</span> user = userEvent.<span class="function">setup</span>();
+  <span class="function">render</span>(&lt;LoginForm /&gt;);
+
+  <span class="comment">// ✅ getByRole — accessible, semantic, robust to refactoring</span>
+  <span class="keyword">const</span> emailInput = screen.<span class="function">getByRole</span>(<span class="string">'textbox'</span>, { name: <span class="string">/email/i</span> });
+  <span class="keyword">const</span> submitBtn  = screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/sign in/i</span> });
+
+  <span class="comment">// ✅ getByLabelText — also accessible, great for form fields</span>
+  <span class="keyword">const</span> passwordInput = screen.<span class="function">getByLabelText</span>(<span class="string">/password/i</span>);
+
+  <span class="comment">// ❌ Avoid: getByTestId — user can't see this</span>
+  <span class="comment">// screen.getByTestId('login-email')</span>
+
+  <span class="comment">// ❌ Avoid: querying by CSS class or DOM structure</span>
+  <span class="comment">// container.querySelector('.email-input')</span>
+
+  <span class="comment">// ❌ Avoid: testing implementation details</span>
+  <span class="comment">// expect(setEmail).toHaveBeenCalled() — tests internal wiring</span>
+
+  <span class="keyword">await</span> user.<span class="function">type</span>(emailInput, <span class="string">'alice@example.com'</span>);
+  <span class="keyword">await</span> user.<span class="function">type</span>(passwordInput, <span class="string">'password123'</span>);
+  <span class="keyword">await</span> user.<span class="function">click</span>(submitBtn);
+
+  <span class="comment">// Assert on what the USER sees — not what useState holds</span>
+  <span class="function">expect</span>(<span class="keyword">await</span> screen.<span class="function">findByText</span>(<span class="string">/welcome back, alice/i</span>)).<span class="function">toBeInTheDocument</span>();
+});</code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">The Golden Rule</div>
+    <p>If your test breaks when you rename a component, move a div, or change a CSS class, the test is testing implementation — not behavior. A user doesn't care that your component is called <code>&lt;UserProfile&gt;</code> vs <code>&lt;ProfileCard&gt;</code>. They care that their name shows on the page. Write tests that survive refactoring.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Role, Label, Text, TestId — in that order." Every step down the priority list is a step away from testing what the user actually perceives.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Test behavior (what the user sees and does), not implementation (state, methods, classes)</li>
+      <li>Query priority: getByRole → getByLabelText → getByText → getByTestId (last resort)</li>
+      <li>If a refactor breaks the test but not the UX, the test was wrong</li>
+      <li>userEvent simulates real user interactions; avoid fireEvent for user-driven tests</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Q3: Jest Fundamentals -->
+<div class="question-card" id="q3">
+  <div class="q-header">
+    <div class="q-number">03</div>
+    <div>
+      <div class="q-text">Jest Fundamentals — describe/it/expect, matchers, and mocks (jest.fn, jest.spyOn, jest.mock).</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Core API</div>
+    <p><code>describe</code> groups related tests. <code>it</code>/<code>test</code> defines a single test case. <code>expect</code> makes assertions. <strong>Matchers</strong> (.toBe, .toEqual, .toContain, .toThrow, etc.) define what you're checking. <strong>Mocks</strong> replace real implementations: <code>jest.fn()</code> creates a mock function, <code>jest.spyOn(obj, method)</code> spies on an existing method, and <code>jest.mock('./module')</code> replaces entire modules.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Jest fundamentals in one example</div>
+    <pre><code><span class="comment">// ---- describe/it/expect ----</span>
+<span class="function">describe</span>(<span class="string">'calculateDiscount'</span>, () =&gt; {
+  <span class="function">it</span>(<span class="string">'returns 0 for price of 0'</span>, () =&gt; {
+    <span class="function">expect</span>(<span class="function">calculateDiscount</span>(<span class="number">0</span>)).<span class="function">toBe</span>(<span class="number">0</span>);
+  });
+
+  <span class="function">it</span>(<span class="string">'applies 10% for premium users'</span>, () =&gt; {
+    <span class="function">expect</span>(<span class="function">calculateDiscount</span>(<span class="number">100</span>, { type: <span class="string">'premium'</span> })).<span class="function">toBe</span>(<span class="number">10</span>);
+  });
+
+  <span class="function">it</span>(<span class="string">'throws for negative prices'</span>, () =&gt; {
+    <span class="function">expect</span>(() =&gt; <span class="function">calculateDiscount</span>(<span class="number">-5</span>)).<span class="function">toThrow</span>(<span class="string">'Invalid price'</span>);
+  });
+});
+
+<span class="comment">// ---- jest.fn() — Mock Function ----</span>
+<span class="function">it</span>(<span class="string">'calls the callback on success'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="keyword">const</span> onSuccess = jest.<span class="function">fn</span>();
+  <span class="keyword">await</span> <span class="function">submitForm</span>({ email: <span class="string">'a@b.com'</span> }, onSuccess);
+  <span class="function">expect</span>(onSuccess).<span class="function">toHaveBeenCalledTimes</span>(<span class="number">1</span>);
+  <span class="function">expect</span>(onSuccess).<span class="function">toHaveBeenCalledWith</span>({ userId: <span class="function">expect</span>.<span class="function">any</span>(<span class="type">String</span>) });
+});
+
+<span class="comment">// ---- jest.spyOn() — Spy on existing method ----</span>
+<span class="function">it</span>(<span class="string">'logs errors to console'</span>, () =&gt; {
+  <span class="keyword">const</span> spy = jest.<span class="function">spyOn</span>(console, <span class="string">'error'</span>).<span class="function">mockImplementation</span>(() =&gt; {});
+
+  <span class="function">handleError</span>(<span class="keyword">new</span> <span class="function">Error</span>(<span class="string">'Boom'</span>));
+
+  <span class="function">expect</span>(spy).<span class="function">toHaveBeenCalledWith</span>(<span class="function">expect</span>.<span class="function">stringContaining</span>(<span class="string">'Boom'</span>));
+
+  spy.<span class="function">mockRestore</span>(); <span class="comment">// ALWAYS restore spies!</span>
+});
+
+<span class="comment">// ---- jest.mock() — Module Mocking ----</span>
+jest.<span class="function">mock</span>(<span class="string">'./api'</span>, () =&gt; ({
+  <span class="function">fetchUser</span>: jest.<span class="function">fn</span>().<span class="function">mockResolvedValue</span>({ id: <span class="number">1</span>, name: <span class="string">'Alice'</span> }),
+  <span class="function">updateUser</span>: jest.<span class="function">fn</span>().<span class="function">mockRejectedValue</span>(<span class="keyword">new</span> <span class="function">Error</span>(<span class="string">'Network error'</span>)),
+}));</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Common Matchers Cheat Sheet</div>
+    <table class="styled-table">
+      <thead><tr><th>Matcher</th><th>Use for</th></tr></thead>
+      <tbody>
+        <tr><td><code>.toBe(value)</code></td><td>Primitive equality (===)</td></tr>
+        <tr><td><code>.toEqual(value)</code></td><td>Deep equality (objects/arrays)</td></tr>
+        <tr><td><code>.toStrictEqual(value)</code></td><td>Deep + no extra props (stricter)</td></tr>
+        <tr><td><code>.toContain(item)</code></td><td>Array includes / string contains</td></tr>
+        <tr><td><code>.toHaveLength(n)</code></td><td>Array/string length</td></tr>
+        <tr><td><code>.toThrow(msg?)</code></td><td>Function throws error</td></tr>
+        <tr><td><code>expect.any(Constructor)</code></td><td>Match by type, not exact value</td></tr>
+        <tr><td><code>expect.objectContaining({})</code></td><td>Partial object match</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Pitfalls</div>
+    <p>Using <code>.toBe()</code> on objects (they fail unless same reference — use <code>.toEqual</code>). Forgetting to call <code>mockRestore()</code> or <code>mockClear()</code> between tests (spies leak across tests). Mocking everything in sight — if your test has 15 mocks, you're testing mock configuration, not your actual code.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "ToBe for primitives, ToEqual for objects, ToStrict won't forgive extra props." The three equality matchers, from loosest to strictest.
+  </div>
+</div>
+
+<!-- Q4: RTL Queries Deep Dive -->
+<div class="question-card" id="q4">
+  <div class="q-header">
+    <div class="q-number">04</div>
+    <div>
+      <div class="q-text">RTL Queries Deep Dive — getBy, queryBy, findBy and when to use each variant.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>There are three query variants in RTL: <strong>getBy</strong> (returns element or throws — for synchronous "must exist" queries), <strong>queryBy</strong> (returns element or null — for "should NOT exist" assertions), and <strong>findBy</strong> (returns a Promise — for async "will appear" queries, based on waitFor). Choosing the right one makes tests readable and reliable.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">When to Use Each</div>
+    <table class="styled-table">
+      <thead><tr><th>Query</th><th>Returns</th><th>Throws on not found?</th><th>Use case</th></tr></thead>
+      <tbody>
+        <tr><td><strong>getBy</strong></td><td>Element</td><td>Yes (immediately)</td><td>"This element MUST be in the DOM right now"</td></tr>
+        <tr><td><strong>queryBy</strong></td><td>Element or null</td><td>No</td><td>"This element should NOT be in the DOM"</td></tr>
+        <tr><td><strong>findBy</strong></td><td>Promise&lt;Element&gt;</td><td>Yes (after timeout)</td><td>"This element WILL appear in the DOM soon"</td></tr>
+        <tr><td><strong>getAllBy</strong></td><td>Element[]</td><td>Yes (if none)</td><td>Multiple matching elements</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Practical usage patterns</div>
+    <pre><code><span class="function">test</span>(<span class="string">'shows welcome message after successful login'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="function">render</span>(&lt;App /&gt;);
+
+  <span class="comment">// getBy: element should be there immediately</span>
+  <span class="keyword">const</span> heading = screen.<span class="function">getByRole</span>(<span class="string">'heading'</span>, { name: <span class="string">/login/i</span> });
+  <span class="function">expect</span>(heading).<span class="function">toBeInTheDocument</span>();
+
+  <span class="comment">// queryBy: assert something is NOT there</span>
+  <span class="function">expect</span>(screen.<span class="function">queryByText</span>(<span class="string">/welcome/i</span>)).<span class="function">not</span>.<span class="function">toBeInTheDocument</span>();
+
+  <span class="comment">// findBy: wait for async appearance</span>
+  <span class="keyword">await</span> userEvent.<span class="function">click</span>(screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/sign in/i</span> }));
+  <span class="keyword">const</span> welcome = <span class="keyword">await</span> screen.<span class="function">findByText</span>(<span class="string">/welcome!/i</span>);
+  <span class="function">expect</span>(welcome).<span class="function">toBeInTheDocument</span>();
+
+  <span class="comment">// getAllBy: assert multiple items</span>
+  <span class="function">expect</span>(screen.<span class="function">getAllByRole</span>(<span class="string">'listitem'</span>)).<span class="function">toHaveLength</span>(<span class="number">3</span>);
+});</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Mental Model</div>
+    <p><strong>getBy</strong> = "I know it's there." <strong>queryBy</strong> = "I need to check it's NOT there." <strong>findBy</strong> = "It'll be there soon." If you find yourself writing <code>getByText('Something')!</code> with a bang, you should have used queryBy — null is the correct type for "might not exist."</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "get for yes, query for no, find for later." Three words, three temporal states of the DOM.
+  </div>
+</div>
+
+<!-- Q5: userEvent vs fireEvent -->
+<div class="question-card" id="q5">
+  <div class="q-header">
+    <div class="q-number">05</div>
+    <div>
+      <div class="q-text">userEvent vs fireEvent — Why userEvent is preferred and how it simulates real interactions.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><code>fireEvent</code> dispatches a <strong>single DOM event</strong> when called. <code>userEvent</code> simulates the <strong>full sequence of events</strong> a real user triggers: clicking isn't just a <code>click</code> event — it's <code>pointerdown</code> → <code>mousedown</code> → <code>focus</code> → <code>mouseup</code> → <code>click</code>, and typing isn't just one <code>change</code> event — it's <code>keydown</code> → <code>input</code> → <code>keyup</code> for each character. userEvent is preferred because it catches bugs that fireEvent misses: components that only handle <code>onMouseDown</code> without <code>onMouseUp</code>, or events that fire in the wrong order.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — userEvent vs fireEvent comparison</div>
+    <pre><code><span class="keyword">import</span> { render, screen, fireEvent } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> userEvent <span class="keyword">from</span> <span class="string">'@testing-library/user-event'</span>;
+
+<span class="keyword">const</span> user = userEvent.<span class="function">setup</span>();
+
+<span class="comment">// ❌ fireEvent: fires ONE event — misses focus, blur, mouse down/up</span>
+fireEvent.<span class="function">change</span>(input, { target: { value: <span class="string">'hello'</span> } });
+fireEvent.<span class="function">click</span>(button);
+
+<span class="comment">// ✅ userEvent: fires the full interaction sequence</span>
+<span class="comment">// user.type() triggers: pointerDown → focus → keyDown → input → keyUp</span>
+<span class="comment">//   (once per character!) → blur</span>
+<span class="keyword">await</span> user.<span class="function">type</span>(input, <span class="string">'hello'</span>);
+
+<span class="comment">// user.click() triggers: pointerDown → mouseDown → focus →</span>
+<span class="comment">//   mouseUp → click (in that exact order)</span>
+<span class="keyword">await</span> user.<span class="function">click</span>(button);
+
+<span class="comment">// user.clear(): first selects all text, then deletes it</span>
+<span class="keyword">await</span> user.<span class="function">clear</span>(input);
+<span class="keyword">await</span> user.<span class="function">type</span>(input, <span class="string">'replacement text'</span>);
+
+<span class="comment">// user.selectOptions(): full select interaction</span>
+<span class="keyword">await</span> user.<span class="function">selectOptions</span>(selectElement, <span class="string">'option-value'</span>);
+
+<span class="comment">// user.keyboard(): simulate keyboard shortcuts</span>
+<span class="keyword">await</span> user.<span class="function">keyboard</span>(<span class="string">'{Control>}a{/Control}'</span>); <span class="comment">// Ctrl+A = select all</span>
+
+<span class="comment">// user.tab(): simulate tab navigation (focus management)</span>
+<span class="keyword">await</span> user.<span class="function">tab</span>(); <span class="comment">// Move focus to next focusable element</span></code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">When fireEvent is acceptable</div>
+    <p>Use fireEvent only for events that userEvent doesn't support (like <code>scroll</code>, <code>resize</code>, <code>pointermove</code>) or for testing a specific DOM-dispatch codepath. If you're testing something a user would do, always reach for userEvent first. Note: userEvent v14+ requires <code>userEvent.setup()</code> before using it — the old API (<code>userEvent.click()</code>) is deprecated.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "userEvent = realistic. fireEvent = raw. Use raw only when realistic won't do." A user never dispatches events — they click, type, and tab. Test what they do, not what the browser dispatches.
+  </div>
+</div>
+
+<!-- Q6: Testing Async Operations -->
+<div class="question-card" id="q6">
+  <div class="q-header">
+    <div class="q-number">06</div>
+    <div>
+      <div class="q-text">Testing Async Operations — waitFor, findBy, act(), and MSW for API mocking.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Async testing in React has three main tools: <strong>findBy</strong> queries (built on waitFor — retry until element appears or timeout), <strong>waitFor</strong> (wait for any condition to be true), and <strong>act()</strong> (ensure all state updates and effects are flushed before assertions). Pair these with <strong>MSW</strong> (Mock Service Worker) to intercept and mock HTTP requests at the network level — you don't mock fetch or axios, you mock the <em>server</em>.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Async testing patterns</div>
+    <pre><code><span class="keyword">import</span> { render, screen, waitFor, act } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> userEvent <span class="keyword">from</span> <span class="string">'@testing-library/user-event'</span>;
+
+<span class="keyword">const</span> user = userEvent.<span class="function">setup</span>();
+
+<span class="comment">// Pattern 1: findBy — simplest, auto-retries for up to 1000ms</span>
+<span class="function">test</span>(<span class="string">'loads and displays user data'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="function">render</span>(&lt;UserProfile userId=<span class="string">"1"</span> /&gt;);
+
+  <span class="comment">// findBy* is equivalent to: await waitFor(() => screen.getByRole(...))</span>
+  <span class="keyword">const</span> name = <span class="keyword">await</span> screen.<span class="function">findByRole</span>(<span class="string">'heading'</span>, { name: <span class="string">/alice johnson/i</span> });
+  <span class="function">expect</span>(name).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Pattern 2: waitFor — for custom conditions (not just element presence)</span>
+<span class="function">test</span>(<span class="string">'shows a success toast after saving'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="function">render</span>(&lt;SettingsPage /&gt;);
+
+  <span class="keyword">await</span> user.<span class="function">click</span>(screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/save/i</span> }));
+
+  <span class="keyword">await</span> <span class="function">waitFor</span>(() =&gt; {
+    <span class="function">expect</span>(screen.<span class="function">getByText</span>(<span class="string">/settings saved/i</span>)).<span class="function">toBeInTheDocument</span>();
+    <span class="function">expect</span>(screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/save/i</span> })).<span class="function">not</span>.<span class="function">toBeDisabled</span>();
+  }, { timeout: <span class="number">3000</span> });
+});
+
+<span class="comment">// Pattern 3: waitForElementToBeRemoved — wait for something to disappear</span>
+<span class="function">test</span>(<span class="string">'hides spinner after data loads'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="function">render</span>(&lt;Dashboard /&gt;);
+
+  <span class="keyword">const</span> spinner = screen.<span class="function">getByRole</span>(<span class="string">'progressbar'</span>);
+
+  <span class="keyword">await</span> <span class="function">waitForElementToBeRemoved</span>(spinner, { timeout: <span class="number">5000</span> });
+
+  <span class="keyword">const</span> data = screen.<span class="function">getByText</span>(<span class="string">/dashboard loaded/i</span>);
+  <span class="function">expect</span>(data).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Pattern 4: waitFor with custom assertion for non-DOM states</span>
+<span class="function">test</span>(<span class="string">'submits form and redirects'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="keyword">const</span> mockNavigate = jest.<span class="function">fn</span>();
+  jest.<span class="function">mock</span>(<span class="string">'react-router-dom'</span>, () =&gt; ({
+
+    useNavigate: () =&gt; mockNavigate,
+  }));
+
+  <span class="function">render</span>(&lt;CheckoutForm /&gt;);
+  <span class="keyword">await</span> user.<span class="function">click</span>(screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/place order/i</span> }));
+
+  <span class="keyword">await</span> <span class="function">waitFor</span>(() =&gt; {
+    <span class="function">expect</span>(mockNavigate).<span class="function">toHaveBeenCalledWith</span>(<span class="string">'/order/confirmation'</span>);
+  });
+});</code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">About act()</div>
+    <p>In modern RTL, you rarely need explicit <code>act()</code> calls — RTL's <code>render</code>, <code>fireEvent</code>, and <code>userEvent</code> all wrap their operations in act internally. You only need <code>act()</code> when testing custom hooks directly with <code>renderHook</code> or when manually triggering state updates outside RTL's helpers.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "findBy = waitFor + getBy. waitFor = polling loop. act = batch updates." Three async tools, each for a different level of control.
+  </div>
+</div>
+
+<!-- Q7: Mock Service Worker (MSW) -->
+<div class="question-card" id="q7">
+  <div class="q-header">
+    <div class="q-number">07</div>
+    <div>
+      <div class="q-text">Mock Service Worker (MSW) — How and why to mock at the network level instead of mocking fetch.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><strong>MSW</strong> intercepts HTTP requests at the <strong>service worker level</strong> (in the browser) or the <strong>http module level</strong> (in Node.js tests). Instead of mocking <code>fetch</code> or <code>axios</code> (which ties tests to your HTTP client), you define mock <strong>handlers</strong> that describe what the server would return. This means your tests work with any HTTP client, your fetch/loading/error logic is genuinely exercised, and switching from fetch to axios to ky to RTK Query requires zero test changes.</p>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Setup & Usage</div>
+    <div class="code-block">
+      <div class="code-block-header">TypeScript — MSW setup for tests + handlers</div>
+      <pre><code><span class="comment">// 1. Define handlers (src/mocks/handlers.ts)</span>
+<span class="keyword">import</span> { http, HttpResponse } <span class="keyword">from</span> <span class="string">'msw'</span>;
+
+<span class="keyword">export const</span> handlers = [
+  <span class="comment">// GET /api/users — return list</span>
+  http.<span class="function">get</span>(<span class="string">'/api/users'</span>, () =&gt; {
+    <span class="keyword">return</span> HttpResponse.<span class="function">json</span>([
+      { id: <span class="string">'1'</span>, name: <span class="string">'Alice'</span>, role: <span class="string">'admin'</span> },
+      { id: <span class="string">'2'</span>, name: <span class="string">'Bob'</span>, role: <span class="string">'user'</span> },
+    ]);
+  }),
+
+  <span class="comment">// GET /api/users/:id — return single user</span>
+  http.<span class="function">get</span>(<span class="string">'/api/users/:id'</span>, ({ params }) =&gt; {
+    <span class="keyword">const</span> { id } = params;
+    <span class="keyword">return</span> HttpResponse.<span class="function">json</span>({ id, name: <span class="string">'User '</span> + id });
+  }),
+
+  <span class="comment">// POST /api/users — create user</span>
+  http.<span class="function">post</span>(<span class="string">'/api/users'</span>, <span class="keyword">async</span> ({ request }) =&gt; {
+    <span class="keyword">const</span> body = <span class="keyword">await</span> request.<span class="function">json</span>();
+    <span class="keyword">return</span> HttpResponse.<span class="function">json</span>({ id: <span class="string">'3'</span>, ...body <span class="keyword">as</span> <span class="type">object</span> }, { status: <span class="number">201</span> });
+  }),
+
+  <span class="comment">// Simulate server error</span>
+  http.<span class="function">delete</span>(<span class="string">'/api/users/:id'</span>, () =&gt; {
+    <span class="keyword">return new</span> <span class="function">HttpResponse</span>(<span class="keyword">null</span>, { status: <span class="number">500</span> });
+  }),
+
+  <span class="comment">// Simulate network error (lost connection)</span>
+  http.<span class="function">get</span>(<span class="string">'/api/offline-resource'</span>, () =&gt; {
+    <span class="keyword">return</span> HttpResponse.<span class="function">error</span>(); <span class="comment">// NetworkError, not HTTP error</span>
+  }),
+];
+
+<span class="comment">// 2. Setup server for tests (src/mocks/server.ts)</span>
+<span class="comment">// import { setupServer } from 'msw/node';</span>
+<span class="comment">// export const server = setupServer(...handlers);</span>
+
+<span class="comment">// 3. Configure in jest.setup.ts:</span>
+<span class="comment">// beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));</span>
+<span class="comment">// afterEach(() => server.resetHandlers());</span>
+<span class="comment">// afterAll(() => server.close());</span></code></pre>
+    </div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Testing with MSW (error states, loading)</div>
+    <pre><code><span class="keyword">import</span> { server } <span class="keyword">from</span> <span class="string">'./mocks/server'</span>;
+<span class="keyword">import</span> { http, HttpResponse } <span class="keyword">from</span> <span class="string">'msw'</span>;
+
+<span class="comment">// Test happy path — no extra setup needed, handlers already defined</span>
+<span class="function">test</span>(<span class="string">'renders user list'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="function">render</span>(&lt;UserList /&gt;);
+  <span class="keyword">const</span> alice = <span class="keyword">await</span> screen.<span class="function">findByText</span>(<span class="string">/alice/i</span>);
+  <span class="function">expect</span>(alice).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Override handler for a specific test — test error state</span>
+<span class="function">test</span>(<span class="string">'shows error message on server failure'</span>, <span class="keyword">async</span> () =&gt; {
+  server.<span class="function">use</span>(
+    http.<span class="function">get</span>(<span class="string">'/api/users'</span>, () =&gt; {
+      <span class="keyword">return new</span> <span class="function">HttpResponse</span>(<span class="keyword">null</span>, { status: <span class="number">500</span> });
+    })
+  );
+
+  <span class="function">render</span>(&lt;UserList /&gt;);
+  <span class="keyword">const</span> error = <span class="keyword">await</span> screen.<span class="function">findByText</span>(<span class="string">/failed to load users/i</span>);
+  <span class="function">expect</span>(error).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Test loading state with delayed response</span>
+<span class="function">test</span>(<span class="string">'shows loading spinner while fetching'</span>, <span class="keyword">async</span> () =&gt; {
+  server.<span class="function">use</span>(
+    http.<span class="function">get</span>(<span class="string">'/api/users'</span>, <span class="keyword">async</span> () =&gt; {
+      <span class="keyword">await new</span> <span class="function">Promise</span>(<span class="function">r</span> =&gt; <span class="function">setTimeout</span>(r, <span class="number">500</span>)); <span class="comment">// Simulate slow network</span>
+      <span class="keyword">return</span> HttpResponse.<span class="function">json</span>([]);
+    })
+  );
+
+  <span class="function">render</span>(&lt;UserList /&gt;);
+  <span class="comment">// Spinner should appear immediately (before the 500ms delay resolves)</span>
+  <span class="function">expect</span>(screen.<span class="function">getByRole</span>(<span class="string">'progressbar'</span>)).<span class="function">toBeInTheDocument</span>();
+});</code></pre>
+  </div>
+  <div class="callout callout-faang">
+    <div class="callout-title">Industry Adoption</div>
+    <p>MSW is used by Vercel, Postman, Notion, and thousands of teams. It's the de facto standard for API mocking in modern React testing. The key advantage: your fetch/loading/error logic runs unmodified. If you mock <code>fetch</code> directly, you're not testing your actual API layer — just the happy path you manually reconstructed. MSW tests the real code path end-to-end.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Mock the server, not the client." MSW intercepts requests where they leave your app, so your entire data-fetching stack runs as-is. Mock fetch, and you're only testing your UI's reaction to mock data.
+  </div>
+</div>
+
+<!-- Q8: Testing Custom Hooks -->
+<div class="question-card" id="q8">
+  <div class="q-header">
+    <div class="q-number">08</div>
+    <div>
+      <div class="q-text">Testing Custom Hooks — renderHook, act(), and testing state updates and side effects.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p><code>renderHook</code> (from RTL) lets you test hooks in isolation — without rendering a full component. It returns a <code>result</code> object that always reflects the hook's <strong>current</strong> return value. Use <code>act()</code> to wrap state updates (setters, dispatchers, async operations), <code>waitFor</code>/<code>waitForNextUpdate</code> for async assertions, and <code>rerender</code> to test how the hook reacts to prop changes.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Testing a pagination hook</div>
+    <pre><code><span class="keyword">import</span> { renderHook, act } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> { waitFor } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+
+<span class="comment">// Custom hook: usePagination</span>
+<span class="keyword">function</span> <span class="function">usePagination</span>&lt;<span class="type">T</span>&gt;(<span class="function">items</span>: <span class="type">T</span>[], pageSize = <span class="number">5</span>) {
+  <span class="keyword">const</span> [page, setPage] = <span class="function">useState</span>(<span class="number">1</span>);
+  <span class="keyword">const</span> totalPages = Math.<span class="function">ceil</span>(items.length / pageSize);
+  <span class="keyword">const</span> pageItems = items.<span class="function">slice</span>((page - <span class="number">1</span>) * pageSize, page * pageSize);
+
+  <span class="keyword">return</span> {
+    page,
+    totalPages,
+    pageItems,
+    <span class="function">next</span>: () =&gt; <span class="function">setPage</span>(<span class="function">p</span> =&gt; Math.<span class="function">min</span>(p + <span class="number">1</span>, totalPages)),
+    <span class="function">prev</span>: () =&gt; <span class="function">setPage</span>(<span class="function">p</span> =&gt; Math.<span class="function">max</span>(p - <span class="number">1</span>, <span class="number">1</span>)),
+  };
+}
+
+<span class="comment">// Tests</span>
+<span class="function">describe</span>(<span class="string">'usePagination'</span>, () =&gt; {
+  <span class="keyword">const</span> items = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>];
+
+  <span class="function">it</span>(<span class="string">'returns first page by default'</span>, () =&gt; {
+    <span class="keyword">const</span> { result } = <span class="function">renderHook</span>(() =&gt; <span class="function">usePagination</span>(items, <span class="number">3</span>));
+
+    <span class="function">expect</span>(result.current.page).<span class="function">toBe</span>(<span class="number">1</span>);
+    <span class="function">expect</span>(result.current.pageItems).<span class="function">toEqual</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+    <span class="function">expect</span>(result.current.totalPages).<span class="function">toBe</span>(<span class="number">4</span>);
+  });
+
+  <span class="function">it</span>(<span class="string">'navigates forward and backward'</span>, () =&gt; {
+    <span class="keyword">const</span> { result } = <span class="function">renderHook</span>(() =&gt; <span class="function">usePagination</span>(items, <span class="number">3</span>));
+
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">next</span>(); });
+    <span class="function">expect</span>(result.current.page).<span class="function">toBe</span>(<span class="number">2</span>);
+    <span class="function">expect</span>(result.current.pageItems).<span class="function">toEqual</span>([<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]);
+
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">prev</span>(); });
+    <span class="function">expect</span>(result.current.page).<span class="function">toBe</span>(<span class="number">1</span>);
+  });
+
+  <span class="function">it</span>(<span class="string">'does not go below page 1 or beyond last page'</span>, () =&gt; {
+    <span class="keyword">const</span> { result } = <span class="function">renderHook</span>(() =&gt; <span class="function">usePagination</span>(items, <span class="number">3</span>));
+
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">prev</span>(); });
+    <span class="function">expect</span>(result.current.page).<span class="function">toBe</span>(<span class="number">1</span>); <span class="comment">// Cannot go below 1</span>
+
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">next</span>(); }); <span class="comment">// 2</span>
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">next</span>(); }); <span class="comment">// 3</span>
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">next</span>(); }); <span class="comment">// 4</span>
+    <span class="function">act</span>(() =&gt; { result.current.<span class="function">next</span>(); }); <span class="comment">// Try beyond last</span>
+    <span class="function">expect</span>(result.current.page).<span class="function">toBe</span>(<span class="number">4</span>); <span class="comment">// Stays on last page</span>
+  });
+
+  <span class="function">it</span>(<span class="string">'updates when items change (rerender)'</span>, () =&gt; {
+    <span class="keyword">const</span> { result, rerender } = <span class="function">renderHook</span>(
+      ({ items }) =&gt; <span class="function">usePagination</span>(items, <span class="number">5</span>),
+      { initialProps: { items: [<span class="number">1</span>, <span class="number">2</span>] } }
+    );
+
+    <span class="function">expect</span>(result.current.totalPages).<span class="function">toBe</span>(<span class="number">1</span>);
+
+    <span class="function">rerender</span>({ items: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>] });
+    <span class="function">expect</span>(result.current.totalPages).<span class="function">toBe</span>(<span class="number">2</span>);
+  });
+});</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Testing async hooks</div>
+    <p>For hooks that fetch data or have async side effects, wrap the hook call in <code>act()</code> and use <code>waitFor</code> to poll <code>result.current</code> until the expected state is reached. MSW is perfect for mocking the API layer — the hook's <code>fetch</code> call goes through normally and hits your MSW handler.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "renderHook gives you result.current. act wraps state changes. rerender tests prop changes." Three tools, one hook testing pattern.
+  </div>
+</div>
+
+<!-- Q9: Testing Redux/Zustand Stores -->
+<div class="question-card" id="q9">
+  <div class="q-header">
+    <div class="q-number">09</div>
+    <div>
+      <div class="q-text">Testing Redux/Zustand Stores — Fresh store per test, Provider wrapping, and isolation strategies.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>The golden rule for testing state stores: <strong>every test gets a fresh, isolated store instance</strong>. Shared state between tests causes cascading failures and makes debugging a nightmare. For Redux: create a helper that generates a new store with configurable initial state. For Zustand: use <code>act()</code> to reset the store or re-create it per test. For both: render components wrapped in the appropriate Provider with the test-specific store.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Redux: Fresh store per test</div>
+    <pre><code><span class="keyword">import</span> { configureStore } <span class="keyword">from</span> <span class="string">'@reduxjs/toolkit'</span>;
+<span class="keyword">import</span> { Provider } <span class="keyword">from</span> <span class="string">'react-redux'</span>;
+<span class="keyword">import</span> { render } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> userReducer, { <span class="type">UserState</span> } <span class="keyword">from</span> <span class="string">'./userSlice'</span>;
+
+<span class="comment">// Test helper: create a fresh store with optional preloaded state</span>
+<span class="keyword">function</span> <span class="function">renderWithRedux</span>(
+  <span class="function">ui</span>: <span class="type">ReactElement</span>,
+  {
+    preloadedState = {} <span class="keyword">as</span> <span class="type">Partial</span>&lt;{ user: <span class="type">UserState</span> }&gt;,
+    store = <span class="function">configureStore</span>({
+      reducer: { user: userReducer },
+      preloadedState,
+    }),
+    ...renderOptions
+  } = {}
+) {
+  <span class="keyword">function</span> <span class="function">Wrapper</span>({ children }: { children: <span class="type">ReactNode</span> }) {
+    <span class="keyword">return</span> &lt;Provider store={store}&gt;{children}&lt;/Provider&gt;;
+  }
+  <span class="keyword">return</span> { store, ...<span class="function">render</span>(ui, { wrapper: <span class="type">Wrapper</span>, ...renderOptions }) };
+}
+
+<span class="comment">// Test 1: Component renders with authenticated user</span>
+<span class="function">test</span>(<span class="string">'shows welcome message for logged-in user'</span>, () =&gt; {
+  <span class="function">renderWithRedux</span>(&lt;Dashboard /&gt;, {
+    preloadedState: {
+      user: { current: { id: <span class="string">'1'</span>, name: <span class="string">'Alice'</span> }, loading: <span class="keyword">false</span> },
+    },
+  });
+
+  <span class="function">expect</span>(screen.<span class="function">getByText</span>(<span class="string">/welcome, alice/i</span>)).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Test 2: Component with different state — no leakage from Test 1</span>
+<span class="function">test</span>(<span class="string">'shows login prompt for anonymous user'</span>, () =&gt; {
+  <span class="function">renderWithRedux</span>(&lt;Dashboard /&gt;, {
+    preloadedState: { user: { current: <span class="keyword">null</span>, loading: <span class="keyword">false</span> } },
+  });
+
+  <span class="function">expect</span>(screen.<span class="function">getByText</span>(<span class="string">/please log in/i</span>)).<span class="function">toBeInTheDocument</span>();
+});
+
+<span class="comment">// Test 3: Reducer logic in isolation (no component)</span>
+<span class="function">test</span>(<span class="string">'setUser action updates state correctly'</span>, () =&gt; {
+  <span class="keyword">const</span> store = <span class="function">configureStore</span>({ reducer: { user: userReducer } });
+  store.<span class="function">dispatch</span>(<span class="function">setUser</span>({ id: <span class="string">'99'</span>, name: <span class="string">'Bob'</span> }));
+
+  <span class="keyword">const</span> state = store.<span class="function">getState</span>().user;
+  <span class="function">expect</span>(state.current).<span class="function">toEqual</span>({ id: <span class="string">'99'</span>, name: <span class="string">'Bob'</span> });
+});</code></pre>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Zustand: Reset store between tests</div>
+    <pre><code><span class="keyword">import</span> { create } <span class="keyword">from</span> <span class="string">'zustand'</span>;
+
+<span class="comment">// Zustand store with a reset function</span>
+<span class="keyword">interface</span> <span class="type">CartStore</span> {
+  items: <span class="type">CartItem</span>[];
+  <span class="function">addItem</span>: (item: <span class="type">CartItem</span>) =&gt; <span class="keyword">void</span>;
+  reset: () =&gt; <span class="keyword">void</span>;
+}
+
+<span class="keyword">const</span> <span class="function">useCartStore</span> = create&lt;<span class="type">CartStore</span>&gt;(<span class="function">set</span> =&gt; ({
+  items: [],
+  <span class="function">addItem</span>: (<span class="function">item</span>) =&gt; <span class="function">set</span>(<span class="function">s</span> =&gt; ({ items: [...s.items, item] })),
+  reset: () =&gt; <span class="function">set</span>({ items: [] }),
+}));
+
+<span class="comment">// Reset after each test</span>
+<span class="function">afterEach</span>(() =&gt; {
+  <span class="function">act</span>(() =&gt; { useCartStore.<span class="function">getState</span>().<span class="function">reset</span>(); });
+});
+
+<span class="function">test</span>(<span class="string">'adds item to cart'</span>, () =&gt; {
+  <span class="keyword">const</span> { result } = <span class="function">renderHook</span>(() =&gt; <span class="function">useCartStore</span>());
+  <span class="function">act</span>(() =&gt; { result.current.<span class="function">addItem</span>({ id: <span class="string">'1'</span>, name: <span class="string">'Widget'</span> }); });
+  <span class="function">expect</span>(result.current.items.<span class="function">length</span>).<span class="function">toBe</span>(<span class="number">1</span>);
+});
+
+<span class="comment">// ZUSTAND: No Provider needed when testing hooks in isolation!</span>
+<span class="comment">// Render a component that uses the store — it just works</span>
+<span class="comment">// (If you render the hook, no Provider is needed either)</span></code></pre>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — Zustand's Testing Advantage</div>
+    <p>Zustand stores don't need a Provider, which means: (1) no extra wrapper in tests, (2) you can call <code>useMyStore.getState()</code> and <code>useMyStore.setState()</code> from outside React (no render needed), and (3) the store lives outside React's component tree so it's ridiculously easy to inspect and manipulate. Redux's provider-model means every test needs a Provider wrapper — doable, but more ceremony.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Fresh store, fresh test. Shared state = shared failure." Every test creates its own store or resets the global one. Never share store state between test cases.
+  </div>
+</div>
+
+<!-- Q10: Playwright vs Cypress -->
+<div class="question-card" id="q10">
+  <div class="q-header">
+    <div class="q-number">10</div>
+    <div>
+      <div class="q-text">Playwright vs Cypress — Architecture, auto-waiting, locators, and trace viewer.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>Both are E2E test frameworks, but architecturally very different. <strong>Cypress</strong> runs inside the browser (same JS thread as your app) — it's easier to debug but can't handle multiple tabs, native events, or cross-origin navigations easily. <strong>Playwright</strong> runs outside the browser using the Chrome DevTools Protocol — full control over multiple tabs, iframes, network interception, and native events. In 2025, Playwright is the clear winner for most teams due to better performance, multi-browser support (Chromium, Firefox, WebKit), and the incredible trace viewer.</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Feature</th><th>Playwright</th><th>Cypress</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Architecture</strong></td><td>Outside browser (CDP)</td><td>Inside browser (same thread)</td></tr>
+      <tr><td><strong>Browsers</strong></td><td>Chromium, Firefox, WebKit</td><td>Chromium-based only (Chrome, Edge, Electron)</td></tr>
+      <tr><td><strong>Multi-tab</strong></td><td>Yes (native)</td><td>Limited (no real multi-tab)</td></tr>
+      <tr><td><strong>Auto-waiting</strong></td><td>Yes (built into every action)</td><td>Yes (built into commands)</td></tr>
+      <tr><td><strong>Parallel execution</strong></td><td>Free (built-in)</td><td>Paid (Dashboard)</td></tr>
+      <tr><td><strong>API Testing</strong></td><td>Yes (built-in request fixture)</td><td>Yes (cy.intercept)</td></tr>
+      <tr><td><strong>Trace Viewer</strong></td><td>Yes (dom, network, console, screenshots)</td><td>Yes (but less detailed)</td></tr>
+      <tr><td><strong>Mobile emulation</strong></td><td>Yes (built-in devices)</td><td>Via viewport only</td></tr>
+    </tbody>
+  </table>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Same test in Playwright vs Cypress</div>
+    <pre><code><span class="comment">// ---- Playwright ----</span>
+<span class="keyword">import</span> { test, expect } <span class="keyword">from</span> <span class="string">'@playwright/test'</span>;
+
+<span class="function">test</span>(<span class="string">'user can login'</span>, <span class="keyword">async</span> ({ page }) =&gt; {
+  <span class="keyword">await</span> page.<span class="function">goto</span>(<span class="string">'/login'</span>);
+
+  <span class="comment">// getByRole, getByLabel, getByTestId — same philosophy as RTL!</span>
+  <span class="keyword">await</span> page.<span class="function">getByRole</span>(<span class="string">'textbox'</span>, { name: <span class="string">'Email'</span> }).<span class="function">fill</span>(<span class="string">'alice@test.com'</span>);
+  <span class="keyword">await</span> page.<span class="function">getByLabel</span>(<span class="string">'Password'</span>).<span class="function">fill</span>(<span class="string">'s3cret'</span>);
+  <span class="keyword">await</span> page.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">'Sign In'</span> }).<span class="function">click</span>();
+
+  <span class="comment">// Auto-waiting: waits for URL, for text to appear — no manual waits</span>
+  <span class="keyword">await</span> <span class="function">expect</span>(page).<span class="function">toHaveURL</span>(<span class="string">/dashboard/i</span>);
+  <span class="keyword">await</span> <span class="function">expect</span>(page.<span class="function">getByText</span>(<span class="string">'Welcome back'</span>)).<span class="function">toBeVisible</span>();
+});
+
+<span class="comment">// ---- Cypress ----</span>
+<span class="comment">// describe('Login', () => {</span>
+<span class="comment">//   it('user can login', () => {</span>
+<span class="comment">//     cy.visit('/login');</span>
+<span class="comment">//     cy.findByRole('textbox', { name: 'Email' }).type('alice@test.com');</span>
+<span class="comment">//     cy.findByLabelText('Password').type('s3cret');</span>
+<span class="comment">//     cy.findByRole('button', { name: 'Sign In' }).click();</span>
+<span class="comment">//     cy.url().should('include', '/dashboard');</span>
+<span class="comment">//     cy.contains('Welcome back').should('be.visible');</span>
+<span class="comment">//   });</span>
+<span class="comment">// });</span></code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Playwright's Killer Feature: Trace Viewer</div>
+    <p>When a test fails, Playwright generates a <code>trace.zip</code> containing: a timeline of every action, DOM snapshots before/after each step, all network requests and responses, console logs, and full-page screenshots. You open it with <code>npx playwright show-trace trace.zip</code> and can literally step through the test like a debugger. Cypress has something similar but with less depth — the Playwright trace is genuinely transformative for debugging flaky tests.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Playwright for greenfield. Cypress for existing. Both auto-wait. Playwright multi-browser, Cypress single-browser." For new projects in 2025, choose Playwright.
+  </div>
+  <div class="q-section"><div class="q-section-title">Summary</div>
+    <ul class="summary-list">
+      <li>Playwright: outside browser, full control, multi-tab, multi-browser, free parallel</li>
+      <li>Cypress: inside browser, easier to debug, single-tab, chromium-only, paid parallel</li>
+      <li>Both support auto-waiting and accessibility-first locators (getByRole, etc.)</li>
+      <li>Playwright's trace viewer is the best debugging tool in the E2E ecosystem</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="section-divider">
+  <h2>P2 — Common Questions (Concise Format)</h2>
+  <p>Important topics that round out your testing knowledge.</p>
+</div>
+
+<div class="container">
+
+<!-- Q11: Snapshot Testing -->
+<div class="question-card" id="q11">
+  <div class="q-header">
+    <div class="q-number">11</div>
+    <div>
+      <div class="q-text">Snapshot Testing — When it's useful and when it's a trap.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">The Honest Truth</div>
+    <p>Snapshots are <strong>both useful and dangerous</strong>. Useful for: stable output (error messages, serialized configs, GraphQL queries, generated HTML for emails). Dangerous for: component render output — developers blindly update snapshots when tests fail, turning them into a "format-on-save" button rather than a genuine assertion. The real problem: snapshots tell you "something changed" but not <em>what should have changed</em>. A broken button and a slightly different className text look the same — a large chunk of red and green in the diff.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Good vs Bad snapshot usage</div>
+    <pre><code><span class="comment">// ✅ GOOD: Snapshot small, stable output with explicit assertions alongside</span>
+<span class="function">test</span>(<span class="string">'formats error message correctly'</span>, () =&gt; {
+  <span class="keyword">const</span> msg = <span class="function">formatError</span>({ code: <span class="string">'VALIDATION'</span>, field: <span class="string">'email'</span> });
+  <span class="function">expect</span>(msg).<span class="function">toContain</span>(<span class="string">'email'</span>); <span class="comment">// Explicit assertion</span>
+  <span class="function">expect</span>(msg).<span class="function">toMatchSnapshot</span>(); <span class="comment">// Snapshot as regression guard</span>
+});
+
+<span class="comment">// ✅ ALSO GOOD: Configuration objects that rarely change</span>
+<span class="function">test</span>(<span class="string">'builds Webpack config'</span>, () =&gt; {
+  <span class="keyword">const</span> config = <span class="function">buildWebpackConfig</span>(<span class="string">'production'</span>);
+  <span class="function">expect</span>(config).<span class="function">toMatchSnapshot</span>();
+});
+
+<span class="comment">// ❌ BAD: Snapshot of large component render — fragile and low-signal</span>
+<span class="comment">// test('renders user profile', () => {</span>
+<span class="comment">//   const { container } = render(&lt;UserProfile user={mockUser} /&gt;);</span>
+<span class="comment">//   expect(container.firstChild).toMatchSnapshot(); // Bad: 500 lines of div soup</span>
+<span class="comment">// });</span>
+
+<span class="comment">// ✅ BETTER: Inline snapshots — diff is in your code, not a separate file</span>
+<span class="function">test</span>(<span class="string">'generates correct SQL'</span>, () =&gt; {
+  <span class="keyword">const</span> sql = <span class="function">buildQuery</span>({ table: <span class="string">'users'</span>, limit: <span class="number">10</span> });
+  <span class="function">expect</span>(sql).<span class="function">toMatchInlineSnapshot</span>(
+    `<span class="string">"SELECT * FROM users LIMIT 10"</span>`
+  );
+});</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">The Snapshot Death Spiral</div>
+    <p>Team adds snapshot test for every component → 200 test files with large snapshots → one CSS change updates 50 snapshots → dev runs <code>jest --updateSnapshot</code> without reading diffs → snapshots become meaningless noise. To avoid this: only snapshot small, focused outputs. Never snapshot a component's full rendered DOM. Pair snapshots with explicit assertions.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Snapshot small things that have a right answer. Never snapshot big things just because rendering worked." If you can't describe what changed from the snapshot diff alone, the snapshot is too large.
+  </div>
+</div>
+
+<!-- Q12: Accessibility Testing -->
+<div class="question-card" id="q12">
+  <div class="q-header">
+    <div class="q-number">12</div>
+    <div>
+      <div class="q-text">Accessibility Testing — jest-axe and Playwright + axe-core for automated a11y checks.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Two Levels of a11y Testing</div>
+    <p><strong>jest-axe</strong>: Unit-level a11y checks. Renders a component, runs axe-core on the rendered DOM, and reports violations (missing labels, insufficient contrast, missing roles). Use in every component test — it's a free a11y audit.<br><strong>Playwright + @axe-core/playwright</strong>: E2E-level a11y checks. Runs axe on full pages after interactions. Catches issues that only appear after state changes (form submission, modal open, route change).</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — jest-axe in component tests</div>
+    <pre><code><span class="keyword">import</span> { render } <span class="keyword">from</span> <span class="string">'@testing-library/react'</span>;
+<span class="keyword">import</span> { axe, toHaveNoViolations } <span class="keyword">from</span> <span class="string">'jest-axe'</span>;
+
+<span class="function">expect</span>.<span class="function">extend</span>(toHaveNoViolations);
+
+<span class="function">test</span>(<span class="string">'LoginForm has no a11y violations'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="keyword">const</span> { container } = <span class="function">render</span>(&lt;LoginForm /&gt;);
+  <span class="keyword">const</span> results = <span class="keyword">await</span> <span class="function">axe</span>(container);
+  <span class="function">expect</span>(results).<span class="function">toHaveNoViolations</span>();
+});
+
+<span class="comment">// Pro tip: Run axe after interactions — violations appear after state changes</span>
+<span class="function">test</span>(<span class="string">'Modal is accessible when open'</span>, <span class="keyword">async</span> () =&gt; {
+  <span class="keyword">const</span> { container } = <span class="function">render</span>(&lt;App /&gt;);
+  <span class="keyword">await</span> userEvent.<span class="function">click</span>(screen.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">/open settings/i</span> }));
+  <span class="keyword">const</span> results = <span class="keyword">await</span> <span class="function">axe</span>(container);
+  <span class="function">expect</span>(results).<span class="function">toHaveNoViolations</span>();
+});</code></pre>
+  </div>
+  <div class="callout callout-remember">
+    <div class="callout-title">Automated tools catch ~30% of a11y issues</div>
+    <p>axe can detect missing labels, color contrast, and missing roles. It cannot detect: logical tab order, meaningful alt text (vs gibberish), or correct heading hierarchy semantics. Automated a11y is a baseline, not a guarantee. Use it everywhere, but also do manual keyboard-navigation testing.</p>
+  </div>
+</div>
+
+<!-- Q13: E2E Test Patterns -->
+<div class="question-card" id="q13">
+  <div class="q-header">
+    <div class="q-number">13</div>
+    <div>
+      <div class="q-text">E2E Test Patterns — Page Object Model, fixtures, and test isolation.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Page Object Model (POM)</div>
+    <p>A class that encapsulates selectors and actions for a page: <code>loginPage.goto()</code>, <code>loginPage.login(email, password)</code>, <code>loginPage.expectError('Invalid credentials')</code>. Benefits: selectors change in one place, tests read like user stories, no duplicate code. However, Playwright's built-in fixtures and locators have made POM somewhat less essential — the pattern is still good for complex flows.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Playwright Page Object + Custom Fixtures</div>
+    <pre><code><span class="comment">// Page Object</span>
+<span class="keyword">class</span> <span class="type">LoginPage</span> {
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> <span class="function">page</span>: <span class="type">Page</span>) {}
+
+  <span class="keyword">async</span> <span class="function">goto</span>() { <span class="keyword">await this</span>.page.<span class="function">goto</span>(<span class="string">'/login'</span>); }
+
+  <span class="keyword">async</span> <span class="function">login</span>(email: <span class="type">string</span>, password: <span class="type">string</span>) {
+    <span class="keyword">await this</span>.page.<span class="function">getByLabel</span>(<span class="string">'Email'</span>).<span class="function">fill</span>(email);
+    <span class="keyword">await this</span>.page.<span class="function">getByLabel</span>(<span class="string">'Password'</span>).<span class="function">fill</span>(password);
+    <span class="keyword">await this</span>.page.<span class="function">getByRole</span>(<span class="string">'button'</span>, { name: <span class="string">'Sign In'</span> }).<span class="function">click</span>();
+  }
+
+  <span class="keyword">async</span> <span class="function">expectErrorMessage</span>(message: <span class="type">string</span>) {
+    <span class="keyword">await</span> <span class="function">expect</span>(<span class="keyword">this</span>.page.<span class="function">getByRole</span>(<span class="string">'alert'</span>)).<span class="function">toHaveText</span>(message);
+  }
+
+  <span class="keyword">async</span> <span class="function">expectRedirect</span>(path: <span class="type">string</span> | <span class="type">RegExp</span>) {
+    <span class="keyword">await</span> <span class="function">expect</span>(<span class="keyword">this</span>.page).<span class="function">toHaveURL</span>(path);
+  }
+}
+
+<span class="comment">// Custom fixture — inject page objects into tests</span>
+<span class="keyword">const</span> test = base.<span class="function">extend</span>&lt;{ <span class="function">loginPage</span>: <span class="type">LoginPage</span> }&gt;({
+  <span class="function">loginPage</span>: <span class="keyword">async</span> ({ page }, use) =&gt; {
+    <span class="keyword">await</span> <span class="function">use</span>(<span class="keyword">new</span> <span class="function">LoginPage</span>(page));
+  },
+});
+
+<span class="comment">// Test using the fixture — clean and readable</span>
+<span class="function">test</span>(<span class="string">'shows error for invalid credentials'</span>, <span class="keyword">async</span> ({ loginPage }) =&gt; {
+  <span class="keyword">await</span> loginPage.<span class="function">goto</span>();
+  <span class="keyword">await</span> loginPage.<span class="function">login</span>(<span class="string">'bad@email.com'</span>, <span class="string">'wrongpass'</span>);
+  <span class="keyword">await</span> loginPage.<span class="function">expectErrorMessage</span>(<span class="string">'Invalid credentials'</span>);
+});</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Test Isolation</div>
+    <p>Every E2E test should be independent. Microsoft's Playwright best-practice: use <code>test.use({ storageState: 'auth.json' })</code> for pre-authenticated tests instead of logging in every test. Use unique test data (UUIDs for created resources), and clean up after yourself (delete created records in <code>afterEach</code>). Never write tests that depend on the order they run.</p>
+  </div>
+</div>
+
+<!-- Q14: Test Coverage -->
+<div class="question-card" id="q14">
+  <div class="q-header">
+    <div class="q-number">14</div>
+    <div>
+      <div class="q-text">Test Coverage — What percentage to aim for and what coverage numbers actually tell you.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Coverage Actually Measures</div>
+    <p>Code coverage tells you <strong>which lines ran</strong> during tests — nothing more. It does NOT tell you: whether the assertions are correct, whether edge cases are covered, whether the test actually validates behavior, or whether the tests would catch a real regression. You can have 100% coverage with zero assertions and it's meaningless. You can have 60% coverage that catches every real bug.</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Metric</th><th>What it means</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Statement coverage</strong></td><td>Each line executed at least once</td><td>80%+ (minimum)</td></tr>
+      <tr><td><strong>Branch coverage</strong></td><td>Each if/else/switch path taken</td><td>70%+ (more important than statement)</td></tr>
+      <tr><td><strong>Function coverage</strong></td><td>Each function called at least once</td><td>90%+ (should be high)</td></tr>
+      <tr><td><strong>Line coverage</strong></td><td>Similar to statement</td><td>80%+ (standard metric)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight — The Coverage Lie</div>
+    <p>I've seen teams spend weeks writing tests for every branch of a utility function when the function is trivial and never breaks. Meanwhile, their critical checkout flow has two tests. <strong>Coverage should be a floor, not a target.</strong> Aim for 80% overall, but spend 80% of your testing effort on the 20% of code that actually matters: payment flows, auth logic, data mutations, and error handling paths. A 100% covered <code>formatDate</code> function is worth less than a 50% covered <code>submitOrder</code> function.</p>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistakes</div>
+    <p>Chasing 100% coverage and writing brittle, low-value tests. Setting coverage thresholds too high and blocking CI on trivial uncovered lines. Using coverage as a performance metric for engineers (it incentivizes bad tests). Ignoring branch coverage: 95% line coverage with 40% branch coverage means all your if/else branches are untested — the most dangerous kind of coverage gap.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "80% is a floor, not a goal. 100% means you're testing things that don't matter." Coverage tells you what ran — not what was tested correctly.
+  </div>
+</div>
+
+<!-- Q15: Visual Regression Testing -->
+<div class="question-card" id="q15">
+  <div class="q-header">
+    <div class="q-number">15</div>
+    <div>
+      <div class="q-text">Visual Regression Testing — Chromatic, Percy, and Playwright screenshots.</div>
+      <span class="q-badge badge-advanced">Advanced</span>
+      <span class="q-badge priority-p2">P2</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">What Visual Regression Testing Catches</div>
+    <p>Traditional tests can't verify that your button moved 2px left or that a CSS change broke the layout on one screen size. Visual regression tools take <strong>screenshots</strong> of components/pages and compare them pixel-by-pixel to a baseline. Any visual difference triggers a review. This catches CSS regressions, layout breakage, font rendering issues, and cross-browser visual bugs — the class of bugs that users notice first and automated tests miss most.</p>
+  </div>
+  <table class="styled-table">
+    <thead><tr><th>Tool</th><th>Type</th><th>Best for</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Chromatic</strong></td><td>Storybook integration</td><td>Component-level visual testing</td><td>Free tier (5000 snaps/mo)</td></tr>
+      <tr><td><strong>Percy</strong></td><td>BrowserStack product</td><td>Full-page visual testing</td><td>Paid (starting ~$149/mo)</td></tr>
+      <tr><td><strong>Playwright Screenshots</strong></td><td>Built-in</td><td>E2E visual assertions</td><td>Free (included in Playwright)</td></tr>
+    </tbody>
+  </table>
+  <div class="code-block">
+    <div class="code-block-header">TypeScript — Playwright visual regression</div>
+    <pre><code><span class="function">test</span>(<span class="string">'homepage layout matches design'</span>, <span class="keyword">async</span> ({ page }) =&gt; {
+  <span class="keyword">await</span> page.<span class="function">goto</span>(<span class="string">'/'</span>);
+
+  <span class="comment">// Full page screenshot comparison</span>
+  <span class="keyword">await</span> <span class="function">expect</span>(page).<span class="function">toHaveScreenshot</span>(<span class="string">'homepage.png'</span>);
+});
+
+<span class="function">test</span>(<span class="string">'checkout form on mobile viewport'</span>, <span class="keyword">async</span> ({ page }) =&gt; {
+  <span class="keyword">await</span> page.<span class="function">setViewportSize</span>({ width: <span class="number">375</span>, height: <span class="number">812</span> }); <span class="comment">// iPhone X</span>
+  <span class="keyword">await</span> page.<span class="function">goto</span>(<span class="string">'/checkout'</span>);
+
+  <span class="comment">// Screenshot only the form element</span>
+  <span class="keyword">const</span> form = page.<span class="function">getByRole</span>(<span class="string">'form'</span>);
+  <span class="keyword">await</span> <span class="function">expect</span>(form).<span class="function">toHaveScreenshot</span>(<span class="string">'checkout-mobile.png'</span>);
+});</code></pre>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">Pro Tips</div>
+    <p><strong>Always use consistent viewports</strong> — screenshots on different window sizes are different images. <strong>Mock dynamic content</strong> (dates, random avatars, animations) — they produce false positives. <strong>Mask unstable areas</strong> with Playwright's <code>mask</code> option for elements like video players or ad slots. <strong>Don't over-test visually</strong> — test layout of key pages and states (empty, error, loaded), not every component in isolation.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Screenshot changes catch what code reviews miss. Mock the dynamic, mask the unstable, test the critical paths."
+  </div>
+</div>
+
+</div>
+
+<div class="end-section">
+  <h2>Most Asked Testing Questions</h2>
+  <p>Based on interview reports from FAANG and top-tier companies. These are the testing questions that come up in practically every frontend interview.</p>
+
+  <table class="styled-table">
+    <thead>
+      <tr><th>Rank</th><th>Question</th><th>Frequency</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>#1</strong></td>
+        <td>Explain the Testing Trophy and why integration tests give the best ROI for frontend apps</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#2</strong></td>
+        <td>Walk me through RTL's query priority — when to use getByRole vs getByTestId</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#3</strong></td>
+        <td>How do you test async behavior? waitFor vs findBy, mocking API calls with MSW</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#4</strong></td>
+        <td>Playwright vs Cypress — which would you choose for a new project and why?</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#5</strong></td>
+        <td>How do you test Redux/Zustand stores in isolation and with components?</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#6</strong></td>
+        <td>What's your approach to test coverage? What number do you target?</td>
+        <td><span class="q-badge priority-p2">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>#7</strong></td>
+        <td>Explain userEvent vs fireEvent — why is userEvent preferred?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>#8</strong></td>
+        <td>How do you test custom hooks with renderHook and act()?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>#9</strong></td>
+        <td>What are the limitations of snapshot testing?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>#10</strong></td>
+        <td>How do you approach visual regression testing in your CI pipeline?</td>
+        <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="memory-trick" style="margin-top: 2rem;">
+    <strong>Final Memory Trick:</strong> "Test behavior, not implementation. Integration over unit. MSW over mock fetch. Playwright over Cypress. Accessibility over afterthought."
+  </div>
+</div>
+
+</body>
+</html>

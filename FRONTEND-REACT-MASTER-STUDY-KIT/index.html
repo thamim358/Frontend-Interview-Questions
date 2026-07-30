@@ -3,114 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Frontend React Master Study Kit — Nebula Dashboard</title>
+<title>Frontend Interview Handbook — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg-deep: #070b14;
-    --bg-primary: #0c1222;
+    --bg-primary: #0D1117;
+    --bg-secondary: #161B22;
+    --bg-card: #161B22;
+    --bg-card-hover: #1C2129;
     --bg-surface: #111827;
-    --bg-card: #182235;
-    --bg-card-hover: #1e2a45;
-    --bg-elevated: #243050;
-    --text-primary: #e8edf5;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-dim: #475569;
+    --bg-elevated: #1C2129;
+    --text-primary: #F0F6FC;
+    --text-secondary: #8B949E;
+    --text-muted: #6E7681;
+    --text-dim: #484F58;
+    --accent-blue: #58A6FF;
     --accent-sky: #38bdf8;
-    --accent-blue: #60a5fa;
-    --accent-indigo: #818cf8;
-    --accent-violet: #a78bfa;
-    --accent-rose: #fb7185;
-    --accent-amber: #fbbf24;
+    --accent-cyan: #39D2C0;
+    --accent-green: #3FB950;
     --accent-emerald: #34d399;
-    --accent-red: #f87171;
-    --gradient-primary: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-    --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #fb7185 100%);
-    --gradient-cool: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-    --gradient-violet: linear-gradient(135deg, #a78bfa 0%, #fb7185 100%);
-    --gradient-bg: linear-gradient(135deg, #070b14 0%, #0c1222 30%, #111827 60%, #182235 100%);
-    --glass-bg: rgba(17, 24, 39, 0.6);
-    --glass-border: 1px solid rgba(148, 163, 184, 0.08);
-    --glass-blur: blur(16px);
+    --accent-amber: #D29922;
+    --accent-orange: #F97316;
+    --accent-rose: #F85149;
+    --accent-red: #F85149;
+    --accent-violet: #A371F7;
+    --accent-purple: #A371F7;
+    --accent-indigo: #818cf8;
+    --gradient-primary: linear-gradient(135deg, #58A6FF 0%, #A371F7 100%);
+    --gradient-warm: linear-gradient(135deg, #FBBF24 0%, #F97316 100%);
+    --gradient-cool: linear-gradient(135deg, #58A6FF 0%, #39D2C0 100%);
+    --gradient-violet: linear-gradient(135deg, #A371F7 0%, #FB7185 100%);
+    --gradient-green: linear-gradient(135deg, #3FB950 0%, #34d399 100%);
+    --gradient-amber: linear-gradient(135deg, #FBBF24 0%, #FB7185 100%);
+    --glass-bg: rgba(13, 17, 23, 0.6);
+    --glass-border: 1px solid rgba(139, 148, 158, 0.08);
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
-    --shadow-glow: 0 0 30px rgba(56,189,248,0.08);
+    --shadow-glow: 0 0 30px rgba(88,166,255,0.06);
     --radius-lg: 16px;
     --radius-md: 10px;
-    --border-default: 1px solid rgba(148,163,184,0.12);
-    --border-subtle: 1px solid rgba(148,163,184,0.08);
+    --radius-sm: 6px;
+    --border-default: 1px solid rgba(139,148,158,0.12);
+    --border-subtle: 1px solid rgba(139,148,158,0.08);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-deep);
+    background: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
     background-image:
-      radial-gradient(ellipse at 20% 15%, rgba(56,189,248,0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 85%, rgba(129,140,248,0.03) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 15%, rgba(88,166,255,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 85%, rgba(163,113,247,0.03) 0%, transparent 50%);
   }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
 
   .nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 14px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(7, 11, 20, 0.8);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 12px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(13, 17, 23, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--glass-border);
   }
-  .nav-brand { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-  .nav-brand .logo { width: 28px; height: 28px; background: var(--gradient-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #070b14; font-weight: 800; }
-  .nav-links { display: flex; gap: 8px; align-items: center; }
+  .nav-brand {
+    font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--text-primary);
+  }
+  .nav-brand .logo {
+    width: 26px; height: 26px;
+    background: var(--gradient-primary); border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--bg-primary); font-weight: 800;
+  }
+  .nav-links { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .nav-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 13px;
-    padding: 6px 14px;
-    border-radius: 50px;
-    transition: all 0.2s;
-    font-weight: 500;
+    color: var(--text-muted); text-decoration: none;
+    font-size: 12.5px; padding: 5px 12px; border-radius: 50px;
+    transition: all 0.2s; font-weight: 500;
   }
   .nav-links a:hover { color: var(--text-primary); background: var(--bg-card); }
   .nav-links .btn-print {
     background: var(--gradient-primary);
-    color: #070b14;
-    font-weight: 600;
-    padding: 6px 18px;
+    color: var(--bg-primary); font-weight: 600;
   }
   .nav-links .btn-print:hover { opacity: 0.9; }
 
   .hero {
-    min-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 100px 40px 60px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    min-height: 80vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 100px 32px 50px; text-align: center;
+    position: relative; overflow: hidden;
   }
   .hero::before {
     content: '';
-    position: absolute;
-    inset: -50%;
+    position: absolute; inset: -50%;
     background:
-      radial-gradient(circle at 20% 40%, rgba(56,189,248,0.06) 0%, transparent 50%),
-      radial-gradient(circle at 80% 50%, rgba(129,140,248,0.05) 0%, transparent 50%),
-      radial-gradient(circle at 50% 80%, rgba(167,139,250,0.03) 0%, transparent 50%);
+      radial-gradient(circle at 20% 40%, rgba(88,166,255,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(163,113,247,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(57,210,192,0.03) 0%, transparent 50%);
     animation: heroPulse 12s ease-in-out infinite;
     pointer-events: none;
   }
@@ -119,762 +119,575 @@
     50% { transform: scale(1.06); opacity: 1; }
   }
   .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 22px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: var(--glass-border);
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 18px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.2);
     border-radius: 50px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent-sky);
-    margin-bottom: 24px;
-    position: relative;
-    z-index: 1;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
   }
   .hero-title {
-    font-size: clamp(42px, 7vw, 72px);
+    font-size: clamp(38px, 6vw, 64px);
     font-weight: 900;
-    letter-spacing: -2px;
-    line-height: 1.05;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: -2px; line-height: 1.05;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 50%, var(--accent-violet) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     margin-bottom: 12px;
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
   .hero-sub {
-    font-size: clamp(16px, 2vw, 20px);
-    color: var(--text-secondary);
-    font-weight: 400;
-    position: relative;
-    z-index: 1;
-    margin-bottom: 6px;
+    font-size: clamp(14px, 1.8vw, 18px);
+    color: var(--text-secondary); font-weight: 400;
+    position: relative; z-index: 1; margin-bottom: 4px;
   }
   .hero-desc {
-    max-width: 520px;
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.8;
-    position: relative;
-    z-index: 1;
-    margin-top: 8px;
+    max-width: 480px; font-size: 13.5px;
+    color: var(--text-muted); line-height: 1.8;
+    position: relative; z-index: 1; margin-top: 6px;
   }
   .hero-stats {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 36px;
-    position: relative;
-    z-index: 1;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center; margin-top: 32px;
+    position: relative; z-index: 1;
   }
   .hero-stat {
-    padding: 16px 28px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: var(--glass-border);
-    border-radius: var(--radius-md);
-    text-align: center;
-    min-width: 90px;
+    padding: 14px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md); text-align: center;
+    min-width: 80px;
   }
   .hero-stat .num {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 24px; font-weight: 700;
     background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     display: block;
   }
   .hero-stat .lbl {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    font-size: 10.5px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px;
   }
 
   .search-wrap {
-    margin-top: 36px;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 440px;
+    margin-top: 32px; position: relative; z-index: 1;
+    width: 100%; max-width: 400px;
   }
   .search-wrap input {
-    width: 100%;
-    padding: 14px 20px 14px 46px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: var(--glass-border);
+    width: 100%; padding: 12px 18px 12px 42px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
     border-radius: 50px;
-    color: var(--text-primary);
-    font-size: 14px;
-    outline: none;
-    transition: all 0.25s;
+    color: var(--text-primary); font-size: 13.5px;
+    outline: none; transition: all 0.25s;
     font-family: 'Inter', sans-serif;
   }
-  .search-wrap input:focus { border-color: rgba(56,189,248,0.3); box-shadow: 0 0 20px rgba(56,189,248,0.05); }
+  .search-wrap input:focus { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(88,166,255,0.05); }
   .search-wrap input::placeholder { color: var(--text-dim); }
   .search-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
+    position: absolute; left: 16px; top: 50%;
     transform: translateY(-50%);
-    color: var(--text-dim);
-    font-size: 15px;
+    color: var(--text-dim); font-size: 14px;
     pointer-events: none;
   }
 
   .section-title {
-    max-width: var(--cw, 1200px);
-    margin: 48px auto 0;
-    padding: 0 40px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    max-width: 1200px;
+    margin: 40px auto 0; padding: 0 32px 14px;
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 12px;
   }
   .section-title h2 {
-    font-size: 18px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 17px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
   }
   .section-title .count {
-    font-size: 11px;
-    color: var(--text-muted);
+    font-size: 10.5px; color: var(--text-muted);
     background: var(--bg-card);
-    padding: 3px 10px;
-    border-radius: 50px;
-    font-weight: 600;
+    padding: 2px 8px; border-radius: 50px; font-weight: 600;
   }
 
   .grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px 40px 60px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 16px;
+    max-width: 1200px; margin: 0 auto;
+    padding: 12px 32px 40px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
   }
 
   .card {
     background: var(--bg-card);
-    border: var(--border-default);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-lg);
-    padding: 28px;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    padding: 24px;
+    text-decoration: none; color: inherit;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
     transition: all 0.3s ease;
   }
   .card::before {
     content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    opacity: 0;
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; opacity: 0;
     transition: opacity 0.3s;
   }
   .card:hover {
-    border-color: rgba(56,189,248,0.15);
-    transform: translateY(-3px);
+    border-color: rgba(88,166,255,0.15);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-glow);
   }
   .card:hover::before { opacity: 1; }
-  .c1::before { background: var(--gradient-primary); }
-  .c2::before { background: var(--gradient-cool); }
-  .c3::before { background: linear-gradient(90deg, var(--accent-sky), var(--accent-emerald)); }
-  .c4::before { background: var(--gradient-warm); }
-  .c5::before { background: var(--gradient-violet); }
-  .c6::before { background: linear-gradient(90deg, var(--accent-amber), var(--accent-rose)); }
-  .c7::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-sky)); }
-  .c8::before { background: linear-gradient(90deg, var(--accent-emerald), var(--accent-blue)); }
-  .c9::before { background: var(--gradient-violet); }
-  .c10::before { background: linear-gradient(90deg, var(--accent-rose), var(--accent-violet)); }
-  .c11::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
-  .c12::before { background: linear-gradient(90deg, var(--accent-rose), var(--accent-amber)); }
 
-  .card-icon {
-    font-size: 26px;
-    margin-bottom: 10px;
-    display: inline-block;
-  }
+  .card-icon { font-size: 24px; margin-bottom: 8px; display: inline-block; }
   .card-title {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    font-size: 15px; font-weight: 700; margin-bottom: 3px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .tag {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+    font-size: 9.5px; font-weight: 600;
+    padding: 2px 7px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.3px;
   }
   .tag-sky { background: rgba(56,189,248,0.1); color: var(--accent-sky); border: 1px solid rgba(56,189,248,0.2); }
-  .tag-amber { background: rgba(251,191,36,0.1); color: var(--accent-amber); border: 1px solid rgba(251,191,36,0.2); }
-  .tag-rose { background: rgba(251,114,133,0.1); color: var(--accent-rose); border: 1px solid rgba(251,114,133,0.2); }
-  .tag-blue { background: rgba(96,165,250,0.1); color: var(--accent-blue); border: 1px solid rgba(96,165,250,0.2); }
-  .tag-violet { background: rgba(167,139,250,0.1); color: var(--accent-violet); border: 1px solid rgba(167,139,250,0.2); }
-  .tag-emerald { background: rgba(52,211,153,0.1); color: var(--accent-emerald); border: 1px solid rgba(52,211,153,0.2); }
+  .tag-amber { background: rgba(210,153,34,0.1); color: var(--accent-amber); border: 1px solid rgba(210,153,34,0.2); }
+  .tag-rose { background: rgba(248,81,73,0.1); color: var(--accent-rose); border: 1px solid rgba(248,81,73,0.2); }
+  .tag-blue { background: rgba(88,166,255,0.1); color: var(--accent-blue); border: 1px solid rgba(88,166,255,0.2); }
+  .tag-violet { background: rgba(163,113,247,0.1); color: var(--accent-violet); border: 1px solid rgba(163,113,247,0.2); }
+  .tag-green { background: rgba(63,185,80,0.1); color: var(--accent-green); border: 1px solid rgba(63,185,80,0.2); }
 
   .card-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    flex: 1;
-    margin: 8px 0 16px;
+    font-size: 12.5px; color: var(--text-secondary);
+    line-height: 1.7; flex: 1;
+    margin: 6px 0 14px;
   }
   .card-meta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    font-size: 11.5px;
-    color: var(--text-muted);
-    border-top: var(--border-subtle);
-    padding-top: 14px;
-    margin-top: auto;
+    display: flex; gap: 10px; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-muted);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px; margin-top: auto;
   }
-  .card-meta span { display: flex; align-items: center; gap: 4px; }
-  .card-meta .p1 { color: var(--accent-rose); }
+  .card-meta span { display: flex; align-items: center; gap: 3px; }
+  .card-meta .p1 { color: var(--accent-red); }
   .card-meta .p2 { color: var(--accent-amber); }
   .card-meta .p3 { color: var(--accent-blue); }
 
+  .c1::before { background: var(--gradient-warm); }
+  .c2::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet)); }
+  .c3::before { background: var(--gradient-cool); }
+  .c4::before { background: var(--gradient-amber); }
+  .c5::before { background: var(--gradient-violet); }
+  .c6::before { background: linear-gradient(90deg, var(--accent-rose), var(--accent-violet)); }
+  .c7::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-sky)); }
+  .c8::before { background: var(--gradient-green); }
+  .c9::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+  .c10::before { background: linear-gradient(90deg, var(--accent-rose), var(--accent-violet)); }
+  .c11::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+  .c12::before { background: linear-gradient(90deg, var(--accent-amber), var(--accent-orange)); }
+  .c13::before { background: var(--gradient-primary); }
+  .c14::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-sky)); }
+
   .roadmap-card {
     background: var(--bg-card);
-    border: 1px solid rgba(56,189,248,0.12);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s;
+    border: 1px solid rgba(88,166,255,0.12);
+    border-radius: var(--radius-lg); padding: 24px;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    transition: all 0.3s; grid-column: 1 / -1;
   }
   .roadmap-card:hover {
-    border-color: rgba(56,189,248,0.25);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-glow);
+    border-color: rgba(88,166,255,0.25);
+    transform: translateY(-2px); box-shadow: var(--shadow-glow);
   }
 
   .tips-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
+    max-width: 1200px; margin: 0 auto; padding: 0 32px;
   }
   .tips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
   }
   .tip-card {
     background: var(--bg-card);
-    border: var(--border-default);
-    border-radius: var(--radius-md);
-    padding: 24px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md); padding: 20px;
     transition: all 0.25s;
   }
-  .tip-card:hover {
-    border-color: rgba(56,189,248,0.12);
-  }
+  .tip-card:hover { border-color: rgba(88,166,255,0.12); }
   .tip-card h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 13.5px; font-weight: 600;
+    margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
   }
-  .tip-card p {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  .footer {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-dim);
-    font-size: 13px;
-    border-top: var(--border-subtle);
-    line-height: 1.8;
-  }
-  .footer strong { color: var(--text-muted); font-weight: 600; }
-
-  .certs-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px 40px 0;
-  }
-  .certs-header { text-align: center; margin-bottom: 32px; }
-  .certs-badge {
-    display: inline-block;
-    padding: 6px 18px;
-    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(129,140,248,0.15));
-    border: 1px solid rgba(56,189,248,0.2);
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent-sky);
-    margin-bottom: 14px;
-  }
-  .certs-subtitle { color: var(--text-secondary); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.8; }
-  .certs-subtitle strong { color: var(--text-primary); }
-
-  .certs-section-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 28px 0 16px;
-  }
-  .certs-section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(56,189,248,0.3), transparent);
-  }
-  .certs-label-free { font-size: 14px; font-weight: 700; color: var(--accent-emerald); white-space: nowrap; }
-  .certs-label-paid { font-size: 14px; font-weight: 700; color: var(--accent-violet); white-space: nowrap; }
+  .tip-card p { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; }
 
   .certs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
-    margin-bottom: 12px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px; margin-bottom: 10px;
   }
-
   .cert-card {
-    position: relative;
-    background: var(--bg-card);
-    border: 1px solid rgba(148,163,184,0.1);
-    border-radius: var(--radius-md);
-    padding: 22px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s ease;
-    overflow: hidden;
+    position: relative; background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md); padding: 20px 18px 18px;
+    display: flex; flex-direction: column;
+    transition: all 0.3s ease; overflow: hidden;
   }
   .cert-card::before {
     content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    opacity: 0;
-    transition: opacity 0.3s;
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; opacity: 0; transition: opacity 0.3s;
   }
-  .cert-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+  .cert-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
   .cert-card:hover::before { opacity: 1; }
-
-  .cert-free::before { background: linear-gradient(90deg, #34d399, #2dd4bf); }
-  .cert-free:hover { border-color: rgba(52,211,153,0.2); }
-  .cert-paid::before { background: linear-gradient(90deg, #a78bfa, #fb7185); }
-  .cert-paid:hover { border-color: rgba(167,139,250,0.2); }
-
-  .cert-card-glow {
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 100% 0%, rgba(56,189,248,0.03) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .cert-paid .cert-card-glow {
-    background: radial-gradient(circle at 100% 0%, rgba(167,139,250,0.03) 0%, transparent 60%);
-  }
-
-  .cert-icon {
-    font-size: 22px;
-    margin-bottom: 8px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.04);
-    border-radius: 10px;
-    border: 1px solid rgba(148,163,184,0.08);
-  }
-  .cert-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; line-height: 1.3; }
-  .cert-provider { font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
-  .cert-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; flex: 1; margin-bottom: 14px; }
+  .cert-free::before { background: var(--gradient-green); }
+  .cert-paid::before { background: var(--gradient-violet); }
+  .cert-icon { font-size: 20px; margin-bottom: 6px; }
+  .cert-name { font-size: 13.5px; font-weight: 700; margin-bottom: 1px; }
+  .cert-provider { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+  .cert-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; flex: 1; margin-bottom: 12px; }
   .cert-link {
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 14px;
-    border-radius: 6px;
-    transition: all 0.2s;
-    width: fit-content;
+    font-size: 11.5px; font-weight: 600; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 5px 12px; border-radius: var(--radius-sm);
+    transition: all 0.2s; width: fit-content;
   }
-  .cert-free .cert-link { color: #070b14; background: linear-gradient(135deg, #34d399, #2dd4bf); }
-  .cert-free .cert-link:hover { opacity: 0.85; transform: translateX(2px); }
-  .cert-paid .cert-link { color: #070b14; background: linear-gradient(135deg, #a78bfa, #c084fc); }
-  .cert-paid .cert-link:hover { opacity: 0.85; transform: translateX(2px); }
+  .cert-free .cert-link { color: var(--bg-primary); background: var(--gradient-green); }
+  .cert-paid .cert-link { color: var(--bg-primary); background: var(--gradient-violet); }
+  .cert-link:hover { opacity: 0.85; transform: translateX(2px); }
 
   .certs-strategy {
-    margin: 28px 0 50px;
-    background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(129,140,248,0.04));
-    border: 1px solid rgba(56,189,248,0.1);
-    border-radius: var(--radius-md);
-    padding: 22px 28px;
-    border-left: 3px solid var(--accent-sky);
+    margin: 24px 0 40px;
+    background: rgba(88,166,255,0.05);
+    border: 1px solid rgba(88,166,255,0.1);
+    border-radius: var(--radius-md); padding: 20px 24px;
+    border-left: 3px solid var(--accent-blue);
   }
-  .certs-strategy-content strong {
-    display: block;
-    font-size: 14px;
-    color: var(--accent-sky);
-    margin-bottom: 6px;
+  .certs-strategy strong {
+    display: block; font-size: 13.5px;
+    color: var(--accent-blue); margin-bottom: 4px;
   }
-  .certs-strategy-content p { color: var(--text-secondary); font-size: 13px; line-height: 1.8; margin: 0; }
-  .certs-strategy-content p strong { display: inline; font-size: inherit; color: var(--text-primary); }
+  .certs-strategy p { color: var(--text-secondary); font-size: 12.5px; line-height: 1.8; margin: 0; }
+
+  .footer {
+    text-align: center; padding: 36px;
+    color: var(--text-dim); font-size: 12.5px;
+    border-top: 1px solid var(--border-subtle); line-height: 1.8;
+  }
+  .footer strong { color: var(--text-muted); font-weight: 600; }
+
+  .hidden { display: none !important; }
 
   @media (max-width: 768px) {
-    .certs-wrap { padding: 16px; }
-    .certs-grid { grid-template-columns: 1fr; }
-    .cert-card { padding: 18px 16px; }
-    .certs-strategy { padding: 18px 20px; margin: 20px 0 40px; }
-    .nav { padding: 12px 16px; flex-direction: column; gap: 8px; }
+    .nav { padding: 10px 16px; flex-direction: column; gap: 6px; }
     .nav-links { flex-wrap: wrap; justify-content: center; }
-    .grid { grid-template-columns: 1fr; padding: 16px; }
+    .grid { grid-template-columns: 1fr; padding: 8px 16px; }
     .section-title { padding: 0 16px; flex-direction: column; align-items: flex-start; }
-    .hero { padding: 80px 20px 40px; }
-    .hero-stats { gap: 10px; }
-    .hero-stat { padding: 12px 18px; min-width: 70px; }
-    .hero-stat .num { font-size: 20px; }
+    .hero { padding: 80px 16px 30px; }
+    .hero-stats { gap: 8px; }
+    .hero-stat { padding: 10px 16px; min-width: 60px; }
+    .hero-stat .num { font-size: 18px; }
     .tips-section { padding: 0 16px; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .certs-grid { grid-template-columns: 1fr; }
   }
 
   @media print {
     body { background: #fff !important; color: #1a1a2e !important; }
-    .hero { min-height: auto; padding: 40px; }
+    .hero { min-height: auto; padding: 30px; }
     .card, .roadmap-card, .tip-card { break-inside: avoid; border: 1px solid #ddd !important; }
-    .nav { display: none; }
-    .search-wrap { display: none; }
+    .nav, .search-wrap { display: none; }
   }
 </style>
 </head>
 <body>
 
 <div class="nav">
-  <div class="nav-brand"><span class="logo">⚛</span> Frontend React Master Study Kit</div>
+  <div class="nav-brand"><span class="logo">F</span> Frontend Interview Handbook</div>
   <div class="nav-links">
-    <a href="#topics">Topics</a>
-    <a href="#roadmap">Roadmap</a>
+    <a href="#topics">Handbooks</a>
+    <a href="#extra">Extras</a>
     <a href="#tips">Tips</a>
     <a href="#certs">Certs</a>
-    <a href="#" onclick="window.print()" class="btn-print">🖨 Print</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#" onclick="window.print()" class="btn-print">Print</a>
   </div>
 </div>
 
 <div class="hero" id="top">
-  <div class="hero-badge">✦ 2024-2026 React Interview Prep</div>
-  <h1 class="hero-title">Frontend React<br>Master Study Kit</h1>
-  <p class="hero-sub">420+ High-Value Questions across 12 Topics + Master Roadmap</p>
-  <p class="hero-desc">Curated from real interview patterns at FAANG, Product-Based Companies, FinTech, SaaS, and Enterprise MNCs. Every question includes detailed answers, code examples, and interview strategies for React Frontend roles.</p>
+  <div class="hero-badge">2024-2026 · Premium Interview Prep</div>
+  <h1 class="hero-title">Frontend Interview<br>Handbook</h1>
+  <p class="hero-sub">14 Expert-Crafted Handbooks for Frontend Developers (3+ YOE)</p>
+  <p class="hero-desc">Every question taught like a senior engineer mentoring a junior — with real-world examples, production code, memory tricks, and FAANG interview tips.</p>
   <div class="hero-stats">
-    <div class="hero-stat"><span class="num">12</span><span class="lbl">Topics</span></div>
-    <div class="hero-stat"><span class="num">420+</span><span class="lbl">Questions</span></div>
+    <div class="hero-stat"><span class="num">14</span><span class="lbl">Handbooks</span></div>
+    <div class="hero-stat"><span class="num">300+</span><span class="lbl">Questions</span></div>
     <div class="hero-stat"><span class="num">P1-P3</span><span class="lbl">Priority</span></div>
     <div class="hero-stat"><span class="num">Free</span><span class="lbl">Resource</span></div>
   </div>
   <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search topics... React, Hooks, Next.js, TypeScript...">
+    <span class="search-icon">&#x2315;</span>
+    <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search handbooks... React, hooks, closures, system design...">
   </div>
 </div>
 
 <div class="section-title" id="topics">
-  <h2>📚 Interview Topics <span class="count">12</span></h2>
+  <h2>Interview Handbooks <span class="count">14</span></h2>
 </div>
 <div class="grid" id="cardGrid">
 
-  <a href="01-JavaScript/JavaScript-Interview-Mastery.html" class="card c1" data-tags="javascript js es6 closures promises async event loop">
-    <div class="card-icon">⚡</div>
-    <div class="card-title">JavaScript ES6+ <span class="tag tag-rose">55 Qs</span></div>
-    <div class="card-desc">Closures · Event Loop · Promises · Async/Await · ES6+ · Array Methods · this Binding · Hoisting · Prototypes · Debounce/Throttle · Modules</div>
-    <div class="card-meta"><span class="p1">● 20 P1</span><span class="p2">● 25 P2</span><span class="p3">● 10 P3</span><span>🏷 Beginner → Expert</span></div>
+  <a href="01-JavaScript/JavaScript-Interview-Handbook.html" class="card c1" data-tags="javascript js es6 closures promises async event loop hoisting">
+    <div class="card-icon">JS</div>
+    <div class="card-title">JavaScript <span class="tag tag-rose">35 Qs</span></div>
+    <div class="card-desc">Closures · Event Loop · Promises · Async/Await · Hoisting · Debounce/Throttle · this Binding · Prototypes · Map/Filter/Reduce · Generators · Arrow Functions · Cancel API · Event Loop Queues · Output Puzzles</div>
+    <div class="card-meta"><span class="p1">15 P1</span><span class="p2">5 P2</span><span class="p3">15 RapidFire</span><span>Beginner → Expert</span></div>
   </a>
 
-  <a href="02-TypeScript/TypeScript-Interview-Mastery.html" class="card c2" data-tags="typescript ts generics types interfaces react">
-    <div class="card-icon">📐</div>
-    <div class="card-title">TypeScript <span class="tag tag-blue">40 Qs</span></div>
-    <div class="card-desc">Interfaces vs Types · Generics · Utility Types · Mapped/Conditional Types · Type Guards · Discriminated Unions · React + TS Patterns · Generic Components</div>
-    <div class="card-meta"><span class="p1">● 15 P1</span><span class="p2">● 18 P2</span><span class="p3">● 7 P3</span><span>🏷 Beginner → Expert</span></div>
+  <a href="02-TypeScript/TypeScript-Interview-Handbook.html" class="card c2" data-tags="typescript ts generics types interfaces react props">
+    <div class="card-icon">TS</div>
+    <div class="card-title">TypeScript <span class="tag tag-blue">18 Qs</span></div>
+    <div class="card-desc">Interface vs Type · Generics · Utility Types · Discriminated Unions · Type Guards · Mapped Types · React + TS Patterns · Generic Components</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">8 P2</span><span>Beginner → Expert</span></div>
   </a>
 
-  <a href="03-React-Core/React-Core-Interview-Mastery.html" class="card c3" data-tags="react core components jsx props state hooks lifecycle">
-    <div class="card-icon">⚛️</div>
-    <div class="card-title">React Core <span class="tag tag-sky">50 Qs</span></div>
-    <div class="card-desc">JSX · Components · Props/State · useState · useEffect · useRef · Context · Lifecycle · Forms · Lists & Keys · Refs · Event Handling · Children</div>
-    <div class="card-meta"><span class="p1">● 22 P1</span><span class="p2">● 18 P2</span><span class="p3">● 10 P3</span><span>🏷 Beginner → Advanced</span></div>
+  <a href="03-React-Core/React-Core-Interview-Handbook.html" class="card c3" data-tags="react core components jsx props state hooks virtual dom reconciliation">
+    <div class="card-icon">&#x269B;</div>
+    <div class="card-title">React Core <span class="tag tag-sky">25 Qs</span></div>
+    <div class="card-desc">Virtual DOM · JSX · useState/useEffect/useRef · Context · Keys · Portals · React Router · Re-renders · Auth Flow · When NOT to use useEffect · Controlled/Uncontrolled · Fragments · Error Boundaries</div>
+    <div class="card-meta"><span class="p1">16 P1</span><span class="p2">9 P2</span><span>Beginner → Advanced</span></div>
   </a>
 
-  <a href="04-React-Advanced/React-Advanced-Interview-Mastery.html" class="card c4" data-tags="react advanced performance patterns optimization custom hooks">
-    <div class="card-icon">🚀</div>
-    <div class="card-title">React Advanced <span class="tag tag-amber">40 Qs</span></div>
-    <div class="card-desc">Performance · React.memo · useMemo/useCallback · Custom Hooks · Render Props · HOCs · Error Boundaries · Portals · Suspense · Concurrent Features · Fiber Architecture</div>
-    <div class="card-meta"><span class="p1">● 18 P1</span><span class="p2">● 14 P2</span><span class="p3">● 8 P3</span><span>🏷 Advanced → Expert</span></div>
+  <a href="04-React-Advanced/React-Advanced-Interview-Handbook.html" class="card c4" data-tags="react advanced performance fiber memoization custom hooks server components">
+    <div class="card-icon">&#x26A1;</div>
+    <div class="card-title">React Advanced <span class="tag tag-amber">21 Qs</span></div>
+    <div class="card-desc">Fiber Architecture · useMemo/useCallback · React 19 · Server Components · Suspense · Concurrent Features · Custom Hooks · Virtualization · Upgrade Strategy · Retry Pattern · Context Splitting</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">11 P2</span><span>Advanced → Expert</span></div>
   </a>
 
-  <a href="05-NextJS/NextJS-Interview-Mastery.html" class="card c5" data-tags="nextjs app router server components ssr ssg middleware">
-    <div class="card-icon">▲</div>
-    <div class="card-title">Next.js <span class="tag tag-violet">35 Qs</span></div>
-    <div class="card-desc">App Router · Server Components · SSR/SSG/ISR · Data Fetching · Middleware · API Routes · Auth · Layouts · Metadata · Caching · Deployment · Streaming</div>
-    <div class="card-meta"><span class="p1">● 16 P1</span><span class="p2">● 12 P2</span><span class="p3">● 7 P3</span><span>🏷 Intermediate → Expert</span></div>
+  <a href="05-NextJS/NextJS-Interview-Handbook.html" class="card c5" data-tags="nextjs app router server components ssr ssg isr middleware cache">
+    <div class="card-icon">&#x25B2;</div>
+    <div class="card-title">Next.js <span class="tag tag-violet">20 Qs</span></div>
+    <div class="card-desc">App Router · Server/Client Components · SSR/SSG/ISR · Data Fetching · Middleware · Server Actions · Caching · Metadata · Auth · Deployment</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">10 P2</span><span>Intermediate → Expert</span></div>
   </a>
 
-  <a href="06-CSS-Styling/CSS-Styling-Interview-Mastery.html" class="card c6" data-tags="css tailwind styled-components css-in-js responsive design animations">
-    <div class="card-icon">🎨</div>
-    <div class="card-title">CSS & Styling <span class="tag tag-amber">30 Qs</span></div>
-    <div class="card-desc">Tailwind CSS · CSS Modules · Styled Components · Responsive Design · Flexbox/Grid · Animations · Theming · Dark Mode · CSS-in-JS · Design Systems</div>
-    <div class="card-meta"><span class="p1">● 10 P1</span><span class="p2">● 14 P2</span><span class="p3">● 6 P3</span><span>🏷 Beginner → Expert</span></div>
+  <a href="06-CSS-Styling/CSS-Styling-Interview-Handbook.html" class="card c6" data-tags="css tailwind flexbox grid animations responsive design">
+    <div class="card-icon">&#x2728;</div>
+    <div class="card-title">CSS & Styling <span class="tag tag-amber">19 Qs</span></div>
+    <div class="card-desc">Flexbox · Grid · Box Model · Specificity · Tailwind · Container Queries · Animations · Custom Properties · Dark Mode · Modern CSS (has, layer) · Browser Internals (DNS/TCP/TLS/CRP)</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">9 P2</span><span>Beginner → Expert</span></div>
   </a>
 
-  <a href="07-State-Management/State-Management-Interview-Mastery.html" class="card c7" data-tags="state management redux zustand context react-query rtk">
-    <div class="card-icon">🗂️</div>
-    <div class="card-title">State Management <span class="tag tag-blue">35 Qs</span></div>
-    <div class="card-desc">Redux Toolkit · Zustand · Context API · React Query/TanStack Query · Jotai · Recoil · Server State · URL State · Atomic State · Middleware · DevTools</div>
-    <div class="card-meta"><span class="p1">● 15 P1</span><span class="p2">● 14 P2</span><span class="p3">● 6 P3</span><span>🏷 Intermediate → Expert</span></div>
+  <a href="07-State-Management/State-Management-Interview-Handbook.html" class="card c7" data-tags="state management redux zustand context react-query rtk">
+    <div class="card-icon">&#x1F5C2;</div>
+    <div class="card-title">State Management <span class="tag tag-blue">18 Qs</span></div>
+    <div class="card-desc">Redux Toolkit · Zustand · Context API · React Query · Server vs Client State · Optimistic Updates · Selectors · Immer · State Normalization</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">8 P2</span><span>Intermediate → Expert</span></div>
   </a>
 
-  <a href="08-Testing/Testing-Interview-Mastery.html" class="card c8" data-tags="testing jest react-testing-library playwright cypress vitest">
-    <div class="card-icon">🧪</div>
-    <div class="card-title">Testing <span class="tag tag-emerald">35 Qs</span></div>
-    <div class="card-desc">Jest · React Testing Library · Playwright · Vitest · Unit Tests · Integration Tests · E2E Tests · Mocking · Snapshot · Accessibility · Coverage · CI/CD</div>
-    <div class="card-meta"><span class="p1">● 15 P1</span><span class="p2">● 14 P2</span><span class="p3">● 6 P3</span><span>🏷 Beginner → Expert</span></div>
+  <a href="08-Testing/Testing-Interview-Handbook.html" class="card c8" data-tags="testing jest react-testing-library playwright msw vitest e2e">
+    <div class="card-icon">&#x1F9EA;</div>
+    <div class="card-title">Testing <span class="tag tag-green">15 Qs</span></div>
+    <div class="card-desc">React Testing Library · Jest · Playwright · MSW · RTL Queries · userEvent · Custom Hooks · E2E · Accessibility Testing · Coverage</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">5 P2</span><span>Beginner → Expert</span></div>
   </a>
 
-  <a href="09-Build-Tools-DevOps/Build-Tools-DevOps-Interview-Mastery.html" class="card c9" data-tags="build tools webpack vite babel eslint docker cicd vercel netlify">
-    <div class="card-icon">🔧</div>
-    <div class="card-title">Build Tools & DevOps <span class="tag tag-violet">25 Qs</span></div>
-    <div class="card-desc">Vite · Webpack · Babel · ESLint/Prettier · CI/CD · Docker · Vercel/Netlify · Module Federation · Monorepos · Bundle Analysis · Code Splitting</div>
-    <div class="card-meta"><span class="p1">● 10 P1</span><span class="p2">● 10 P2</span><span class="p3">● 5 P3</span><span>🏷 Intermediate → Expert</span></div>
+  <a href="09-Build-Tools-DevOps/Build-Tools-DevOps-Interview-Handbook.html" class="card c9" data-tags="build tools webpack vite babel eslint docker cicd monorepo">
+    <div class="card-icon">&#x1F527;</div>
+    <div class="card-title">Build Tools & DevOps <span class="tag tag-violet">15 Qs</span></div>
+    <div class="card-desc">Vite vs Webpack · Tree Shaking · Babel/SWC · ESLint/Prettier · CI/CD · Docker · Monorepos · Module Federation · Deployment · Bundle Analysis</div>
+    <div class="card-meta"><span class="p1">8 P1</span><span class="p2">7 P2</span><span>Intermediate → Expert</span></div>
   </a>
 
-  <a href="10-System-Design/System-Design-Interview-Mastery.html" class="card c10" data-tags="system design frontend architecture micro-frontends performance scalability">
-    <div class="card-icon">🏗️</div>
-    <div class="card-title">System Design <span class="tag tag-rose">25 Qs</span></div>
-    <div class="card-desc">Frontend Architecture · Micro-Frontends · Performance Optimization · Security · Accessibility · Scalability · SEO · Web Vitals · CDN · PWA · Edge Computing</div>
-    <div class="card-meta"><span class="p1">● 12 P1</span><span class="p2">● 8 P2</span><span class="p3">● 5 P3</span><span>🏷 Advanced → Expert</span></div>
+  <a href="10-System-Design/System-Design-Interview-Handbook.html" class="card c10" data-tags="system design frontend architecture micro-frontends performance security">
+    <div class="card-icon">&#x1F3D7;</div>
+    <div class="card-title">System Design <span class="tag tag-rose">37 Qs</span></div>
+    <div class="card-desc">Large-Scale React · Web Vitals · Micro-Frontends · Security · Caching · Infinite Scroll · Component Library · Auth · Real-Time Chat · Notifications · Autocomplete · News Feed · Form Builder · Dashboard · Netflix · URL Shortener · Rate Limiter · Uber · Google Drive · Amazon · Payment Gateway · Zoom · Google Docs · Ticket Booking · Diagrams</div>
+    <div class="card-meta"><span class="p1">12 P1</span><span class="p2">10 P2</span><span class="p3">15 Ref</span><span>Beginner → Expert</span></div>
   </a>
 
-  <a href="11-Behavioral-Company/Behavioral-Interview-Mastery.html" class="card c11" data-tags="behavioral interview star faang amazon google react frontend">
-    <div class="card-icon">💬</div>
-    <div class="card-title">Behavioral + Company <span class="tag tag-blue">20 Qs</span></div>
-    <div class="card-desc">STAR Method · Amazon LPs · Google · React Architecture Stories · Conflict Resolution · Mentorship · Code Reviews · Production Incidents · Team Collaboration</div>
-    <div class="card-meta"><span class="p1">● 12 P1</span><span class="p2">● 5 P2</span><span class="p3">● 3 P3</span><span>🏷 Beginner → Expert</span></div>
+  <a href="11-Behavioral-Company/Behavioral-Interview-Handbook.html" class="card c11" data-tags="behavioral star amazon google meta microsoft netflix leadership">
+    <div class="card-icon">&#x1F4AC;</div>
+    <div class="card-title">Behavioral + Company <span class="tag tag-blue">15 STAR Qs</span></div>
+    <div class="card-desc">STAR Method · Amazon LPs · Google Googleyness · Meta · Microsoft · Netflix · 8 Full STAR Stories · Senior/Staff Questions · Negotiation</div>
+    <div class="card-meta"><span class="p1">8 P1</span><span class="p2">7 P2</span><span>All Levels</span></div>
   </a>
 
-  <a href="12-Coding-Interview/Coding-Interview-Mastery.html" class="card c12" data-tags="coding interview algorithms leetcode data structures react frontend">
-    <div class="card-icon">💻</div>
-    <div class="card-title">Coding Interview <span class="tag tag-amber">30 Problems</span></div>
-    <div class="card-desc">Two Sum · Debounce/Throttle · Promise.all · Deep Clone · Debounce · LRU Cache · Deep Equality · JSON Validator · Retry Logic · Array Chunk · Flatten</div>
-    <div class="card-meta"><span class="p1">● 12 Easy</span><span class="p2">● 12 Medium</span><span class="p3">● 6 Hard</span><span>🏷 Easy → Hard</span></div>
+  <a href="12-Coding-Interview/Coding-Interview-Handbook.html" class="card c12" data-tags="coding interview algorithms leetcode dsa promise debounce throttle react">
+    <div class="card-icon">&#x1F4BB;</div>
+    <div class="card-title">Coding Interview <span class="tag tag-amber">27 Problems</span></div>
+    <div class="card-desc">Two Sum · Debounce/Throttle · Promise.all · Deep Clone · Polyfills · Flatten · Memoize · LRU · Currying · Sliding Window · Anagrams · Product of Array · Linked List · Tree DFS · Min Stack · allSettled</div>
+    <div class="card-meta"><span class="p1">10 P1</span><span class="p2">8 P2</span><span class="p3">9 P3</span><span>Beginner → Hard</span></div>
   </a>
 
-  <a href="playground/coding-playground.html" class="card c4" data-tags="playground interactive runnable code map filter reduce console.log array basics practice">
-    <div class="card-icon">🧪</div>
-    <div class="card-title">Coding Playground <span class="tag tag-amber">Interactive</span></div>
-    <div class="card-desc">Interactive coding playground with 70+ runnable questions covering map(), filter(), reduce(), console.log output predictions, and JavaScript Array fundamentals. Click ▶ Run to execute code in-browser.</div>
-    <div class="card-meta"><span class="p1">● 7 map</span><span class="p2">● 6 filter</span><span class="p3">● 6 reduce</span><span>🧪 15 console.log</span></div>
+  <a href="13-Mock-Interview/Mock-Interview-Handbook.html" class="card c13" data-tags="mock interview simulation practice rounds faang behavioral system design">
+    <div class="card-icon">&#x1F3AF;</div>
+    <div class="card-title">Mock Interview <span class="tag tag-sky">6 Rounds</span></div>
+    <div class="card-desc">Complete 6-Round Mock Interview: JS/TS · React Deep Dive · System Design (Netflix) · Live Coding · Manager Round · HR/Negotiation · Model Answers</div>
+    <div class="card-meta"><span class="p1">Round 1-6</span><span>Full Simulation</span><span>With Answers</span></div>
+  </a>
+
+  <a href="14-Quick-Reference/Quick-Reference.md" class="card c14" data-tags="cheat sheet quick reference revision summary">
+    <div class="card-icon">&#x1F4D6;</div>
+    <div class="card-title">Quick Reference <span class="tag tag-green">Cheat Sheet</span></div>
+    <div class="card-desc">Dense markdown cheat sheet: JS One-Liners · React Hooks · CSS Decision Tree · TS Utilities · Next.js Conventions · State Mgmt Matrix · Perf Checklist</div>
+    <div class="card-meta"><span>10 Sections</span><span>Printable</span><span>Dense Format</span></div>
   </a>
 
 </div>
 
-<div class="section-title" id="roadmap">
-  <h2>🗺️ Frontend React Master Roadmap</h2>
+<div class="section-title" id="extra">
+  <h2>Extras <span class="count">3</span></h2>
 </div>
 <div class="grid" style="padding-top: 0;">
-  <a href="Frontend-Master-Roadmap.html" class="roadmap-card" style="grid-column: 1 / -1;" data-tags="roadmap learning path career frontend react">
-    <div class="card-icon" style="font-size: 26px; margin-bottom: 10px;">🗺️</div>
-    <div class="card-title" style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Frontend React Complete Roadmap <span class="tag tag-sky">12 Phases</span></div>
-    <div class="card-desc">Complete learning path from Junior to Staff Frontend Engineer. Includes learning sequence, estimated timelines, interview readiness checkpoints, salary progression, and study plan across all 12 topic areas.</div>
-    <div class="card-meta"><span>📅 Phase 1 → Phase 12</span><span>💰 Salary Progression</span><span>🎯 Readiness Checkpoints</span></div>
+  <a href="Frontend-Master-Roadmap.html" class="roadmap-card" data-tags="roadmap learning path career">
+    <div style="font-size: 24px; margin-bottom: 8px;">&#x1F5FA;</div>
+    <div style="font-size: 15px; font-weight: 700; margin-bottom: 3px;">Frontend Master Roadmap <span class="tag tag-sky">12 Phases</span></div>
+    <div style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; flex: 1; margin: 4px 0 12px;">Complete learning path from Junior to Staff Frontend Engineer. Includes learning sequence, estimated timelines, interview readiness checkpoints, and salary progression.</div>
+    <div class="card-meta"><span>&#x1F4C5; Phase 1 → 12</span><span>&#x1F4B0; Salary Progression</span><span>&#x1F3AF; Readiness Checkpoints</span></div>
+  </a>
+
+  <a href="React_Coding_Interview_Questions.md" class="card c1" data-tags="coding problems leetcode dsa standalone">
+    <div style="font-size: 22px; margin-bottom: 8px;">&#x1F4DD;</div>
+    <div style="font-size: 14px; font-weight: 700; margin-bottom: 3px;">Coding Problems (Standalone) <span class="tag tag-amber">30+</span></div>
+    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; flex: 1; margin: 4px 0 12px;">Original detailed coding problems markdown file with solutions, complexity analysis, and frontend relevance.</div>
+    <div class="card-meta"><span>Full Solutions</span><span>Time/Space Complexity</span></div>
+  </a>
+
+  <a href="playground/coding-playground.html" class="card c4" data-tags="playground interactive runnable code map filter reduce">
+    <div style="font-size: 22px; margin-bottom: 8px;">&#x1F9EA;</div>
+    <div style="font-size: 14px; font-weight: 700; margin-bottom: 3px;">Coding Playground <span class="tag tag-amber">Interactive</span></div>
+    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; flex: 1; margin: 4px 0 12px;">Interactive coding playground with 70+ runnable questions covering map(), filter(), reduce(), console.log predictions, and JavaScript Array fundamentals.</div>
+    <div class="card-meta"><span>&#x25B6; Run in Browser</span><span>70+ Questions</span></div>
   </a>
 </div>
 
 <div class="tips-section" id="tips">
-  <div style="background: var(--bg-card); border: var(--border-default); border-radius: var(--radius-lg); padding: 32px; margin: 20px 0 60px;">
-    <h3 style="font-size: 16px; font-weight: 700; color: var(--accent-sky); margin-bottom: 20px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;">📖 How to Use This Study Kit</h3>
+  <div style="background: var(--bg-card); border: var(--border-default); border-radius: var(--radius-lg); padding: 28px; margin: 20px 0 50px;">
+    <h3 style="font-size: 15px; font-weight: 700; color: var(--accent-blue); margin-bottom: 18px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">&#x1F4D6; How to Use This Handbook</h3>
     <div class="tips-grid">
-      <div class="tip-card" style="background: var(--bg-surface); border: var(--border-subtle);">
-        <h4 style="color: var(--accent-emerald);">🎯 Start with P1</h4>
-        <p>Master all P1 (red) questions first — these appear in nearly every React interview. Then P2 (amber) for breadth. Review P3 (blue) for senior roles.</p>
+      <div class="tip-card">
+        <h4 style="color: var(--accent-green);">&#x1F3AF; Start with P1</h4>
+        <p>Master all P1 (Must Know) questions first — they cover 80% of interview scenarios. Then P2 for breadth. P3 for senior roles.</p>
       </div>
-      <div class="tip-card" style="background: var(--bg-surface); border: var(--border-subtle);">
-        <h4 style="color: var(--accent-amber);">🔁 Progressive Learning</h4>
-        <p>JavaScript → TypeScript → React Core → React Advanced → Next.js. Then branch to Testing, State Management, System Design depending on your target role.</p>
+      <div class="tip-card">
+        <h4 style="color: var(--accent-amber);">&#x1F501; Progressive Learning</h4>
+        <p>JavaScript → TypeScript → React Core → React Advanced → Next.js. Then branch to State Management, Testing, System Design.</p>
       </div>
-      <div class="tip-card" style="background: var(--bg-surface); border: var(--border-subtle);">
-        <h4 style="color: var(--accent-violet);">📝 Practice Aloud</h4>
-        <p>Read the \"Real Interview Answer\" sections. Then practice saying them aloud. Prepare 7-8 STAR behavioral stories with quantified impact for your React projects.</p>
+      <div class="tip-card">
+        <h4 style="color: var(--accent-violet);">&#x1F4DD; Practice Aloud</h4>
+        <p>Read the Short Answer sections aloud. Then explain the concept in your own words. Prepare 5-7 STAR behavioral stories with data.</p>
       </div>
-      <div class="tip-card" style="background: var(--bg-surface); border: var(--border-subtle);">
-        <h4 style="color: var(--accent-blue);">🖨 Print for Offline</h4>
-        <p>Open in Chrome, press <strong>Ctrl+P</strong>, save as PDF. The CSS includes print optimization with page break handling and color adjustments.</p>
+      <div class="tip-card">
+        <h4 style="color: var(--accent-blue);">&#x1F5A8; Print to PDF</h4>
+        <p>Press Ctrl+P (Cmd+P on Mac) → Save as PDF. The CSS includes print optimization. Open HTML files in Chrome for best results.</p>
       </div>
     </div>
   </div>
 </div>
 
 <div class="section-title" id="certs">
-  <h2>🎓 Recommended Certifications</h2>
+  <h2>&#x1F393; Recommended Certifications</h2>
 </div>
-<div class="certs-wrap">
-  <div class="certs-header">
-    <div class="certs-badge">Free & Paid</div>
-    <p class="certs-subtitle">Certifications that maximize interview credibility and salary growth for React Frontend Engineers. <strong>Prioritize React + cloud certs</strong> for maximum impact.</p>
-  </div>
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 32px;">
+  <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 24px; line-height: 1.7;">
+    Certifications that maximize interview credibility and salary growth for React Frontend Engineers.
+    <strong style="color: var(--text-primary);">Prioritize 1 Cloud + 1 Framework + 1 Specialty.</strong>
+  </p>
 
-  <div class="certs-section-label">
-    <span class="certs-label-free">🆓 Free Certifications</span>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+    <span style="font-size: 13px; font-weight: 700; color: var(--accent-green);">&#x1F5C4; Free Certifications</span>
+    <div style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(63,185,80,0.3), transparent);"></div>
   </div>
   <div class="certs-grid">
-
     <div class="cert-card cert-free">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">⚛️</div>
+      <div class="cert-icon">&#x269B;</div>
       <div class="cert-name">Meta Front-End Developer</div>
       <div class="cert-provider">Coursera / Meta</div>
-      <div class="cert-desc">Professional Certificate covering React, JS, UI components, and responsive design. Free to audit — employer-recognized credential.</div>
-      <a href="https://www.coursera.org/professional-certificates/meta-front-end-developer" target="_blank" class="cert-link">Audit Free →</a>
+      <div class="cert-desc">Professional Certificate covering React, JS, UI components, and responsive design. Free to audit.</div>
+      <a href="https://www.coursera.org/professional-certificates/meta-front-end-developer" target="_blank" class="cert-link">Audit Free &#x2192;</a>
     </div>
-
     <div class="cert-card cert-free">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">▲</div>
+      <div class="cert-icon">&#x25B2;</div>
       <div class="cert-name">Next.js Conf Workshops</div>
       <div class="cert-provider">Vercel</div>
-      <div class="cert-desc">Free interactive workshops on App Router, Server Components, and data fetching patterns. Practical hands-on learning.</div>
-      <a href="https://nextjs.org/learn" target="_blank" class="cert-link">Start Learning →</a>
+      <div class="cert-desc">Free workshops on App Router, Server Components, and data fetching. Practical hands-on training.</div>
+      <a href="https://nextjs.org/learn" target="_blank" class="cert-link">Start Learning &#x2192;</a>
     </div>
-
     <div class="cert-card cert-free">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">🎨</div>
+      <div class="cert-icon">&#x2728;</div>
       <div class="cert-name">Tailwind CSS Fundamentals</div>
-      <div class="cert-provider">Tailwind Labs / YouTube</div>
-      <div class="cert-desc">Free official Tailwind CSS course covering utility-first workflows, responsive design, and component styling patterns.</div>
-      <a href="https://tailwindcss.com/courses" target="_blank" class="cert-link">Learn Free →</a>
+      <div class="cert-provider">Tailwind Labs</div>
+      <div class="cert-desc">Official Tailwind CSS course covering utility-first workflows and responsive design patterns.</div>
+      <a href="https://tailwindcss.com/courses" target="_blank" class="cert-link">Learn Free &#x2192;</a>
     </div>
-
     <div class="cert-card cert-free">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">☁️</div>
+      <div class="cert-icon">&#x2601;</div>
       <div class="cert-name">AWS Front-End Developer</div>
       <div class="cert-provider">AWS Skill Builder</div>
-      <div class="cert-desc">Free digital training on deploying React apps with Amplify, S3, CloudFront, and CI/CD pipeline integration.</div>
-      <a href="https://aws.amazon.com/training/" target="_blank" class="cert-link">Explore Free →</a>
+      <div class="cert-desc">Free digital training on deploying React apps with Amplify, S3, CloudFront, and CI/CD.</div>
+      <a href="https://aws.amazon.com/training/" target="_blank" class="cert-link">Explore &#x2192;</a>
     </div>
-
-    <div class="cert-card cert-free">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">🧪</div>
-      <div class="cert-name">Testing React Apps</div>
-      <div class="cert-provider">Testing Library / Epic React</div>
-      <div class="cert-desc">Free guides and tutorials for React Testing Library, Jest, and Playwright — essential for any React developer role.</div>
-      <a href="https://testing-library.com/docs/react-testing-library/intro" target="_blank" class="cert-link">Learn Free →</a>
-    </div>
-
   </div>
 
-  <div class="certs-section-label">
-    <span class="certs-label-paid">💳 Paid Certifications (High ROI)</span>
+  <div style="display: flex; align-items: center; gap: 10px; margin: 28px 0 14px;">
+    <span style="font-size: 13px; font-weight: 700; color: var(--accent-violet);">&#x1F4B3; Paid Certifications (High ROI)</span>
+    <div style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(163,113,247,0.3), transparent);"></div>
   </div>
   <div class="certs-grid">
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">🏆</div>
+      <div class="cert-icon">&#x1F3C6;</div>
       <div class="cert-name">AWS Developer — Associate</div>
       <div class="cert-provider">AWS · ~$150</div>
-      <div class="cert-desc">Gold standard for frontend deployment on AWS. Covers Amplify, Lambda, API Gateway, DynamoDB, and CI/CD for React apps.</div>
-      <a href="https://aws.amazon.com/certification/" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-desc">Gold standard for frontend deployment. Covers Amplify, Lambda, API Gateway, CI/CD.</div>
+      <a href="https://aws.amazon.com/certification/" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">⚛️</div>
+      <div class="cert-icon">&#x269B;</div>
       <div class="cert-name">Meta React Advanced</div>
       <div class="cert-provider">Meta / Coursera · ~$300</div>
-      <div class="cert-desc">Advanced React patterns including performance, testing, and architecture. Covers topics expected in Senior React interviews.</div>
-      <a href="https://www.coursera.org/professional-certificates/meta-front-end-developer" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-desc">Advanced React patterns for Senior interviews: performance, testing, architecture.</div>
+      <a href="https://www.coursera.org/professional-certificates/meta-front-end-developer" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">📱</div>
+      <div class="cert-icon">&#x1F4F1;</div>
       <div class="cert-name">Google Mobile Web Specialist</div>
       <div class="cert-provider">Google · ~$200</div>
-      <div class="cert-desc">Covers PWAs, performance optimization, responsive design, and accessibility — critical skills for modern React developers.</div>
-      <a href="https://developers.google.com/certification" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-desc">PWAs, performance optimization, responsive design, and accessibility.</div>
+      <a href="https://developers.google.com/certification" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">☸️</div>
+      <div class="cert-icon">&#x2638;</div>
       <div class="cert-name">CKAD (Kubernetes)</div>
       <div class="cert-provider">CNCF · ~$395</div>
-      <div class="cert-desc">Container orchestration for frontend micro-frontends and scalable deployment. Differentiator for senior platform roles.</div>
-      <a href="https://www.cncf.io/certification/ckad/" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-desc">Container orchestration for micro-frontends. Differentiator for senior platform roles.</div>
+      <a href="https://www.cncf.io/certification/ckad/" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">♿</div>
+      <div class="cert-icon">&#x267F;</div>
       <div class="cert-name">IAAP CPACC (Accessibility)</div>
       <div class="cert-provider">IAAP · ~$325</div>
-      <div class="cert-desc">Certified Professional in Accessibility. React accessibility is increasingly mandatory for senior roles and enterprise applications.</div>
-      <a href="https://www.accessibilityassociation.org/s/cpacc-certification" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-desc">Certified Professional in Accessibility. Increasingly mandatory for senior roles.</div>
+      <a href="https://www.accessibilityassociation.org/s/cpacc-certification" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
     <div class="cert-card cert-paid">
-      <div class="cert-card-glow"></div>
-      <div class="cert-icon">🛡️</div>
+      <div class="cert-icon">&#x1F6E1;</div>
       <div class="cert-name">GitHub Actions CI/CD</div>
-      <div class="cert-provider">GitHub / Microsoft · ~$99</div>
-      <div class="cert-desc">Official GitHub certification covering CI/CD pipelines, deployment workflows, and frontend automation best practices.</div>
-      <a href="https://docs.github.com/en/actions" target="_blank" class="cert-link">View Details →</a>
+      <div class="cert-provider">GitHub · ~$99</div>
+      <div class="cert-desc">CI/CD pipelines, deployment workflows, and frontend automation best practices.</div>
+      <a href="https://docs.github.com/en/actions" target="_blank" class="cert-link">View Details &#x2192;</a>
     </div>
-
   </div>
 
   <div class="certs-strategy">
-    <div class="certs-strategy-content">
-      <strong>💡 Certification Strategy for React Frontend Engineers</strong>
-      <p>Don't collect certs — collect capabilities. Prioritize <strong>1 Cloud (AWS Developer) + 1 Framework (Meta React) + 1 Specialty (Accessibility or CI/CD)</strong>. That combination proves you can build, deploy, and maintain production-grade React applications. Free certs (Meta Front-End audit, Next.js workshops) are great for resume keywords; paid certs (AWS Developer, CPACC) move the salary needle.</p>
-    </div>
+    <strong>&#x1F4A1; Certification Strategy</strong>
+    <p>Don't collect certs — collect capabilities. Prioritize <strong>1 Cloud (AWS Developer) + 1 Framework (Meta React) + 1 Specialty (Accessibility or CI/CD)</strong>. That combination proves you can build, deploy, and maintain production-grade React applications.</p>
   </div>
 </div>
 
 <div class="footer">
-  <strong>Frontend React Master Study Kit</strong> — Curated for 2024-2026 Frontend Interviews<br>
-  FAANG · Product-Based Companies · FinTech · SaaS · Enterprise MNC<br>
-  <span style="color: var(--text-dim); font-size: 12px;">Built with ❤️ for every React developer preparing for their dream role</span>
+  <strong>Frontend Interview Handbook — Premium Edition</strong><br>
+  Prepared for Frontend Developers (3+ YOE) targeting FAANG · Product Companies · FinTech · Enterprise<br>
+  <span style="color: var(--text-dim); font-size: 11.5px;">Built with &#x2764; for every developer preparing for their dream role</span>
 </div>
 
 <script>
@@ -882,7 +695,7 @@ function filterCards() {
   var query = document.getElementById('searchInput').value.toLowerCase();
   var cards = document.querySelectorAll('.card, .roadmap-card');
   for (var i = 0; i < cards.length; i++) {
-    var searchable = (cards[i].getAttribute('data-tags') || '') + ' ' + cards[i].textContent.toLowerCase();
+    var searchable = ((cards[i].getAttribute('data-tags') || '') + ' ' + cards[i].textContent).toLowerCase();
     cards[i].classList.toggle('hidden', searchable.indexOf(query) === -1);
   }
 }
