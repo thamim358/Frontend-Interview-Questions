@@ -1561,6 +1561,45 @@
   </div>
 </div>
 
+<!-- Q20: display none vs visibility hidden -->
+<div class="question-card" id="q20">
+  <div class="q-header">
+    <div class="q-number">20</div>
+    <div>
+      <div class="q-text">display: none vs visibility: hidden — layout, accessibility, and events</div>
+      <span class="q-badge badge-beginner">Beginner</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <table class="styled-table"><thead><tr><th>Feature</th><th>display: none</th><th>visibility: hidden</th></tr></thead><tbody>
+    <tr><td>Space in layout</td><td>Removed — surrounding content collapses into its place</td><td>Preserved — an empty hole remains where the element was</td></tr>
+    <tr><td>Accessibility</td><td>Removed from the accessibility tree — screen readers skip it</td><td>Hidden from sight but still announced by most screen readers unless paired with aria-hidden</td></tr>
+    <tr><td>Events</td><td>Receives no mouse, keyboard, or focus events</td><td>Receives no pointer events, but can still receive focus in some browsers — manage tabindex</td></tr>
+    </tbody></table>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">CSS — Hiding strategies</div>
+    <pre><code><span class="selector">.gone</span> {
+  <span class="attr">display</span>: <span class="string">none</span>; <span class="comment">/* layout removal, no space */</span>
+}
+<span class="selector">.invisible</span> {
+  <span class="attr">visibility</span>: <span class="string">hidden</span>; <span class="comment">/* space preserved, layout hole */</span>
+}
+<span class="selector">.transparent</span> {
+  <span class="attr">opacity</span>: <span class="number">0</span>; <span class="comment">/* invisible but still interactive — can be clicked */</span>
+}</code></pre>
+  </div>
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Using <code>display: none</code> vs <code>visibility: hidden</code> interchangeably. Use <code>display: none</code> for conditionally rendered UI (tabs, modals). Use <code>visibility: hidden</code> when layout must not shift (skeleton placeholders, reserved icon slots). Use <code>opacity: 0</code> only for transitions — never for hiding interactive elements, since they stay clickable and focusable.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "display:none = gone from layout. visibility:hidden = invisible but holding its seat. opacity:0 = invisible but still clickable."
+  </div>
+</div>
+
 <div class="end-section">
   <h2>Most Frequently Asked CSS Questions</h2>
   <table class="styled-table">
@@ -1587,9 +1626,10 @@
       <tr><td><strong>17</strong></td><td>View Transitions API</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
       <tr><td><strong>18</strong></td><td>Scroll-driven Animations — scroll-timeline</td><td>Low</td><td><span class="q-badge badge-advanced">Advanced</span></td></tr>
       <tr><td><strong>19</strong></td><td>Browser Internals — URL to pixels, DNS, TCP, TLS, CRP</td><td>Very High</td><td><span class="q-badge badge-intermediate">Intermediate</span></td></tr>
+      <tr><td><strong>20</strong></td><td>display: none vs visibility: hidden — layout, a11y, events</td><td>Very High</td><td><span class="q-badge badge-beginner">Beginner</span></td></tr>
     </tbody>
   </table>
-  <p style="margin-top: 2rem; color: var(--text-tertiary);">Master these 19 questions and you'll ace any CSS interview — from startup to FAANG.</p>
+  <p style="margin-top: 2rem; color: var(--text-tertiary);">Master these 20 questions and you'll ace any CSS interview — from startup to FAANG.</p>
 </div>
 
 </body>

@@ -368,6 +368,10 @@ code {
 .code-block .type { color: #FFA657; }
 .code-block .operator { color: #FF7B72; }
 .code-block .attr { color: #79C0FF; }
+.code-block .tag { color: #7EE787; }
+.code-block .selector { color: #7EE787; }
+.code-block .property { color: #79C0FF; }
+.code-block .variable { color: #E3B341; }
 
 /* ---- Tables ---- */
 .styled-table {

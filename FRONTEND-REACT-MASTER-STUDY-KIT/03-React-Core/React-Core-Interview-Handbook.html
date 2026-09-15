@@ -23,7 +23,7 @@
   <h1 class="cover-title">React Core Interview Handbook</h1>
   <p class="cover-subtitle">Master the fundamentals. Ace the interview.</p>
   <div class="cover-meta">
-    <span class="cover-meta-item">25 Must-Know Questions</span>
+    <span class="cover-meta-item">26 Must-Know Questions</span>
     <span class="cover-meta-item">Senior-Reviewed Answers</span>
     <span class="cover-meta-item">Production Code Examples</span>
   </div>
@@ -1842,6 +1842,65 @@
   </div>
 </div>
 
+<!-- Q26: Pure Components -->
+<div class="question-card">
+  <div class="q-header">
+    <span class="q-number">Q26</span>
+    <span class="q-text">What are Pure Components? — Shallow-compare rendering with React.PureComponent and React.memo</span>
+    <span class="q-badge badge-intermediate">Intermediate</span>
+    <span class="q-badge priority-p2">P2</span>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Short Answer</div>
+    <p>A Pure Component skips re-rendering when its props and state haven't changed, using a shallow comparison. For class components, extend <code>React.PureComponent</code> instead of <code>React.Component</code>. For function components, wrap with <code>React.memo</code>. Both perform a shallow compare of props (and state, for PureComponent) — if every top-level value is <code>Object.is</code>-equal, React bails out of rendering.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Easy Explanation</div>
+    <p>Imagine a chef who only re-cooks a dish when the order ticket actually changes. A regular component re-cooks on every ticket print — even if the order is identical. A Pure Component glances at the new ticket, compares it line by line with the last one, and only fires up the stove when something differs.</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Real-World Example</div>
+    <p>A static sidebar with navigation links inside a dashboard that re-renders every second from a live clock. Without purity, all 30 nav links re-render 60 times a minute for nothing. Extending <code>PureComponent</code> (or wrapping with <code>memo</code>) means the sidebar renders once and stays quiet — only the clock ticks.</p>
+  </div>
+
+  <div class="callout callout-mistake">
+    <div class="callout-title">Common Mistake</div>
+    <p>Passing inline objects, arrays, or arrow functions as props to a Pure Component (<code>&lt;PureChild config={{ a: 1 }} onClick={() => ...} /&gt;</code>). New references are created every parent render, so the shallow compare always fails and the "optimization" does nothing — worse, it adds comparison overhead. Stabilize reference-typed props with <code>useMemo</code>/<code>useCallback</code>, or the purity is defeated.</p>
+  </div>
+
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>Shallow compare is the whole contract — and its biggest footgun. Mutating state in place (<code>this.state.items.push(x)</code>) keeps the same array reference, so a PureComponent will <em>not</em> re-render and your UI goes stale. Purity forces immutable updates, which is exactly why it pairs with Redux-style state management. Also note: <code>PureComponent</code> only exists for classes; in function components <code>memo</code> is the equivalent (props only — there is no component state to compare, since hooks own that).</p>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-title">Code Example</div>
+    <div class="code-block">
+      <div class="code-block-header">React — PureComponent (class) and memo (function)</div>
+      <pre><code><span class="keyword">import</span> { Component, memo } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Class: shallow-compares props AND state automatically</span>
+<span class="keyword">class</span> <span class="type">NavSidebar</span> <span class="keyword">extends</span> <span class="type">React.PureComponent</span> {
+  <span class="function">render</span>() {
+    <span class="keyword">return</span> <span class="tag">&lt;nav&gt;</span>{<span class="keyword">this</span>.<span class="attr">props</span>.<span class="attr">links</span>.<span class="function">map</span>(<span class="attr">l</span> => <span class="tag">&lt;a</span> <span class="attr">key</span>={<span class="attr">l</span>.<span class="attr">id</span>} <span class="attr">href</span>={<span class="attr">l</span>.<span class="attr">href</span>}&gt;{<span class="attr">l</span>.<span class="attr">label</span>}<span class="tag">&lt;/a&gt;</span>)}<span class="tag">&lt;/nav&gt;</span>;
+  }
+}
+
+<span class="comment">// Function: shallow-compares props only</span>
+<span class="keyword">const</span> <span class="attr">NavSidebarFn</span> = <span class="function">memo</span>(({ <span class="attr">links</span> }) => {
+  <span class="keyword">return</span> <span class="tag">&lt;nav&gt;</span>{<span class="attr">links</span>.<span class="function">map</span>(<span class="attr">l</span> => <span class="tag">&lt;a</span> <span class="attr">key</span>={<span class="attr">l</span>.<span class="attr">id</span>} <span class="attr">href</span>={<span class="attr">l</span>.<span class="attr">href</span>}&gt;{<span class="attr">l</span>.<span class="attr">label</span>}<span class="tag">&lt;/a&gt;</span>)}<span class="tag">&lt;/nav&gt;</span>;
+});</code></pre>
+    </div>
+  </div>
+
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Pure = compare ticket before cooking. PureComponent for classes (props + state), memo for functions (props only). Never mutate — mutation blinds the comparison."
+  </div>
+</div>
+
 <!-- ==================== END SECTION ==================== -->
 <div class="end-section">
   <h2>Most Frequently Asked React Core Questions</h2>
@@ -1946,6 +2005,12 @@
         <td>React Fragments — why and when</td>
         <td>Medium</td>
         <td>Beginner</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>Pure Components — PureComponent vs memo, shallow compare</td>
+        <td>Medium</td>
+        <td>Intermediate</td>
       </tr>
     </tbody>
   </table>

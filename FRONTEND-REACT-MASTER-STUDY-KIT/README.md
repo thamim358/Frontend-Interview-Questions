@@ -8,13 +8,13 @@ Complete interview preparation for Frontend Developers (3+ YOE)
 
 | # | Handbook | Questions | Format |
 |---|----------|-----------|--------|
-| 1 | JavaScript | 35 | Full HTML Handbook |
+| 1 | JavaScript | 90+ (Top 50 + 16 topics + PDF) | Full HTML Handbook |
 | 2 | TypeScript | 18 | Full HTML Handbook |
-| 3 | React Core | 25 | Full HTML Handbook |
+| 3 | React Core | 26 | Full HTML Handbook |
 | 4 | React Advanced | 21 | Full HTML Handbook |
 | 5 | Next.js | 20 | Full HTML Handbook |
-| 6 | CSS & Styling | 19 | Full HTML Handbook |
-| 7 | State Management | 18 | Full HTML Handbook |
+| 6 | CSS & Styling | 20 | Full HTML Handbook |
+| 7 | State Management | 19 | Full HTML Handbook |
 | 8 | Testing | 15 | Full HTML Handbook |
 | 9 | Build Tools & DevOps | 15 | Full HTML Handbook |
 | 10 | System Design | 37 | Full HTML Handbook + Diagrams |

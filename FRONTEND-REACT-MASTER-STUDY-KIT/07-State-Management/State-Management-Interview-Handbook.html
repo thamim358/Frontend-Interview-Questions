@@ -27,11 +27,11 @@
 <div class="cover-page">
   <div class="cover-badge">INTERVIEW HANDBOOK</div>
   <h1 class="cover-title">State Management Interview Handbook</h1>
-  <p class="cover-subtitle">18 Essential Questions on React State Management — from Context API to Redux Toolkit, Zustand, and React Query. Taught by a senior engineer, not a textbook.</p>
+  <p class="cover-subtitle">19 Essential Questions on React State Management — from Context API to Redux Toolkit, Zustand, and React Query. Taught by a senior engineer, not a textbook.</p>
   <div class="cover-meta">
-    <div class="cover-meta-item"><span class="number">10</span><span class="label">P1 — Full Format</span></div>
+    <div class="cover-meta-item"><span class="number">11</span><span class="label">P1 — Full Format</span></div>
     <div class="cover-meta-item"><span class="number">8</span><span class="label">P2 — Concise</span></div>
-    <div class="cover-meta-item"><span class="number">18</span><span class="label">Total Questions</span></div>
+    <div class="cover-meta-item"><span class="number">19</span><span class="label">Total Questions</span></div>
     <div class="cover-meta-item"><span class="number">50+</span><span class="label">Code Snippets</span></div>
   </div>
 </div>
@@ -1397,6 +1397,52 @@ useStore.<span class="function">subscribe</span>(<span class="function">state</s
 
 </div>
 
+<!-- Q19: Why use Redux when React has state management? -->
+<div class="question-card" id="q19">
+  <div class="q-header">
+    <div class="q-number">19</div>
+    <div>
+      <div class="q-text">Why use Redux when React has state management? — Centralized predictable state vs scattered local state.</div>
+      <span class="q-badge badge-intermediate">Intermediate</span>
+      <span class="q-badge priority-p1">P1</span>
+    </div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">Answer</div>
+    <p>React's built-in state (useState, Context) works well for local and low-frequency shared state. Redux earns its place when state is <strong>shared across many distant components</strong>, <strong>updated from many places</strong>, or must be <strong>predictable and debuggable</strong>. Redux gives you a centralized single source of truth: every state change is an explicit action flowing through one pipeline (Action → Reducer → Store → View), which makes the app's behavior traceable, testable, and replayable — unlike state scattered across dozens of useState hooks and prop-drilling chains.</p>
+    <p>Beyond centralization, Redux brings an ecosystem: <strong>DevTools</strong> (time-travel debugging, action replay, state diffing), <strong>middleware</strong> (thunk/saga for async flows, logger, persist), and <strong>predictable update rules</strong> (pure reducers, immutable updates). The trade-off is boilerplate and indirection — which is exactly why modern teams reach for Redux Toolkit (or lighter tools like Zustand) instead of hand-rolled Redux, and why server state belongs in React Query rather than any client store.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header">Redux data flow — Action → Reducer → Store → View</div>
+    <pre><code><span class="comment">// 1. Action — a plain object describing what happened</span>
+{ type: <span class="string">'cart/addItem'</span>, payload: { id: <span class="number">42</span>, qty: <span class="number">1</span> } }
+
+<span class="comment">// 2. Reducer — pure function: (state, action) =&gt; newState</span>
+<span class="keyword">function</span> <span class="function">cartReducer</span>(state = [], action) {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'cart/addItem'</span>: <span class="keyword">return</span> [...state, action.payload];
+    <span class="keyword">default</span>: <span class="keyword">return</span> state;
+  }
+}
+
+<span class="comment">// 3. Store — holds state, dispatches actions, notifies subscribers</span>
+store.<span class="function">dispatch</span>({ type: <span class="string">'cart/addItem'</span>, payload: { id: <span class="number">42</span>, qty: <span class="number">1</span> } });
+
+<span class="comment">// 4. View — React re-renders from store state via useSelector</span></code></pre>
+  </div>
+  <div class="q-section">
+    <div class="q-section-title">When Redux, and when not?</div>
+    <p><strong>Reach for Redux/Toolkit when:</strong> 3+ distant components share mutable state; complex update logic with many action types; undo/redo, audit logs, or optimistic updates with rollback; large team needing enforced update conventions. <strong>Skip it when:</strong> state is local to one component (useState); infrequently-changing global config (Context); server data with caching needs (React Query); simple shared UI state (Zustand, URL params).</p>
+  </div>
+  <div class="callout callout-senior">
+    <div class="callout-title">Senior Insight</div>
+    <p>"Why Redux?" is really a judgment question, not a trivia question. Strong answers name the trade-off explicitly: centralization and debuggability in exchange for boilerplate and indirection — then show you know the modern escape hatches (Toolkit kills the boilerplate, Zustand covers the middle ground, React Query owns server state). Interviewers promoting senior candidates listen for exactly that: not Redux advocacy, but state-ownership reasoning.</p>
+  </div>
+  <div class="memory-trick">
+    <strong>Memory Trick:</strong> "Redux = one store, explicit actions, pure reducers, replayable history. Use it for shared + complex + debuggable state. Skip it for local, config, or server state."
+  </div>
+</div>
+
 <div class="end-section">
   <h2>Most Asked State Management Questions</h2>
   <p>Based on interview reports from FAANG and top-tier companies. These four come up in nearly every interview.</p>
@@ -1445,6 +1491,11 @@ useStore.<span class="function">subscribe</span>(<span class="function">state</s
         <td><strong>#8</strong></td>
         <td>How would you implement undo/redo functionality?</td>
         <td><span class="q-badge priority-p3">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>#9</strong></td>
+        <td>Why use Redux when React has state management? Centralized predictable state</td>
+        <td><span class="q-badge priority-p1">Very High</span></td>
       </tr>
     </tbody>
   </table>
